@@ -1,0 +1,982 @@
+﻿@model MissierSystem.Models.Platform.Services.Raffle.WorkClasses.NumberStatusTotal
+
+@{
+    if (Model.Raffle != null)
+    {
+        ViewData["Title"] = Model.Raffle.RaffleName + " - Sorteio/Rifa";
+    }
+    else
+    {
+        ViewData["Title"] = " Não encontrado - Sorteio/Rifa";
+    }
+
+    var dic = new Dictionary<string, int>();
+
+    var RaffleTotalNumbers = Model.RaffleTotalNumbers;
+    var CountStart = 1;
+    var CountStop = 200;
+    var end = 200;
+    bool stoploop = false;
+    string typeType = "normal";
+    if (Model.Raffle.RaffleCloseOption)
+    {
+        typeType = "manual";
+    }
+
+    //var YourNamberAmorin = (List<int>)ViewBag.YourNumbers;
+    var AllNumbersAmorinReserved = Model.NumberStatus.Where(e => e.Status == 2).Select(e => e.Number).ToList();
+    var AllNumbersAmorinOcuped = Model.NumberStatus.Where(e => e.Status == 3).Select(e => e.Number).ToList();
+    var AnimalName = "";
+    var AnimalImage = "";
+
+    int flux = 1;
+    var stringToRout = "?raffleId=" + Model.Raffle.Id.ToString() + "&number=" + flux;
+
+    string GetAnimalName(int numberSelected)
+    {
+        if (numberSelected == 1)
+            return "AVESTRUZ";
+        else if (numberSelected == 5)
+            return "ÁGUIA";
+        else if (numberSelected == 9)
+            return "BURRO";
+        else if (numberSelected == 13)
+            return "BORBOLETA";
+        else if (numberSelected == 17)
+            return "CACHORRO";
+        else if (numberSelected == 21)
+            return "CABRA";
+        else if (numberSelected == 25)
+            return "CARNEIRO";
+        else if (numberSelected == 29)
+            return "CAMELO";
+        else if (numberSelected == 33)
+            return "COBRA";
+        else if (numberSelected == 37)
+            return "COELHO";
+        else if (numberSelected == 41)
+            return "CAVALO";
+        else if (numberSelected == 45)
+            return "ELEFANTE";
+        else if (numberSelected == 49)
+            return "GALO";
+        else if (numberSelected == 53)
+            return "GATO";
+        else if (numberSelected == 57)
+            return "JACARÉ";
+        else if (numberSelected == 61)
+            return "LEÃO";
+        else if (numberSelected == 65)
+            return "MACACO";
+        else if (numberSelected == 69)
+            return "PORCO";
+        else if (numberSelected == 73)
+            return "PAVÃO";
+        else if (numberSelected == 77)
+            return "PERU";
+        else if (numberSelected == 81)
+            return "TOURO";
+        else if (numberSelected == 85)
+            return "TIGRE";
+        else if (numberSelected == 89)
+            return "URSO";
+        else if (numberSelected == 93)
+            return "VEADO";
+        else if (numberSelected == 97)
+            return "VACA";
+        else
+            return "ERROR!!";
+    }
+
+    string GetNumberSequence(int start)
+    {
+        if (start > 0)
+        {
+            List<string> l = new List<string>();
+            var s = start.ToString("D2");
+            for (int i = start + 1; i <= start + 3; i++)
+            {
+                s += ", " + i.ToString("D2");
+            }
+
+            return s;
+        }
+
+        return "";
+    }
+
+    bool ChangeFlux()
+    {
+        flux += 4;
+        AnimalName = GetAnimalName(flux);
+        AnimalImage = RemovePontuation(GetAnimalName(flux)).ToLower() + ".jpg";
+        stringToRout = "?raffleId=" + Model.Raffle.Id.ToString() + "&number=" + flux;
+
+        return true;
+    }
+
+    string RemovePontuation(string word)
+    {
+        if (string.IsNullOrEmpty(word))
+            return String.Empty;
+
+        byte[] bytes = System.Text.Encoding.GetEncoding("iso-8859-8").GetBytes(word);
+        return System.Text.Encoding.UTF8.GetString(bytes);
+    }
+
+
+}
+<input type="hidden" name="Manual" id="Manual" value="@typeType" />
+
+<div class="participateSelectNumberMainPage">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <span class="navbar-brand"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</span>
+            @if (Model.Raffle != null)
+            {
+                <span class="lead text-center text-light">@Model.Raffle.RaffleName</span>
+            }
+
+            <div class="">
+                <a class="btn btn-outline-warning" style="margin-left:10px;" asp-area="" asp-controller="PlataformServiceRaffle" asp-action="RaffleMainPage">Voltar</a>
+                <a class="btn btn-outline-danger" asp-controller="Home" asp-action="GetOutFromLogin">Sair</a>
+            </div>
+
+        </div>
+    </nav>
+
+    @if (ViewBag.alert == "fail")
+    {
+        <div class="alert alert-danger alert-dismissible fade show container-fluid mt-4 text-center" role="alert">
+            <strong>Infelizmente houve um erro ao processar a mudança de status, tente novamente mais tarde.</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    }
+    else if (ViewBag.alert == "success")
+    {
+        <div class="alert alert-danger alert-dismissible fade show container-fluid mt-4 text-center" role="alert">
+            <strong>Alterado com sucesso!.</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    }
+
+    <div class="container-fluid">
+
+        <div class="row mb-5">
+
+            <div class="col-sm-12 col-lg-6">
+                <div class="accordion accordion-flush" id="raffleInformations">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-raffleInformations-1">
+                            <button class="accordion-button collapsed lead" type="button" data-bs-toggle="collapse" data-bs-target="#flush-raffleInformations-collapse-1" aria-expanded="false" aria-controls="flush-raffleInformations-collapse-1">
+                                Informaçãoes sobre o sorteio
+                            </button>
+                        </h2>
+                        <div id="flush-raffleInformations-collapse-1" class="accordion-collapse collapse" aria-labelledby="flush-raffleInformations-1" data-bs-parent="#raffleInformations">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="text-center m-auto">
+                                        <span class="lead">@Model.Raffle.RaffleName</span><br />
+                                        <span>@Model.Raffle.RafflePremiationDescription</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                                    <div class="row" style="width:100%">
+                                        <div class="col-sm-12 col-lg-3 m-0">
+                                            <b>Valor: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleNumbersValue.ToString("C2", ViewBag.Culture)</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-6 m-0">
+                                            <b>Max. de Nº por participante: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleUserMaxNumbers</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-3 m-0">
+                                            <b>Total de Nº: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleMaxNumber</span>
+                                        </div>
+                                    </div>
+
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="row" style="width:100%">
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Disponível: </b>
+                                            <span class="badge bg-success rounded-pill">@Model.AvaliableNumber</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Reservado:  </b>
+                                            <span class="badge bg-warning rounded-pill">@Model.SchaduleNumber</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Ocupado</b>
+                                            <span class="badge bg-danger rounded-pill">@Model.UnavaliableNumber</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        @if (Model.NumberStatus != null || Model.Raffle.RaffleCloseOption)
+        {
+            <div class="accordion accordion-flush" id="accordionPanelsRaffle">
+                <div class="row ">
+
+                    <div class="col-sm-12 col-md-12 col-lg-8 mb-5 d-block text-center">
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/avestruz.jpg" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">AVESTRUZ</h5>
+                                        <p class="card-text">@GetNumberSequence(1)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card " style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2 " style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card " style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2 " style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card " style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2 " style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card " style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2 " style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card " style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2 " style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1">Disponível</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-12 col-lg-4">
+                        <div class="row">
+
+                            <div class="col-sm-12 col-lg-12">
+                                <div id="alertMessage"></div>
+                                <h1 class="display-6 text-center">Info. do Participante</h1>
+                            </div>
+
+                            <div class="col-sm-12 col-lg-12">
+
+                                <hr />
+                                <div class="row ">
+                                    <div class="col-sm-4 col-lg-6">
+                                        <div id="ParticipantNumberInformation" class="text-break">
+                                            <!--Traz informações do Usuario-->
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-lg-4 ">
+
+                                        @if (!Model.Raffle.RaffleCloseOption)
+                                        {
+                                            <div class="card" style="width: 10rem; " id="hideImageCard">
+                                                <div>
+                                                    <img src="" id="receiptImage" alt="Imagem do Comprovante" title="Imagem do Comprovante" data-bs-toggle="modal" data-bs-target="#modalReceiptImage" class="card-img-top" style="width: 10rem; height: 15rem;" />
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title"><span class="lead" id="receiptValueUserSaid"></span> </h5>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                    <div id="receiptFile" class="mt-2">
+
+                                    </div>
+
+                                    @if (Model.Raffle.RaffleCloseOption)
+                                    {
+                                        <form asp-action="RaffleConfirmNumberSelled" method="post">
+                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                            <input type="hidden" value="0" name="NumberBought" id="NumberBought" />
+                                            <input type="hidden" value="@Model.Raffle.Id" name="RaffleId" id="RaffleId" />
+                                            <input type="hidden" value="1" readonly id="CloseOption" />
+                                            <div class="form-group">
+                                                <label>Identificação do participante</label>
+                                                <input type="text" id="Identity" name="Identity" onkeyup="Restartconcience()"
+                                                       placeholder="Mínimo de 10 caracteres" class="form-control" required min="10" maxlength="100" />
+                                            </div>
+
+                                            @if (Model.Raffle.RaffleStatus == 1)
+                                            {
+                                                <div class="form-group form-check ">
+                                                    <label class="form-check-label mt-4">
+                                                        <input class="form-check-input" type="checkbox" id="concience" onclick="AllowConfirmPaymentManualOption()" asp-for="ConfirmBuy" /> Estou ciente que estou confimando um pagamento.
+                                                    </label>
+                                                    <span asp-validation-for="ConfirmBuy" class="text-danger"></span>
+                                                </div>
+                                                <div class="form-group my-3 d-grid gap-4">
+                                                    <input type="submit" disabled="disabled" id="confirmPay" value="Confirmar Pagamento" class="btn btn-danger my-3 " />
+                                                </div>
+                                            }
+
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <div class="row">
+                                            <div class="col-sm-12 col-lg-5" id="confirmPaymentFormDiv">
+                                                <form id="formAproved" asp-action="RaffleConfirmNumberSelled" method="post">
+                                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                    <input type="hidden" value="0" name="NumberBought" id="NumberBought" />
+                                                    <input type="hidden" value="1" name="aprovedValue" id="aprovedValue" />
+                                                    <input type="hidden" value="@Model.Raffle.Id" name="RaffleId" id="RaffleId" />
+                                                    <input type="hidden" value="0" readonly id="CloseOption" />
+
+                                                    <div class="form-group form-check ">
+                                                        <label class="form-check-label mt-4">
+                                                            <input class="form-check-input" type="checkbox" id="concience" onclick="AllowConfirmPayment()" asp-for="ConfirmBuy" /> Estou ciente que estou confimando um pagamento.
+                                                        </label>
+                                                        <span asp-validation-for="ConfirmBuy" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group my-3 d-grid gap-4">
+                                                        <input type="submit" disabled="disabled" id="confirmPay" value="Confirmar Pagamento" class="btn btn-success my-3 " />
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="col-sm-12 col-lg-5" id="refusePaymentFormDiv">
+                                                <form id="formRefused" asp-action="RaffleRefuseNumberSelled" method="post">
+                                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                    <input type="hidden" value="0" name="NumberBoughtRefuse" id="NumberBoughtRefuse" />
+                                                    <input type="hidden" value="0" name="aprovedValue" id="aprovedValue" />
+                                                    <input type="hidden" value="@Model.Raffle.Id" name="RaffleId" id="RaffleId" />
+                                                    <input type="hidden" value="0" readonly id="CloseOption" />
+                                                    <div class="form-group form-check ">
+                                                        <label class="form-check-label mt-4">
+                                                            <input class="form-check-input" type="checkbox" id="concienceRefuse" onclick="RefuseConfirmPayment()" asp-for="RefuseBuy" /> Estou ciente que estou recusando um pagamento.
+                                                        </label>
+                                                        <span asp-validation-for="RefuseBuy" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group my-3 d-grid gap-4">
+                                                        <input type="submit" disabled="disabled" id="refusePay" value="Recusar Pagamento" class="btn btn-danger my-3 " />
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <p class="lead text-center my-5">Sorteio/Rifa ainda não possui dados relacionados aos particiantes</p>
+        }
+
+    </div>
+
+</div>
+
+<div id="modalReceiptImage" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title lead fw-bolder" id="receiptTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="lead" id="receiptInformations"></p>
+                <div class="lead">
+                    <img src="" id="receiptImageModal" width="100%" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/ParticipantScripts/UserRaffleInterface.js"></script>
+
+<script type="text/javascript">
+    //$("#updateInformation").hide();
+    close = document.getElementById("CloseOption").value;
+    if (close != 1) {
+        document.getElementById("hideImageCard").style.display = "none";
+    }
+
+    function ShowHideEditInformation() {
+        $("#updateInformation").toggle();
+    }
+
+</script>
+
+
+
+
+
+
+
+
+
+
+

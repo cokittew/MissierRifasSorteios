@@ -1,0 +1,159 @@
+﻿@model IEnumerable<MissierSystem.Models.GeneralModels.Models.UserExtraModels.UserBankInformation>
+
+@{
+    ViewData["Title"] = "Index";
+
+}
+
+<style>
+    #teste:hover {
+        background-color: red;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5" style="width: 100%; height: 10%; box-shadow: 1px 2px 25px black" id="platformMainNavbar">
+
+    <div class="container-fluid">
+        <div style="margin-left: 2px;">
+            <a href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" class="img-fluid" title="Missier System" alt="Missier System"></a>
+        </div>
+        @*<a class="navbar-brand" href="#">Missier System</a>*@
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Missier</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Meus Serviços
+                    </a>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="RaffleMainPage" asp-controller="PlataformServiceRaffle">Sorteio/Rifa</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Minha Conta
+                    </a>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown2">
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserSocialMidias">Redes Sociais</a></li>
+                        @*<li><a class="dropdown-item" style="color: white" id="teste" asp-action="Index" asp-controller="UserBankInformations" asp-all-route-data="param">Contas Bancárias</a></li>*@
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserPixInformations">PIX</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="d-flex m-2">
+                <a class="btn btn-outline-danger" asp-controller="Home" asp-action="GetOutFromLogin">Sair</a>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+<div class="row mb-3">
+    <div class="col-sm-12 col-lg-12 text-center">
+        <p class="display-4">Suas contas bancárias <i class="fas fa-money-check-alt"></i></p>
+    </div>
+    <div class="container-fluid">
+        @if (!String.IsNullOrEmpty(ViewBag.alert))
+        {
+
+            if (ViewBag.alert == "successSave")
+            {
+                <div class="container-fluid mt-2">
+                    <div class="alert alert-success text-center" role="alert">
+                        Nova conta bancária cadastrada com sucesso!
+                    </div>
+                </div>
+            }
+            else if (ViewBag.alert == "successDelete")
+            {
+                <div class="container-fluid mt-2">
+                    <div class="alert alert-success text-center" role="alert">
+                        Conta bancária desabilitada com sucesso.
+                    </div>
+                </div>
+            }
+            else if (ViewBag.alert == "failDelete")
+            {
+                <div class="container-fluid mt-2">
+                    <div class="alert alert-danger text-center" role="alert">
+                        Infelizmente houve um erro ao desabilitar conta bancária.
+                    </div>
+                </div>
+            }
+
+        }
+    </div>
+    <div class="col-sm-12 col-lg-12 text-center">
+        <a class="btn btn-outline-success" asp-action="Create" asp-controller="UserBankInformations">Adicionar nova conta bancária </a>
+    </div>
+</div>
+<hr />
+<table class="table text-center">
+    <thead>
+        <tr>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.WhatServiceUse)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.BankCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AgenceAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountOwnerCpf)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.WhatServiceUse)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.BankCode)
+                    @foreach (var bankItem in ViewBag.banksData)
+                    {
+                        if (bankItem.BankCode == item.BankCode)
+                        {
+                            <span>(</span>@bankItem.BankName<span>)</span>
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BankAccount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AgenceAccount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountOwnerCpf)
+                </td>
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@item.Id" asp-all-route-data="param">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id" asp-all-route-data="param">Details</a> |*@
+                    @{
+                        var paramDelete = new Dictionary<string, string>()
+                                                                        {
+                            {"id", item.Id.ToString()  }
+
+                        };
+                    }
+                    <a asp-action="Delete" asp-route-id="@item.Id" asp-all-route-data="paramDelete"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

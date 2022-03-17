@@ -1,0 +1,131 @@
+﻿@model MissierSystem.Models.TonModality.RaffleBusinessParticipant
+
+@{
+    ViewData["Title"] = "Ton Sorteios e Rifas";
+}
+
+<div>
+    <nav class="navbar navbar-expand-lg navbar-dark text-light" style="background-color: black">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
+            <div>
+                <span class="lead">Olá, seja bem-vindo!</span>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div class="container-fluid mt-4">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <span class="lead">Preencha seus dados:</span>
+         </div>
+        <div class="col-sm-5">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <form asp-action="AddParticipantReservation" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="RaffleId" value="@ViewBag.RaffleId" class="form-control" />
+                    <input type="hidden" id="raffleValue" readonly value="@ViewBag.Raffle.RaffleNumbersValue" class="form-control" />
+                    <span asp-validation-for="RaffleId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FullName" class="control-label lead"></label><span style="color: red"> *</span>
+                    <input asp-for="FullName" class="form-control" placeholder="Ex: Gustavo Ferreira dos Santos" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label lead"></label><span style="color: red"> *</span>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Ex: SouVencedor@ganhei.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="control-label lead"></label><span style="color: red"> *</span>
+                    <input asp-for="PhoneNumber" type="text" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);"
+                           class="form-control" placeholder="(99) 99999-9999" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber2" class="control-label lead"></label><span style="color: red"> *</span>
+                    <input asp-for="PhoneNumber2" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);"
+                           class="form-control" placeholder="(99) 99999-9999" />
+                    <span asp-validation-for="PhoneNumber2" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CollaboratorCode" class="control-label lead"></label>
+                    <input asp-for="CollaboratorCode" class="form-control" placeholder="Ex: AISUFTYHS" />
+                    <span asp-validation-for="CollaboratorCode" class="text-danger"></span>
+                </div>
+
+                <div class="bg-dark p-2" style="border-radius: 10px 10px; margin: 15px 0px 10px 0px">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <span class="btn btn-success mt-1" id="add1" onclick="AddNumbersQuantity(1)" style="width: 60px;">+1</span>
+                            <span class="btn btn-success mt-1" id="add5" onclick="AddNumbersQuantity(5)" style="width: 60px;">+5</span>
+                            <span class="btn btn-success mt-1" id="add10" onclick="AddNumbersQuantity(10)" style="width: 60px;">+10</span>
+                            <span class="btn btn-success mt-1" id="add15" onclick="AddNumbersQuantity(15)" style="width: 60px;">+15</span>
+                            <span class="btn btn-success mt-1" id="add20" onclick="AddNumbersQuantity(20)" style="width: 60px;">+20</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Numbers" class="control-label lead text-light">Quantidade de Números</label><span style="color: red"> *</span>
+                        <input type="number" min="1" value="1" onkeyup="ShowValue();" r asp-for="Numbers" class="form-control" />
+                        <span asp-validation-for="Numbers" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="amountValue" class="control-label lead text-light">Valor</label>
+                        <input type="text" min="1" disabled value="@ViewBag.Raffle.RaffleNumbersValue.ToString("C2")" id="amountValue" class="form-control" />
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <div class="d-grid gap-4">
+                            <input type="submit" value="Comprar Número(s) " class="btn btn-danger lead" />
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    function AddNumbersQuantity(quantity) {
+        var number = document.getElementById("Numbers");
+        if (number.value == "")
+            number.value = parseInt(quantity);
+        else
+            number.value = parseInt(number.value) + parseInt(quantity);
+
+        ShowValue();
+    }
+
+    function ShowValue() {
+        var number = document.getElementById("Numbers");
+        var raffleValue = document.getElementById("raffleValue");
+
+        if (number.value == "")
+            number.value = parseInt(quantity);
+
+        var amountValue = document.getElementById("amountValue");
+        amountValue.value = (parseFloat(number.value * raffleValue.value.replace(",", '.'))).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+    }
+
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

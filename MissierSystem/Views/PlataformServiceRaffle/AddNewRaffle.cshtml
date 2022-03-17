@@ -1,0 +1,380 @@
+﻿@model MissierSystem.Models.Platform.Services.Raffle.PlatformServiceRaffle
+
+@{
+    ViewData["Title"] = "Novo Sorteio/Rifa";
+}
+
+<style>
+    #teste:hover {
+        background-color: red;
+    }
+
+</style>
+
+<div id="NotificationSide">
+
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5" style="width: 100%; height: 10%; box-shadow: 1px 2px 25px black" id="platformMainNavbar">
+
+    <div class="container-fluid">
+        <div style="margin-left: 2px;">
+            <a href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" class="img-fluid" title="Missier System" alt="Missier System"></a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Missier</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Minha Conta
+                    </a>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown2">
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserSocialMidias">Redes Sociais</a></li>
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Index" asp-controller="UserBankInformations">Contas Bancárias</a></li>
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserPixInformations">PIX</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="">
+                <a class="btn btn-outline-warning" style="margin-right:10px;" asp-area="" asp-controller="SystemUserPlatform" asp-action="MainPagePlatform">Voltar</a>
+                <a class="btn btn-outline-danger" asp-action="GetOutFromLogin" asp-controller="Home">Sair</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-sm-12 col-lg-7">
+            <a class="btn btn-danger" asp-action="RaffleMainPage" asp-controller="PlataformServiceRaffle">Página Inicial</a>
+            <a class="btn btn-warning" asp-action="ListRaffleView" asp-controller="PlataformServiceRaffle">Meus Sorteios</a>
+        </div>
+    </div>
+
+    <div id="showCreateNewRaffleUser" class="mt-5">
+
+        @if (!String.IsNullOrEmpty(ViewBag.alert) && ViewBag.alert == "PixBankAccountError")
+        {
+        <div class="alert alert-danger alert-dismissible fade show container-fluid mt-4 text-center lead" role="alert">
+            <strong>
+                Para criar um sorteio é requisito ter uma conta bancária ou chave PIX cadastrada para o recebimento dos valores.<br />
+                Adicione na aba 'Minha Conta' no menu.
+            </strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        }
+        else
+        {
+            <div class="text-center">
+                @if (ViewBag.alert == "successSave")
+                {
+                    <div class="container-fluid mb-2">
+                        <div class="alert alert-success text-center lead" role="alert">
+                            Seu sorteio foi salvo com sucesso! Veja detalhes em "Meus Sorteios".
+                        </div>
+                    </div>
+
+                    <div class="container-fluid mb-2">
+                        <div class="alert alert-info text-center lead" role="alert">
+                            Envie este link para que as outras pessoas possam participar: <b>@ViewBag.defaultUrl@ViewBag.newRaffleCode</b><br />
+                            Código único do seu sorteio: <b>@ViewBag.newRaffleCode</b>
+                        </div>
+                    </div>
+                }
+                else if (ViewBag.alert == "failSave")
+                {
+                    <div class="container-fluid mb-2">
+                        <div class="alert alert-danger text-center lead" role="alert">
+                            Houve um erro inesperado ao tentar salvar sua rifa/sorteio, tente novamente mais tarde.
+                        </div>
+                    </div>
+                }
+                <span class="display-6">Novo Sorteio/Rifa <i class="fas fa-sort-numeric-up"></i></span>
+            </div>
+
+            <div class="formNewRaffle text-center mt-3 p-3" style="box-shadow: 1px 2px 25px black">
+
+                <div class="row justify-content-start">
+
+                    <div class="col-sm-2 col-lg-2 text-end">
+                        <a class="btn btn-danger ml-4" asp-action="RaffleMainPage" asp-controller="PlataformServiceRaffle">Comprar mais <i class="fas fa-grin-stars"></i></a>
+                    </div>
+
+                    <div class="col-sm-2 col-lg-1 text-end">
+                        <span class="lead ">Você tem </span>
+                    </div>
+                    <div class="col-sm-2 col-lg-1">
+                        <input type="number" class="form-control text-center" id="numbersWeHave" value="@ViewBag.UserNumberBag" readonly />
+                    </div>
+
+                    <div class="col-sm-2 col-lg-2 text-start">
+                        @if (ViewBag.UserNumberBag < 10)
+                        {
+                            <span class="lead">Número(s) <i class="fas fa-sad-tear"></i></span>
+
+                        }
+                        else if (ViewBag.UserNumberBag > 10 && ViewBag.UserNumberBag < 30)
+                        {
+                            <span class="lead">Número(s) <i class="fas fa-smile-beam"></i></span>
+                        }
+                        else
+                        {
+                            <span class="lead">Número(s) <i class="fas fa-grin-stars"></i></span>
+                        }
+
+                    </div>
+                    <hr class="mt-2" />
+                </div>
+
+                <form id="createNewRafflePlatform" asp-action="AddNewRaffle">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="IdBasicUser" type="hidden" value="@ViewBag.userId" />
+                    <input asp-for="Identity" type="hidden" value="0" />
+
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10 my-2">
+                            <div class="form-group">
+                                <label asp-for="RaffleName" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                                <input asp-for="RaffleName" autofocus class="form-control text-center" title="Digite o nome do seu sorteio/rifa." placeholder="Digite o nome do seu sorteio" />
+                                <span asp-validation-for="RaffleName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label asp-for="RaffleGeneralDescription" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <i class="fas fa-question-circle"></i>
+                                </a>
+                                <textarea asp-for="RaffleGeneralDescription" class="form-control text-center" title="Informações para os Participantes." placeholder="Capriche!"></textarea>
+                                <span asp-validation-for="RaffleGeneralDescription" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label asp-for="RafflePremiationDescription" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                                <textarea asp-for="RafflePremiationDescription" class="form-control text-center" title="Digite qual será a premiação." placeholder="Qual será o prêmio?"></textarea>
+                                <span asp-validation-for="RafflePremiationDescription" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-lg-3 my-2">
+
+                            <div class="form-group">
+                                <input asp-for="RaffleMaxNumber" class="form-control" type="hidden" value="30" />
+
+                                <label asp-for="RaffleMaxNumberLimited" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                                <input asp-for="RaffleMaxNumberLimited" onchange="WeWantToHelp()" class="form-control text-center" title="Digite quantos números estarão disponíveis para a escolha." placeholder="Número máximo de números para seleção" />
+                                <span asp-validation-for="RaffleMaxNumberLimited" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4 my-2">
+
+                            <div class="form-group">
+                                <input asp-for="RaffleUserMaxNumbers" class="form-control" type="hidden" value="1" />
+
+                                <label asp-for="RaffleUserMaxNumbersLimited" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                                <input asp-for="RaffleUserMaxNumbersLimited" id="RaffleUserMaxNumbersLimited" class="form-control text-center" title="Digite o número máximo de números por participante." placeholder="Máximo de números por participante" />
+                                <span asp-validation-for="RaffleUserMaxNumbersLimited" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 my-2">
+
+                            <div class="form-group">
+                                <label asp-for="RaffleWinnersNumber" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                                <input asp-for="RaffleWinnersNumber" class="form-control text-center" title="Digite o número máximo de números vencedores." placeholder="Máximo de números premiados" />
+                                <span asp-validation-for="RaffleWinnersNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div class="row justify-content-center">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label asp-for="RafflePaymentIdAllowed" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+
+                                <select asp-for="RafflePaymentIdAllowed" title="Selecione o meio de pagamento" class="form-control" style="text-align: center;text-align-last: center;">
+                                    <option value="1" disabled>Mercado Livre</option>
+                                    <option value="2" disabled>PagSeguro</option>
+                                    <option value="3">Envio de Comprovante</option>
+                                    <option value="20" disabled>Todos</option>
+                                </select>
+                                <span asp-validation-for="RafflePaymentIdAllowed" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label asp-for="RaffleNumbersValue" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                                <input asp-for="RaffleNumbersValue" onchange="WeWantToHelp()" onkeyup="formatCash()" class="form-control text-center" type="number" title="Digite o valor de cada número." placeholder="Valor de custo por número" />
+                                <span asp-validation-for="RaffleNumbersValue" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label asp-for="RaffleType" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+
+                                <select asp-for="RaffleType" title="Tipo de Rifa" onchange="RaffleSelectTypeEvent()" class="form-control" style="text-align: center;text-align-last: center;">
+                                    <option value="1" selected >Sorteio Com Números</option>
+                                    <option value="3" >Sorteio "Jogo do Bicho"</option>
+                                </select>
+                                <span asp-validation-for="RaffleType" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5 mt-2">
+                            <div class="form-group">
+                                <label asp-for="BegginRaffleDay" class="control-label lead mt-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                                <br /><span class="text-muted mb-2">Digite 0 para iniciar agora mesmo.</span>
+                                <input asp-for="BegginRaffleDay" class="form-control text-center" title="Programe uma data para iniciar seu sorteio." placeholder="Exemplo: 10" />
+                                <span asp-validation-for="BegginRaffleDay" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 mt-2">
+                            <div class="form-group">
+                                <label asp-for="EndRaffleDay" class="control-label lead mt-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                                <br /><span class="text-muted mb-2">Digite 91 para não definir data.</span>
+                                <input asp-for="EndRaffleDay" class="form-control text-center" title="Programe uma data para finalizar seu sorteio." placeholder="Exemplo: 7" />
+                                <span asp-validation-for="EndRaffleDay" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-lg-center mt-3">
+                        <div class="col-sm-12 col-lg-3">
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" onclick="VerifyFilds()" id="RaffleCloseOption" asp-for="RaffleCloseOption" /> Ativar rifa/sorteio em modo manual
+                                </label>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#raffleManual">
+                                    <i class="fas fa-question-circle"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10 text-center">
+                            <div class="form-group my-3 d-grid gap-4">
+                                <input type="submit" value="Adicionar Sorteio" class="btn btn-success my-3 " />
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        }
+
+    </div>
+</div>
+
+<!-- Modal - Descrição para o participante e envio de comprovante -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Dúvida?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Ao criar uma rifa/sorteio suas redes sociais são exibidas ao participante.<br />
+                Este campo em especial serve para você(criador da rifa/sorteio) passar suas orientações para o participante:<br /><br />
+                @*<b>-</b>Se você vai estar usando os serviços do Bot(@@Missier) no Telegram.<br />*@
+                <b>-</b>Se existe algum requisito especial a ser seguido pelo participante.<br /><br />
+                Entre outras informações.
+                Este campo é exibido ao participante, então capriche!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="raffleManual" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Dúvida?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Ao criar uma rifa/sorteio com o modo manual ativado você estará desabilitando a possibilidade de um participante fazer sua reserva
+                de número pelo link/página de sua rifa/sorteio. Fazendo com que seu link/página de sorteio seja apenas um demonstrativo da situação
+                atual de sua rifa/sorteio.
+                <br /><br />
+                A confirmação do(s) número(s) serão administrados por você(criador da rifa/sorteio).
+                <br /><br />
+                Essa opção é normalmente utilizada para usuários que apenas querem um controle de sua rifa/sorteio ou quer apenas um grupo especifico
+                tenha acesso a participação.
+                <br /><br />
+                A dinâmica utilizada pelos que optam por essa opção é receber o comprovante e o(s) número(s) selecionado(s)
+                pelo participante pelo seu meio de contato e você (criador da rifa/sorteio) faz a confirmação pela plataforma.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function VerifyFilds() {
+        var checkB = document.getElementById("RaffleCloseOption");
+        var fieldToSet = document.getElementById("RaffleUserMaxNumbersLimited");
+
+        if (checkB.checked) {
+            fieldToSet.setAttribute("value", "1");
+            fieldToSet.setAttribute("disabled", "true");
+        } else {
+            fieldToSet.removeAttribute("disabled");
+        }
+    }
+
+    function formatCash() {
+        //var valueNumber = document.getElementById("RaffleNumbersValue");
+        //var valueF = (valueNumber.value * 1).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        ////var tof = parseFloat(valueF) * 1.0;
+        ////console.log(tof);
+        //valueNumber.setAttribute("value", valueF);
+    }
+
+    function WeWantToHelp() {
+        var valueNumber = document.getElementById("RaffleNumbersValue").value;
+        var howMuchNumbers = document.getElementById("RaffleMaxNumberLimited").value;
+        var fieldAlert = document.getElementById("NotificationSide");
+        fieldAlert.innerHTML = "";
+        if (valueNumber > 0 && howMuchNumbers > 0) {
+            if (valueNumber < 2) {
+                fieldAlert.innerHTML = `<div class="alert alert-success alert-dismissible fade show fixed-top container mt-2 text-center" role="alert">
+                                        <strong>Olá!</strong> Analisamos as informações do seu sorteio e achamos que você não está lucrando o suficiente. <b>${(valueNumber * 1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} x ${howMuchNumbers} = ${(valueNumber * howMuchNumbers).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</b ><br />
+                                        <span>Você selecionou <b>${howMuchNumbers} números</b>, lhe cobraremos <b>${parseInt(howMuchNumbers / 2)} números</b> do seu cofre<br /> ao salvar esse sorteio no formato atual.</span><br />
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
+            }
+
+        }
+
+
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

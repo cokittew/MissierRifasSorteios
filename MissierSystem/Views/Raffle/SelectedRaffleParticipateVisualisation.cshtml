@@ -1,0 +1,419 @@
+﻿@model MissierSystem.Models.Platform.Services.Raffle.WorkClasses.NumberStatusTotal
+
+@{
+    if (Model.Raffle != null)
+    {
+        ViewData["Title"] = Model.Raffle.RaffleName + " - Sorteio/Rifa";
+    }
+    else
+    {
+        ViewData["Title"] = " Não encontrado - Sorteio/Rifa";
+    }
+
+    var RaffleTotalNumbers = Model.RaffleTotalNumbers;
+    var CountStart = 1;
+    var CountStop = 200;
+    var end = 200;
+    bool stoploop = false;
+
+}
+
+<div class="participateSelectNumberMainPage">
+    <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: rgb(40 147 179)">
+        <div class="container-fluid">
+            <span class="navbar-brand"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</span>
+            @if (Model.Raffle != null)
+            {
+                <span class="lead text-center">@Model.Raffle.RaffleName</span>
+            }
+            <div>
+                @*<a class="btn btn-warning text-end" asp-area="" asp-controller="Raffle" asp-action="MainPage">Voltar</a>*@
+                <a class="btn btn-outline-danger" asp-area="" asp-controller="Home" asp-action="GetOutFromLogin">Página Inicial</a>
+            </div>
+        </div>
+    </nav>
+
+    @if (!String.IsNullOrEmpty(ViewBag.ActionFinalResult))
+    {
+        if (ViewBag.ActionFinalResult == "ReservationSuccess")
+        {
+            <div class="container-fluid mt-4">
+                <div class="alert alert-success text-center" role="alert">
+                    Seu(s) número(s) foram reservados com sucesso! Os dados para pagamento estão no fim da página. Leia as orientações atentamente.<br />
+                    Números em reserva por um perído de 48hr!
+                </div>
+            </div>
+        }
+        else if (ViewBag.ActionFinalResult == "ReservationFail")
+        {
+            <div class="container-fluid mt-4">
+                <div class="alert alert-danger text-center" role="alert">
+                    Desculpe, mas infelizmente houve algum erro ao reservar seu(s) número(s).<br />
+                    Possibilidades: outro usuário fez a reserva antes ou instabilidade no sistema.
+                </div>
+            </div>
+        }
+    }
+
+    <div class="container-fluid" style="margin-bottom: 200px;">
+
+        <div class="row mb-5">
+
+            <div class="col-sm-6">
+                <div class="accordion accordion-flush" id="raffleInformations">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-raffleInformations-1">
+                            <button class="accordion-button collapsed lead" type="button" data-bs-toggle="collapse" data-bs-target="#flush-raffleInformations-collapse-1" aria-expanded="false" aria-controls="flush-raffleInformations-collapse-1">
+                                Informaçãoes sobre o sorteio
+                            </button>
+                        </h2>
+                        <div id="flush-raffleInformations-collapse-1" class="accordion-collapse collapse" aria-labelledby="flush-raffleInformations-1" data-bs-parent="#raffleInformations">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="text-center m-auto">
+                                        <span class="lead">@Model.Raffle.RaffleName</span><br />
+                                        <span>@Model.Raffle.RafflePremiationDescription</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                                    <div class="row" style="width:100%">
+                                        <div class="col-sm-12 col-lg-3 m-0">
+                                            <b>Valor: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleNumbersValue.ToString("C2", ViewBag.Culture)</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-6 m-0">
+                                            <b>Max. de Nº por participante: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleUserMaxNumbers</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-3 m-0">
+                                            <b>Total de Nº: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleMaxNumber</span>
+                                        </div>
+                                    </div>
+
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="row" style="width:100%">
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Disponível: </b>
+                                            <span class="badge bg-success rounded-pill">@Model.AvaliableNumber</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Reservado:  </b>
+                                            <span class="badge bg-warning rounded-pill">@Model.SchaduleNumber</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Ocupado</b>
+                                            <span class="badge bg-danger rounded-pill">@Model.UnavaliableNumber</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 lead">
+                <div class="accordion accordion-flush" id="raffleUserInformations">
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-raffleUserInformations-1">
+                            <button class="accordion-button collapsed lead" type="button" data-bs-toggle="collapse" data-bs-target="#flush-raffleUserInformations-collapse1" aria-expanded="false" aria-controls="flush-raffleUserInformations-collapse1">
+                                <span>Criador do sorteio - <strong>@Model.RaffleOwner.NickName</strong></span>
+                            </button>
+                        </h2>
+
+                        <div id="flush-raffleUserInformations-collapse1" class="accordion-collapse collapse" aria-labelledby="flush-raffleUserInformations-1" data-bs-parent="#raffleUserInformations">
+                            <ul class="list-group">
+
+                                @if (Model.RaffleOwnerSocialMidia != null)
+                                {
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Instagram))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-instagram" style="color:orange;"></i> Instagram: </b><a href="#">@Model.RaffleOwnerSocialMidia.Instagram</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Youtube))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-youtube" style="color:red;"></i> Youtube: </b><a href="#">@Model.RaffleOwnerSocialMidia.Youtube</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.TikTok))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-tiktok"></i> TikTok: </b><a href="#">@Model.RaffleOwnerSocialMidia.TikTok</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Facebook))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-facebook" style="color:darkblue;"></i> Facebook: </b><a href="#">@Model.RaffleOwnerSocialMidia.Facebook</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Twitter))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-twitter" style="color:deepskyblue;"></i> Twitter: </b><a href="#">@Model.RaffleOwnerSocialMidia.Twitter</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.WhatsApp))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-whatsapp" style="color:green;"></i> WhatsApp: </b><a href="#">@Model.RaffleOwnerSocialMidia.WhatsApp</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Reddit))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-reddit" style="color:orangered;"></i> Reddit: </b><a href="#">@Model.RaffleOwnerSocialMidia.Reddit</a>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="lead">Nenhuma informação informada <i class="fas fa-exclamation-triangle" style="color:red"></i></span>
+                                        </div>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        @if (Model.NumberStatus != null)
+        {
+
+            <div class="accordion accordion-flush" id="accordionPanelsRaffle">
+                <div class="row">
+
+                    <div class="col-sm-12 col-lg-6">
+                        @if (RaffleTotalNumbers < 201)
+                        {
+                            <div class="col-sm-12 col-lg-12">
+                                @for (int i = CountStart; i <= RaffleTotalNumbers; i++)
+                                {
+
+                                    var find = false;
+                                    var status = 3;
+                                    foreach (var number in Model.NumberStatus)
+                                    {
+                                        if (number.Number == i)
+                                        {
+                                            find = true;
+                                            status = number.Status;
+                                            break;
+                                        }
+                                    }
+
+                                    if (find)
+                                    {
+                                        if (status == 3)
+                                        {
+                                            <a class="btn btn-danger m-1" style="width:50px">@i</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-warning m-1" style="width:50px">@i</a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <a class="btn btn-success m-1" style="width:50px" id="@i" onclick="RafflePreSaveSelectNumber('@i', @ViewBag.MaxUserCanSelect)">@i</a>
+                                    }
+
+                                }
+                            </div>
+
+                        }
+                        else
+                        {
+                            @do
+                            {
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-12">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="flush-headingOne-@CountStart">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne-@CountStart" aria-expanded="false" aria-controls="flush-collapseOne-@CountStart">
+                                                    Números de @CountStart a @(end)
+                                                </button>
+                                            </h2>
+                                            <div id="flush-collapseOne-@CountStart" class="accordion-collapse collapse" aria-labelledby="flush-headingOne-@CountStart" data-bs-parent="#accordionPanelsRaffle">
+                                                <div class="mt-3">
+
+                                                    @for (int i = CountStart; i <= RaffleTotalNumbers; i++)
+                                                    {
+                                                        if (i == CountStop + 1)
+                                                        {
+                                                            CountStart = CountStop + 1;
+                                                            CountStop += 200;
+
+                                                            end = CountStop;
+
+                                                            if (RaffleTotalNumbers - i < 200)
+                                                            {
+                                                                end = RaffleTotalNumbers;
+                                                            }
+
+                                                            break;
+                                                        }
+
+                                                        if (i == RaffleTotalNumbers)
+                                                        {
+                                                            stoploop = true;
+                                                        }
+
+                                                        var find = false;
+                                                        var status = 3;
+                                                        foreach (var number in Model.NumberStatus)
+                                                        {
+                                                            if (number.Number == i)
+                                                            {
+                                                                find = true;
+                                                                status = number.Status;
+                                                                break;
+                                                            }
+                                                        }
+
+                                                        if (find)
+                                                        {
+                                                            if (status == 3)
+                                                            {
+                                                                <a class="btn btn-danger m-1" style="width:50px">@i</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a class="btn btn-warning m-1" style="width:50px">@i</a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a class="btn btn-success m-1" style="width:50px" id="@i" onclick="RafflePreSaveSelectNumber('@i', @ViewBag.MaxUserCanSelect)">@i</a>
+                                                        }
+
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            } while (!stoploop);
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <hr />
+                <div class="col-sm-12 col-lg-12">
+                    <h1 class="display-6 text-center"> Dados para pagamento </h1>
+                </div>
+                <div class="col-sm-12 col-lg-6 mt-3">
+                    <div class="accordion accordion-flush" id="raffleUserInformationsPayment">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header " id="flush-raffleUserInformations-3">
+                                <button class="accordion-button collapsed lead" type="button" data-bs-toggle="collapse" data-bs-target="#flush-raffleUserInformations-collapse3" aria-expanded="false" aria-controls="flush-raffleUserInformations-collapse3">
+                                    <span>Informações para <strong>PAGAMENTO</strong></span>
+                                </button>
+                            </h2>
+                            <div id="flush-raffleUserInformations-collapse3" class="accordion-collapse collapse" aria-labelledby="flush-raffleUserInformations-1" data-bs-parent="#raffleUserInformationsPayment">
+                                <ul class="list-group">
+                                    @if (!String.IsNullOrEmpty(Model.UserPixInformation.PixKey))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <span class="lead">PIX : </span><b> Tipo: </b>
+                                                @foreach (var pixT in ViewBag.pixData)
+                                                {
+                                                    @if (pixT.Id == Model.UserPixInformation.PixKeyType)
+                                                    {
+                                                        <span>@pixT.PixType</span>
+                                                    }
+                                                }
+                                                |
+                                                <b> Chave: </b><span>@Model.UserPixInformation.PixKey</span>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (Model.UserBankInformation.Count() > 0)
+                                    {
+                                        foreach (var bank in Model.UserBankInformation)
+                                        {
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <b> Banco: </b><span>@bank.BankCode</span>
+
+                                                    @foreach (var bankItem in ViewBag.banksData)
+                                                    {
+                                                        if (bankItem.BankCode == bank.BankCode)
+                                                        {
+                                                            <span>(</span>@bankItem.BankName<span>)</span>
+
+                                                        }
+                                                    }
+                                                    |
+                                                    <b> Agência: </b><span>@bank.AgenceAccount</span> |
+                                                    <b> Nº da conta: </b><span>@bank.BankAccount</span> |
+                                                    <b> CPF: </b><span>@bank.AccountOwnerCpf</span>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--Orientações para o pagamento-->
+                <div class="col-sm-12 col-lg-6 mt-3">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-12 text-center">
+                            <h1 class="display-6">Orientações</h1>
+                        </div>
+                        <div class="col-sm-12 col-lg-12 text-center">
+                            <p class="lead"><b>Missier</b><br />Sempre tenha atenção e verifique os dados relacionados ao criador da rifa/sorteio.</p>
+                            <p class="lead"><b>Criador da rifa/sorteio</b><br />@Model.Raffle.RaffleGeneralDescription</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <p class="lead text-center my-5">Infelizmente houve um erro ao abrir os dados relacionados a este sorteio. Tente novamente mais tarde.</p>
+        }
+
+    </div>
+</div>
+
+<script src="~/js/ParticipantScripts/UserRaffleInterface.js"></script>

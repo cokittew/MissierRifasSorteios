@@ -1,0 +1,59 @@
+﻿@model MissierSystem.Models.TonModality.RaffleBusinessParticipant
+
+<h4>RaffleBusinessParticipant</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="View">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="RaffleId" class="control-label"></label>
+                <input asp-for="RaffleId" class="form-control" />
+                <span asp-validation-for="RaffleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Identity" class="control-label"></label>
+                <input asp-for="Identity" class="form-control" />
+                <span asp-validation-for="Identity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Numbers" class="control-label"></label>
+                <input asp-for="Numbers" class="form-control" />
+                <span asp-validation-for="Numbers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RaffleStatus" class="control-label"></label>
+                <input asp-for="RaffleStatus" class="form-control" />
+                <span asp-validation-for="RaffleStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Removed" /> @Html.DisplayNameFor(model => model.Removed)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

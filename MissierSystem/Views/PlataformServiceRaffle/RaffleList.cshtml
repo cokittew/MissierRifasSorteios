@@ -1,0 +1,157 @@
+﻿@model IEnumerable<MissierSystem.Models.Platform.Services.Raffle.PlatformServiceRaffle>
+
+@{
+    Layout = null;
+}
+
+@if (Model.Count() > 0)
+{
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+
+        @foreach (var item in Model)
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne-@item.Id">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne-@item.Id" aria-expanded="false" aria-controls="flush-collapseOne-@item.Id">
+                        <b>
+                            <span class="lead font-weight-normal">@item.RaffleName</span>
+
+                            @if (item.RaffleStatus == 1)
+                            {
+                                <span class="badge bg-success rounded-pill ml-2">Acontecendo</span>
+                            }
+                            else if (item.RaffleStatus == 2)
+                            {
+                                <span class="badge bg-warning rounded-pill ml-2">Agendado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger rounded-pill ml-2">Finalizado</span>
+                                @if (!String.IsNullOrEmpty(item.RaffleNumberResult))
+                                {
+                                    <span class="badge bg-success rounded-pill ml-2">Veja o resultado!</span>
+                                }
+                            }
+
+                        </b>
+
+                    </button>
+                </h2>
+                <div id="flush-collapseOne-@item.Id" class="accordion-collapse collapse" aria-labelledby="flush-headingOne-@item.Id" data-bs-parent="#accordionFlushExample">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <b class="lead">Link pra enviar aos participantes</b>
+                            <span class="badge bg-info rounded-pill"><a asp-action=""></a>@ViewBag.defaultURL@item.Identity</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <b>Código único do sorteio</b>
+                            <span class="badge bg-info rounded-pill">@item.Identity</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <b>Total de números</b>
+                            <span class="badge bg-primary rounded-pill">@item.RaffleMaxNumber</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Valor por número
+                            <span class="badge bg-primary rounded-pill">@item.RaffleNumbersValue.ToString("C2", ViewBag.Culture)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Máximo de números por participante
+                            <span class="badge bg-primary rounded-pill">@item.RaffleUserMaxNumbers</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Data de Início:
+
+                            @{
+                                var raffleStartDate = item.RaffleStartDate.ToString("dd/MM/yyyy");
+                            }
+
+                            <span class="badge bg-primary rounded-pill">@raffleStartDate</span>
+                            Data de Término:
+                            @if (DateTime.Parse("2016-10-01").Date.CompareTo(item.RaffleEndDate) == 0)
+                            {
+                                <span class="badge bg-primary rounded-pill">Indeterminado/Quando todos<br /> os números forem vendidos.</span>
+                            }
+                            else
+                            {
+                                var raffleStartEnd = item.RaffleEndDate.ToString("dd/MM/yyyy");
+
+                                <span class="badge bg-primary rounded-pill">@raffleStartEnd</span>
+                            }
+
+                        </li>
+                        @if (!String.IsNullOrEmpty(item.RaffleNumberResult))
+                        {
+
+                            var r = item.RaffleNumberResult.Split(":");
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <b class="lead">Resultado Final</b>
+                                <div class="row">
+                                    <div class="col-sm-4 col-lg-12">
+                                        @foreach (var number in r)
+                                        {
+                                            if (!String.IsNullOrEmpty(number))
+                                            {
+                                                <span class="badge bg-success rounded-pill p-2">@number</span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    @{
+                        var idRaflle = new Dictionary<string, string>()                                                                                                                                                             {
+                             {"raffleId", item.Id.ToString() }
+                        };
+
+                    }
+
+                    @if (item.RaffleType == 1)
+                    {
+                        <div class="float-end m-2">
+                            <a class="btn btn-outline-info" asp-action="ShowRaffleDetails" asp-controller="PlataformServiceRaffle" asp-all-route-data="idRaflle">Ver Detalhes</a>
+                        </div>
+                    }
+                    else if (item.RaffleType == 3)
+                    {
+                        <div class="float-end m-2">
+                            <a class="btn btn-outline-info" asp-action="ShowRaffleDetailsAmorin" asp-controller="PlataformServiceRaffle" asp-all-route-data="idRaflle">Ver Detalhes</a>
+                        </div>
+                    }
+
+
+
+                    @if (item.RaffleStatus == 3 && String.IsNullOrEmpty(item.RaffleNumberResult) && item.RaffleType != 3)
+                    {
+                        <div class="float-end m-2">
+                            <a class="btn btn-outline-primary" onclick="RaffleChangeStatus('@Url.Action("ToRaffleResult", "PlataformServiceRaffle")', @item.Id)">Sortear</a>
+                        </div>
+                    }
+
+                    @if (DateTime.Parse("2016-10-01").Date.CompareTo(item.RaffleEndDate) == 0)
+                    {
+                        <div class="float-end m-2">
+                            <a class="btn btn-outline-danger" onclick="RaffleChangeStatus('@Url.Action("ToEndRaffle", "PlataformServiceRaffle")', @item.Id)"> Encerrar Sorteio </a>
+                        </div>
+                    }
+
+                    @if (item.RaffleStatus == 2 && String.IsNullOrEmpty(item.RaffleNumberResult))
+                    {
+                        <div class="float-end m-2">
+                            <a class="btn btn-outline-danger" onclick="RaffleChangeStatus('@Url.Action("ToStartRaffle", "PlataformServiceRaffle")', @item.Id)">Iniciar Agora</a>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+}
+else
+{
+    <p class="lead text-center p-3">Não há sorteios com esse status ainda.</p>
+}

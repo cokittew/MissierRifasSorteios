@@ -1,0 +1,145 @@
+﻿@model IEnumerable<MissierSystem.Models.TonModality.RaffleBusinessRaffle>
+
+@{
+    ViewData["Title"] = "Ton Sorteios e Rifas - Lista";
+}
+
+<div>
+    <nav class="navbar navbar-expand-lg navbar-dark text-light" style="background-color: black">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
+            <div>
+                <span class="lead">Olá, seja bem-vindo!</span>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div class="container-fluid d-grid gap-4 mt-2">
+    <a class="btn btn-success" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">Veja Aqui as Orientações Sobre os Sorteios</a>
+    
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Tudo Sobre os Sorteios</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div>
+                <p>É muito fácil participar.</p>
+                <p>Após clicar em participar no sorteio escolhido.</p>
+                <p>1. Preencha seus dados</p>
+                <p>2. Selecione quantos números quiser</p>
+                <p>3. Efetue o pagamento (Seus números ficarão em reserva por 1hr)</p>
+                <p>4. Após o pagamento, anote os números gerados e aguarde o sorteio.</p>
+
+                Mais informações via stories do Instagram: <a href="https://www.instagram.com/evertons12/" target="_blank">@@evertons12</a>
+            </div>
+            <div class="mt-4">
+                <span class="lead fw-bolder">Regulamentos</span>
+                <hr />
+                <p>
+                    O sorteio acontecerá <b>APÓS</b> a venda de <b>TODOS os números.</b>
+                </p>
+                <p>
+                    O número sorteado utilizado para determinar o contemplado será formado pelos 5 últimos algarismos do 1º prêmio extraído
+                    pela Loteria Federal, lidos da esquerda para direita, conforme o exemplo abaixo:
+                </p>
+                <p class="fw-bold">Extração da Loteria Federal do Brasil.</p>
+                <p>
+                    1º prêmio = 3 1 5 9 4 5<br />
+                    2º prêmio = 0 4 6 7 2 9<br />
+                    3º prêmio = 2 5 3 0 0 8<br />
+                    <b>O número Sorteado é: 15945 (exemplo)</b>
+                </p>
+                <p>
+                    Caso ninguém tenha obtido o número do 1º prêmio, será utilizado o 2º prêmio. 46729 (exemplo)
+                    Sendo 0% de chances de alguém burlar o resultado.
+                </p>
+                <p>Todas as Quartas-feiras e Sábados as 19h acontece o sorteio do bilhete premiado na Loteria Federal.</p>
+                <p>
+                    A data do sorteio será marcada após a venda de todas as cotas. Será baseada no resultado do 1º 
+                    prêmio da Loteria Federal da semana subsequente a venda de 100% das cotas. 
+                    Sendo assim o resultado do sorteio pode ser adiantado ou adiado.
+                </p>
+
+                <p class="fw-bolder">Caso ninguém ganhe pela Loteria Federal faremos o sorteio pelo sorteador próprio do sistema.</p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-2 bg-dark p-3" style="border-radius: 15px 15px">
+    <form asp-action="PhoneSearch">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control text-center" required min="15" placeholder="(99) 99999-9999"
+                                id="PhoneSearch" name="PhoneSearch"
+                               onkeypress="mask(this, mphone);" onblur="mask(this, mphone);"/>
+                    </div>
+                    <div class="col-sm-4 d-grid gap-5">
+                        <button type="submit" class="btn btn-warning">Buscar Meus Pedidos</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+<div class="container-fluid mt-3">
+
+    @foreach (var item in Model)
+    {
+    <div class="card justify-content-center mt-2" style="width: 24rem; float: left">
+        @if (!String.IsNullOrEmpty(item.RaffleReceiptFile))
+        {
+            var path = item.Id.ToString() + "image";
+            <img src="@item.RaffleReceiptFile" id="@path" style="width: 24rem;" class="card-img-top" alt="...">
+            }
+    <div class="card-body text-center">
+        <h5 class="card-title">@item.RaffleName</h5>
+        <p class="card-text">@item.RafflePremiationDescription</p>
+        @*<p class="card-text">@item.RaffleGeneralDescription</p>*@
+        <p class="card-text">Valor do número: <b>@item.RaffleNumbersValue.ToString("C2")</b></p>
+
+        @if (item.RaffleStatus == 1)
+        {
+            <p class="card-text">Status: <span style="color:green">Disponível</span></p>
+            <div class="d-grid gap-4">
+                <a asp-action="SelectAndReserveIndex" asp-route-id="@item.Id" class="btn btn-danger">Participar</a>
+            </div>
+        }
+        else
+        {
+            <p class="card-text">Status: <span style="color:red">Encerrado</span></p>
+        }
+
+    </div>
+        </div>
+    }
+
+</div>
+
+<script>
+    function loadImage(path) {
+
+        var data = document.getElementById(path).getAttribute('src');
+        console.log(path + " " + data)
+
+        var f = data.split(';');
+        var f2 = f[0].split(':');
+
+        const blob = b64toBlob(f[1].replace("base64,", ""), f2[1]);
+        const blobUrl = URL.createObjectURL(blob);
+
+    }
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

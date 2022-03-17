@@ -1,0 +1,226 @@
+﻿@model IEnumerable<MissierSystem.Models.Platform.Services.Raffle.PlatformServiceRaffle>
+
+@{
+    ViewData["Title"] = "Meus Sorteios";
+}
+
+<style>
+    #teste:hover {
+        background-color: red;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5" style="width: 100%; height: 10%; box-shadow: 1px 2px 25px black" id="platformMainNavbar">
+
+    <div class="container-fluid">
+        <div style="margin-left: 2px;">
+            <a href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" class="img-fluid" title="Missier System" alt="Missier System"></a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Missier</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Minha Conta
+                    </a>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown2">
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserSocialMidias">Redes Sociais</a></li>
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Index" asp-controller="UserBankInformations">Contas Bancárias</a></li>
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserPixInformations">PIX</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="">
+                <a class="btn btn-outline-warning" style="margin-right:10px;" asp-area="" asp-controller="SystemUserPlatform" asp-action="MainPagePlatform">Voltar</a>
+                <a class="btn btn-outline-danger" asp-action="GetOutFromLogin" asp-controller="Home">Sair</a>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-sm-12 col-lg-7">
+            <a class="btn btn-danger" asp-action="RaffleMainPage" asp-controller="PlataformServiceRaffle">Página Inicial</a>
+            <a class="btn btn-success" asp-action="AddNewRaffle" asp-controller="PlataformServiceRaffle">Novo Sorteio</a>
+        </div>
+    </div>
+
+
+    <div id="showListRaffleOfUser" class="mt-5">
+        <div class="text-center">
+            <span class="display-6">Meus Sorteios/Rifas <i class="fas fa-sort-numeric-up-alt"></i></span>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <div id="raffleSearchArea" class="p-3" style="box-shadow: 1px 2px 25px black">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <input class="form-control mt-1" autofocus id="raffleNameNickSearch" name="raffleNameNickSearch" title="Digite o nome do sorteio/usuário." placeholder="Digite o nome do sorteio/usuário" />
+                                <span class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <input class="form-control mt-1" id="raffleCodeSearch" name="raffleCodeSearch" title="Digite o nome do sorteio/rifa." placeholder="Digite o código do sorteio" />
+                                <span class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <select class="form-control mt-1" id="raffleNameTypeSearch" name="raffleNameTypeSearch" title="Status do sorteio/rifa">
+                                    <option value="1">Acontecendo</option>
+                                    <option value="2">Agendado</option>
+                                    <option value="3">Finalizados</option>
+                                </select>
+                                <span class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 text-center">
+                            <div class="form-group d-grid gap-4">
+                                <input type="submit" value="Buscar" onclick="RaffleSearchFilterNameCode('@Url.Action("RaffleList", "PlataformServiceRaffle")')" class="btn btn-outline-info mt-1" style="color:black;" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div id="raffleListArea" class="mt-2 mb-4" style="box-shadow: 1px 2px 25px black">
+                    @if (Model.Count() > 0)
+                    {
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+
+                            @foreach (var item in Model)
+                            {
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="flush-headingOne-@item.Id">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne-@item.Id" aria-expanded="false" aria-controls="flush-collapseOne-@item.Id">
+                                            <b>
+                                                <span class="lead font-weight-normal">@item.RaffleName</span>
+
+                                                @if (item.RaffleStatus == 1)
+                                                {
+                                                    <span class="badge bg-success rounded-pill ml-2">Acontecendo</span>
+                                                }
+                                                else if (item.RaffleStatus == 2)
+                                                {
+                                                    <span class="badge bg-warning rounded-pill ml-2">Agendado</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger rounded-pill ml-2">Finalizado</span>
+                                                }
+
+                                            </b>
+
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapseOne-@item.Id" class="accordion-collapse collapse" aria-labelledby="flush-headingOne-@item.Id" data-bs-parent="#accordionFlushExample">
+                                        <ul class="list-group">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <b class="lead">Link pra enviar aos participantes</b>
+                                                <span class="badge bg-info rounded-pill"><a asp-action=""></a>@ViewBag.defaultURL@item.Identity</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <b>Código único do sorteio</b>
+                                                <span class="badge bg-info rounded-pill">@item.Identity</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <b>Total de números</b>
+                                                <span class="badge bg-primary rounded-pill">@item.RaffleMaxNumber</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Valor por número
+                                                <span class="badge bg-primary rounded-pill">@item.RaffleNumbersValue.ToString("C2", ViewBag.Culture)</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Máximo de números por participante
+                                                <span class="badge bg-primary rounded-pill">@item.RaffleUserMaxNumbers</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Data de Início:
+                                                @{
+                                                    var raffleStartDate = item.RaffleStartDate.ToString("dd/MM/yyyy");
+                                                }
+
+                                                <span class="badge bg-primary rounded-pill">@raffleStartDate</span>
+                                                Data de Término:
+                                                @if (DateTime.Parse("2016-10-01").Date.CompareTo(item.RaffleEndDate) == 0)
+                                                {
+                                                    <span class="badge bg-primary rounded-pill">Indeterminado/Quando todos<br /> os números forem vendidos.</span>
+                                                }
+                                                else
+                                                {
+                                                    var raffleStartEnd = item.RaffleEndDate.ToString("dd/MM/yyyy");
+
+                                                    <span class="badge bg-primary rounded-pill">@raffleStartEnd</span>
+                                                }
+
+                                            </li>
+                                        </ul>
+                                        @{
+                                            var idRaflle = new Dictionary<string, string>()
+                                                                                                                                                                                                                                                                                                                                                                                            {
+                                        {"raffleId", item.Id.ToString() }
+                                    };
+                                        }
+
+                                        @if (item.RaffleType == 1)
+                                        {
+                                            <div class="float-end m-2">
+                                                <a class="btn btn-outline-info" asp-action="ShowRaffleDetails" asp-controller="PlataformServiceRaffle" asp-all-route-data="idRaflle">Ver Detalhes</a>
+                                            </div>
+                                        }
+                                        else if (item.RaffleType == 3)
+                                        {
+                                            <div class="float-end m-2">
+                                                <a class="btn btn-outline-info" asp-action="ShowRaffleDetailsAmorin" asp-controller="PlataformServiceRaffle" asp-all-route-data="idRaflle">Ver Detalhes</a>
+                                            </div>
+                                        }
+
+                                        @if (item.RaffleStatus == 3 && String.IsNullOrEmpty(item.RaffleNumberResult) && item.RaffleType != 3)
+                                        {
+                                            <div class="float-end m-2">
+                                                <a class="btn btn-outline-primary" asp-action="ToRaffleResult" asp-controller="PlataformServiceRaffle" asp-all-route-data="idRaflle">Sortear</a>
+                                            </div>
+                                        }
+
+                                        @if (DateTime.Parse("2016-10-01").Date.CompareTo(item.RaffleEndDate) <= 0)
+                                        {
+                                            <div class="float-end m-2">
+                                                <a class="btn btn-outline-danger" onclick="RaffleChangeStatus('@Url.Action("ToEndRaffle", "PlataformServiceRaffle")', @item.Id)"> Encerrar Sorteio </a>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="lead text-center p-3">Não encontramos nenhum sorteio.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+

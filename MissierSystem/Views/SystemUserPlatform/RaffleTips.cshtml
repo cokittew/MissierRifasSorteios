@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Dicas";
+    var platform = new Dictionary<string, string>() { { "localuse", "platform" } };
+}
+
+
+<style>
+    #teste:hover {
+        background-color: red;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5" style="width: 100%; height: 10%; box-shadow: 1px 2px 25px black" id="platformMainNavbar">
+
+    <div class="container-fluid">
+        <div style="margin-left: 2px;">
+            <a href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" class="img-fluid" title="Missier System" alt="Missier System"></a>
+        </div>
+        <a class="navbar-brand text-start" href="#">Missier Dicas</a>
+
+        <div class="d-flex m-2">
+            <a class="btn btn-outline-danger" style="margin-right:5px;" asp-action="Login" asp-controller="UserBasicInfo" asp-all-route-data="@platform"><span class="lead"><b>Criar Sorteio</b></span></a><br />
+            <a class="btn btn-outline-warning text-end" style="margin-right: 10px;" asp-area="" asp-controller="Home" asp-action="MainPageParticipant">Página Inicial</a>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container-fluid text-justify">
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <h1 class="display-6">Introdução</h1>
+            <p class="lead">
+                Olá, nessa página vamos abordar algumas dicas para ter um bom sucesso em suas rifas e sorteios, como também algumas estratégias
+                mais comuns utilizadas pelos nossos usuários.
+            </p>
+        </div>
+        <div class="col-sm-12 col-lg-6">
+            <h1 class="display-6">Para um bom começo </h1>
+            <p class="lead">
+                1. Caso não possua, construa um público seu utilizando suas redes sociais. Canal no Youtube, seguidores no Instagram, entre outros.
+                Possuindo um público, ficará fácil a divulgação de sua rifa e seu próp  rio crescimento.
+            </p>
+            <p class="lead">
+                2. Sempre que  possível optar por uma abordagem dinâmica, faça de seu sorteio algo bom de se participar, vise sempre o
+                custo-benefício e aproveite para  aumentar seu engajamento.
+            </p>
+        </div>
+    </div>
+    <hr class="my-3" style="width: 50%; margin:auto;" />
+    <div class="row mt-2">
+        <div class="col-sm-12 col-lg-12 text-center">
+            <h1 class="display-5">Estratégias</h1>
+        </div>
+
+        <div class="col-sm-12 col-lg-12 ">
+            <div class="row">
+                <div class="col-sm-12 col-lg-6">
+                    <h1 class="display-6 mt-4">1. "Venda"</h1>
+                    <p class="lead">
+                        Se você possui uma loja ou empreende com seus próprios produtos via loja física, e-commerce ou outras variações,
+                        aproveite os serviços da Missier para aumentar o engajamento com seus clientes e ainda vender seus produtos.
+                    </p>
+                    <p class="lead">
+                        Exemplo: Uma loja de roupas. Uma peça custa R$30,00. Faça um sorteio com 10 números e como prêmio uma peça.
+                        Cada número custando R$5,00. Ao fim do sorteio terá uma arrecadação de R$50,00.
+                        Com isso, você "vendeu" sua peça de maneira dinâmica e ainda retirou um lucro sobre o sorteio.
+                    </p>
+                </div>
+                <div class="col-sm-12 col-lg-6">
+                    <h1 class="display-6 mt-4">2. Redirecionamento</h1>
+                    <p class="lead">
+                        Nessa abordagem, o criador da rifa/sorteio escolhe uma premiação de seu interesse e faz um orçamento
+                        baseado no valor do item. A partir deste valor, ele define a quantidade de números que deseja e também o valor de cada número,
+                        visando alcançar o valor do item e seu lucro. Em alguns casos, sem necessariamente possuir o item em mãos.
+                    </p>
+                    <p class="lead">
+                        Exemplo: Um relógio de R$300,00. 50 números. Cada número custando R$10,00. O total adquirido ao fim do sorteio será de
+                        R$500,00. Ele faz a aquisição do item (caso não possua), restando R$200,00 que possivelmente será o seu lucro.
+                    </p>
+                </div>
+                <div class="col-sm-12 col-lg-6">
+                    <h1 class="display-6 mt-4">3. Variações de aquisição</h1>
+                    <p class="lead">
+                        Nessa abordagem, há apenas uma implementação de novos meios de aquisição de um item para a premiação.
+                        Normalmente o criador da rifa/sorteio escolhe um item em alguma loja (muitas vezes online). Ao término do sorteio
+                        ele requisita os dados de endereço do vencedor, compra o item e o envia para o endereço do vencedor.
+                    </p>
+                </div>
+                <div class="col-sm-12 col-lg-6">
+                    <h1 class="display-6 mt-4">4. Inovação</h1>
+                    <p class="lead">
+                        Inove!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,1204 @@
+﻿@model MissierSystem.Models.Platform.Services.Raffle.WorkClasses.NumberStatusTotal
+
+@{
+    if (Model.Raffle != null)
+    {
+        ViewData["Title"] = Model.Raffle.RaffleName + " - Sorteio/Rifa";
+    }
+    else
+    {
+        ViewData["Title"] = " Não encontrado - Sorteio/Rifa";
+    }
+
+    var RaffleTotalNumbers = Model.RaffleTotalNumbers;
+    var YourNamberAmorin = (List<int>) ViewBag.YourNumbers;
+    var AllNumbersAmorinReserved = Model.NumberStatus.Where(e => e.Status == 2).Select(e=> e.Number).ToList();
+    var AllNumbersAmorinOcuped = Model.NumberStatus.Where(e=> e.Status == 3).Select(e=> e.Number).ToList();
+    var AnimalName = "";
+    var AnimalImage = "";
+
+    int flux = 1;
+
+    string GetAnimalName(int numberSelected)
+    {
+        if (numberSelected == 1)
+            return "AVESTRUZ";
+        else if (numberSelected == 5)
+            return "ÁGUIA";
+        else if (numberSelected == 9)
+            return "BURRO";
+        else if (numberSelected == 13)
+            return "BORBOLETA";
+        else if (numberSelected == 17)
+            return "CACHORRO";
+        else if (numberSelected == 21)
+            return "CABRA";
+        else if (numberSelected == 25)
+            return "CARNEIRO";
+        else if (numberSelected == 29)
+            return "CAMELO";
+        else if (numberSelected == 33)
+            return "COBRA";
+        else if (numberSelected == 37)
+            return "COELHO";
+        else if (numberSelected == 41)
+            return "CAVALO";
+        else if (numberSelected == 45)
+            return "ELEFANTE";
+        else if (numberSelected == 49)
+            return "GALO";
+        else if (numberSelected == 53)
+            return "GATO";
+        else if (numberSelected == 57)
+            return "JACARÉ";
+        else if (numberSelected == 61)
+            return "LEÃO";
+        else if (numberSelected == 65)
+            return "MACACO";
+        else if (numberSelected == 69)
+            return "PORCO";
+        else if (numberSelected == 73)
+            return "PAVÃO";
+        else if (numberSelected == 77)
+            return "PERU";
+        else if (numberSelected == 81)
+            return "TOURO";
+        else if (numberSelected == 85)
+            return "TIGRE";
+        else if (numberSelected == 89)
+            return "URSO";
+        else if (numberSelected == 93)
+            return "VEADO";
+        else if (numberSelected == 97)
+            return "VACA";
+        else
+            return "ERROR!!";
+    }
+
+    string GetNumberSequence(int start)
+    {
+        if (start > 0)
+        {
+            List<string> l = new List<string>();
+            var s = start.ToString("D2");
+            for (int i = start+1; i <= start + 3; i++)
+            {
+                s += ", " + i.ToString("D2");
+            }
+
+            return s;
+        }
+
+        return "";
+    }
+
+    bool ChangeFlux()
+    {
+        flux += 4;
+        AnimalName = GetAnimalName(flux);
+        AnimalImage = RemovePontuation(GetAnimalName(flux)).ToLower() + ".jpg";
+
+        return true;
+    }
+
+    string RemovePontuation(string word)
+    {
+        if (string.IsNullOrEmpty(word))
+            return String.Empty;
+
+        byte[] bytes = System.Text.Encoding.GetEncoding("iso-8859-8").GetBytes(word);
+        return System.Text.Encoding.UTF8.GetString(bytes);
+    }
+
+}
+
+<div class="participateSelectNumberMainPage">
+    <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: rgb(40 147 179)">
+        <div class="container-fluid">
+            <span class="navbar-brand"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</span>
+            @if (Model.Raffle != null)
+            {
+                <span class="lead text-center">@Model.Raffle.RaffleName</span>
+            }
+            <div>
+                <a class="btn btn-warning text-end" asp-area="" asp-controller="Raffle" asp-action="MainPage">Voltar</a>
+                <a class="btn btn-outline-danger" asp-area="" asp-controller="Home" asp-action="GetOutFromLogin">Sair</a>
+            </div>
+        </div>
+    </nav>
+
+    @if (!String.IsNullOrEmpty(ViewBag.ActionFinalResult))
+    {
+        if (ViewBag.ActionFinalResult == "ReservationSuccess")
+        {
+            <div class="alert alert-success alert-dismissible fade show container-fluid mt-4 text-center" role="alert">
+                <strong>
+                    Seu(s) número(s) foram reservados com sucesso! Os dados para pagamento estão no fim da página. Leia as orientações atentamente.<br />
+                    Números em reserva por um perído de 24hr!
+                </strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        else if (ViewBag.ActionFinalResult == "ReservationFail")
+        {
+            <div class="alert alert-danger alert-dismissible fade show container-fluid mt-4 text-center" role="alert">
+                <strong>
+                    Desculpe, mas infelizmente houve algum erro ao reservar seu(s) número(s).<br />
+                    Possibilidades: outro usuário fez a reserva antes ou instabilidade no sistema.
+                </strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+        }
+        else if (ViewBag.ActionFinalResult == "FileSaved")
+        {
+            <div class="alert alert-success alert-dismissible fade show container-fluid mt-4 text-center" role="alert">
+                <strong>
+                    Seu comprovante foi salvo com sucesso! Aguarde a aprovação do criador do sorteio.
+                </strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+        }
+        else if (ViewBag.ActionFinalResult == "FileSavedFail")
+        {
+            <div class="alert alert-danger alert-dismissible fade show container-fluid mt-4 text-center" role="alert">
+                <strong>
+                    Houve um erro ao salvar seu comprovante
+                </strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+        }
+    }
+
+    <div class="container-fluid" style="margin-bottom: 200px;">
+
+        <div class="row mb-5">
+
+            <div class="col-sm-6">
+                <div class="accordion accordion-flush" id="raffleInformations">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-raffleInformations-1">
+                            <button class="accordion-button collapsed lead" type="button" data-bs-toggle="collapse" data-bs-target="#flush-raffleInformations-collapse-1" aria-expanded="false" aria-controls="flush-raffleInformations-collapse-1">
+                                Informaçãoes sobre o sorteio
+                            </button>
+                        </h2>
+                        <div id="flush-raffleInformations-collapse-1" class="accordion-collapse collapse" aria-labelledby="flush-raffleInformations-1" data-bs-parent="#raffleInformations">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="text-center m-auto">
+                                        <span class="lead">@Model.Raffle.RaffleName</span><br />
+                                        <span>@Model.Raffle.RafflePremiationDescription</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                                    <div class="row" style="width:100%">
+                                        <div class="col-sm-12 col-lg-3 m-0">
+                                            <b>Valor: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleNumbersValue.ToString("C2")</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-6 m-0">
+                                            <b>Max. de Nº por participante: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleUserMaxNumbers</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-3 m-0">
+                                            <b>Total de Nº: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleMaxNumber</span>
+                                        </div>
+                                    </div>
+
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="row" style="width:100%">
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Disponível: </b>
+                                            <span class="badge bg-success rounded-pill">@Model.AvaliableNumber</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Reservado:  </b>
+                                            <span class="badge bg-warning rounded-pill">@Model.SchaduleNumber</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Ocupado</b>
+                                            <span class="badge bg-danger rounded-pill">@Model.UnavaliableNumber</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 lead">
+                <div class="accordion accordion-flush" id="raffleUserInformations">
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-raffleUserInformations-1">
+                            <button class="accordion-button collapsed lead" type="button" data-bs-toggle="collapse" data-bs-target="#flush-raffleUserInformations-collapse1" aria-expanded="false" aria-controls="flush-raffleUserInformations-collapse1">
+                                <span>Criador do sorteio - <strong>@Model.RaffleOwner.NickName</strong></span>
+                            </button>
+                        </h2>
+
+                        <div id="flush-raffleUserInformations-collapse1" class="accordion-collapse collapse" aria-labelledby="flush-raffleUserInformations-1" data-bs-parent="#raffleUserInformations">
+                            <ul class="list-group">
+
+                                @if (Model.RaffleOwnerSocialMidia != null)
+                                {
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Instagram))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-instagram" style="color:orange;"></i> Instagram: </b><a href="@Model.RaffleOwnerSocialMidia.Instagram" target="_blank">@Model.RaffleOwnerSocialMidia.Instagram</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Youtube))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-youtube" style="color:red;"></i> Youtube: </b><a href="https://youtube.com/channel/@Model.RaffleOwnerSocialMidia.Youtube" target="_blank">@Model.RaffleOwnerSocialMidia.Youtube</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.TikTok))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-tiktok"></i> TikTok: </b><a href="https://www.tiktok.com/@Model.RaffleOwnerSocialMidia.TikTok" target="_blank">@Model.RaffleOwnerSocialMidia.TikTok</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Facebook))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-facebook" style="color:darkblue;"></i> Facebook: </b><a href="https://www.facebook.com/@Model.RaffleOwnerSocialMidia.Facebook" target="_blank">@Model.RaffleOwnerSocialMidia.Facebook</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Twitter))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-twitter" style="color:deepskyblue;"></i> Twitter: </b><a href="#">@Model.RaffleOwnerSocialMidia.Twitter</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.WhatsApp))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-whatsapp" style="color:green;"></i> WhatsApp: </b><a href="https://api.whatsapp.com/send?phone=55 @Model.RaffleOwnerSocialMidia.WhatsApp" target="_blank">@Model.RaffleOwnerSocialMidia.WhatsApp</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Reddit))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-reddit" style="color:orangered;"></i> Reddit: </b><a href="#">@Model.RaffleOwnerSocialMidia.Reddit</a>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="lead">Nenhuma informação informada <i class="fas fa-exclamation-triangle" style="color:red"></i></span>
+                                        </div>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-6 mt-3">
+                <div class="accordion accordion-flush" id="raffleUserInformationsPayment">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header " id="flush-raffleUserInformations-3">
+                            <button class="accordion-button collapsed lead" type="button" data-bs-toggle="collapse" data-bs-target="#flush-raffleUserInformations-collapse3" aria-expanded="false" aria-controls="flush-raffleUserInformations-collapse3">
+                                <span>Informações para <strong>PAGAMENTO</strong></span>
+                            </button>
+                        </h2>
+                        <div id="flush-raffleUserInformations-collapse3" class="accordion-collapse collapse" aria-labelledby="flush-raffleUserInformations-1" data-bs-parent="#raffleUserInformationsPayment">
+                            <ul class="list-group">
+                                @if (!String.IsNullOrEmpty(Model.UserPixInformation.PixKey))
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="lead">PIX : </span><b> Tipo: </b>
+                                            @foreach (var pixT in ViewBag.pixData)
+                                            {
+                                                @if (pixT.Id == Model.UserPixInformation.PixKeyType)
+                                                {
+                                                    <span>@pixT.PixType</span>
+                                                }
+                                            }
+                                            |
+                                            <b> Chave: </b><span>@Model.UserPixInformation.PixKey</span>
+                                        </div>
+                                    </li>
+                                }
+                                @if (Model.UserBankInformation.Count() > 0)
+                                {
+                                    foreach (var bank in Model.UserBankInformation)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b> Banco: </b><span>@bank.BankCode</span>
+
+                                                @foreach (var bankItem in ViewBag.banksData)
+                                                {
+                                                    if (bankItem.BankCode == bank.BankCode)
+                                                    {
+                                                        <span>(</span>@bankItem.BankName<span>)</span>
+                                                    }
+                                                }
+                                                |
+                                                <b> Agência: </b><span>@bank.AgenceAccount</span> |
+                                                <b> Nº da conta: </b><span>@bank.BankAccount</span> |
+                                                <b> CPF: </b><span>@bank.AccountOwnerCpf</span>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-sm-6 mt-4">
+                <a class="lead m-4" href="https://www.youtube.com/watch?v=6xEurXyFVro" target="_blank">Tutorial - Como Participar.</a>
+            </div>
+
+        </div>
+
+        @if (Model.NumberStatus != null)
+        {
+            <div class="accordion accordion-flush" id="accordionPanelsRaffle">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-8 d-block text-center">
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/avestruz.jpg" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">AVESTRUZ</h5>
+                                        <p class="card-text">@GetNumberSequence(1)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar </a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card " style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2 " style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card " style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2 " style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card " style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2 " style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card " style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2 " style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(81)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card " style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2 " style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2" style="margin-right: 10px; margin-bottom: 5px;">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="~/image/jogobicho/@AnimalImage" height="107px" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@AnimalName</h5>
+                                        <p class="card-text">@GetNumberSequence(flux)</p>
+                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-danger m-1">Ocupado</a>
+                                        }
+                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                        {
+                                            <a class="btn btn-warning m-1">Reservado</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@flux" onclick="RafflePreSaveSelectNumberAmorin('@flux', @ViewBag.MaxUserCanSelect)">Selecionar</a>
+                                        }
+                                        @if (ChangeFlux()) { }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-sm-12 col-lg-4">
+                        <div id="raffleByNamberArea">
+                            <!--Parte de compra e adição de números-->
+                            <div class="container-fluid mt-1">
+                                <div class="" role="alert" id="divAlertMessage">
+                                    <span id="alertMessage"></span>
+                                </div>
+                            </div>
+                            <div id="raffleBuyArea">
+                                <div class="row mt-1">
+                                    <div class="col-sm-12 col-lg-12">
+                                        @if (ViewBag.MaxUserCanSelect <= 0)
+                                        {
+                                            <span class="lead">Seus Animais: </span>
+                                            @foreach (var yourNumber in ViewBag.YourNumbers)
+                                            {
+                                                <a class="btn btn-info mb-2">@GetAnimalName(yourNumber)</a>
+                                            }
+                                        }
+                                        else if (ViewBag.MaxUserCanSelect < Model.Raffle.RaffleUserMaxNumbers)
+                                        {
+                                            <h1 class="display-6">Selecionado(s): <span id="participantUserSelectNumber" class="lead text-break"></span></h1>
+
+                                            <span class="lead">Seus Animais: </span>
+                                            @foreach (var yourNumber in ViewBag.YourNumbers)
+                                            {
+                                                <a class="btn btn-info mb-2">@GetAnimalName(yourNumber)</a>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            <h1 class="lead">Selecionado(s): <span id="participantUserSelectNumber" class="text-break"></span></h1>
+                                        }
+
+                                        <hr />
+                                    </div>
+                                    <div class="col-sm-12 col-lg-12">
+
+                                        <form asp-action="RafflePrepareToBuy">
+                                            <input type="hidden" value="0" id="serverSendNumbers" name="serverSendNumbers" readonly />
+                                            @*<input type="hidden" value="@ViewBag.userData" id="participantData" name="participantData" readonly />*@
+                                            <input type="hidden" value="@ViewBag.userId" id="participantId" name="participantId" readonly />
+                                            <input type="hidden" value="@Model.Raffle.RaffleNumbersValue" id="numbersValue" name="numbersValue" readonly />
+                                            <input type="hidden" value="@Model.Raffle.Id" id="raffleId" name="raffleId" readonly />
+                                            <div class="d-grid g-2">
+
+
+                                                @if (ViewBag.MaxUserCanSelect <= 0)
+                                                {
+                                                    <button type="submit" id="btnReserve" disabled class="btn btn-outline-danger btn-block">Reservar</button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="submit" id="btnReserve" disabled class="btn btn-outline-danger btn-block">Reservar</button>
+                                                }
+                                            </div>
+                                        </form>
+
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-12" style="margin-top: 46px;">
+
+                                        <h1 class="lead">Enviar Comprovante: </h1>
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h1 class="lead">Selecione os números que serão pagos: </h1>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                @foreach (var yourNumber in ViewBag.YourNumbers)
+                                                {
+                                                    var aproved = false;
+                                                    var idLinked = "toReceipt" + yourNumber;
+
+                                                    @foreach (var proof in Model.ParticipantSelectNumberReceipt)
+                                                    {
+                                                        if (proof == yourNumber)
+                                                        {
+                                                            aproved = true;
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    if (aproved)
+                                                    {
+
+                                                        <a class="btn btn-danger mb-2" id="@idLinked">@GetAnimalName(yourNumber)</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="btn btn-success mb-2" id="@idLinked" onclick="RaffleReceiptSaveSelectNumber('@yourNumber', '@Model.Raffle.RaffleNumbersValue')">@GetAnimalName(yourNumber)</a>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <hr />
+
+                                        <form enctype="application/x-www-form-urlencoded" asp-action="RaffleSendPaymentProof">
+                                            <input type="hidden" value="0" id="serverSendNumbersReceipt" name="serverSendNumbersReceipt" readonly />
+                                            <input type="hidden" value="@ViewBag.userId" id="participantId" name="participantId" readonly />
+                                            <input type="hidden" value="@Model.Raffle.Id" id="raffleId" name="raffleId" readonly />
+                                            <input type="hidden" id="base64" name="base64" />
+
+
+                                            @*@if(ViewBag.MaxUserCanSelect > 0)
+                                                {*@
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <input class="form-control" type="file" name="receiptFile" id="receiptFile" accept="image/*" required />
+                                                    <p><b style="color:red;">* Apenas imagens Max. 3MB*</b> </p>
+                                                </div>
+                                            </div>
+                                            @*}*@
+
+                                            <div class="row mt-3">
+                                                <div class="col-sm-4">
+                                                    <label for="receiptValue">Valor do Comprovante</label>
+                                                    <input type="text" class="form-control" value="0" min="1" readonly id="receiptValue" name="receiptValue" required />
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    @*<label for="receiptValue">Números Selecionados</label>*@
+                                                    <input type="hidden" class="form-control" value="0" min="1" readonly id="receiptNumberReference" name="receiptNumberReference" required />
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row mt-3">
+                                                <div class="col-sm-8">
+                                                    <div class="d-grid g-2">
+                                                        @if (@*!ViewBag.emailConfirmed ||*@ ViewBag.MaxUserCanSelect <= 0)
+                     {
+                        <button id="btnSendReceipt" type="submit" class="btn btn-info btn-block mt-1" disabled>Anexar Comprovante</button>
+                    }
+                    else
+                    {
+                        if (ViewBag.YourNumbers.Count > 0)
+                        {
+                            <button id="btnSendReceipt" type="submit" class="btn btn-info btn-block mt-1" disabled>Anexar Comprovante</button>
+                        }
+                    }
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </form>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <hr />
+                <!--Orientações para o pagamento-->
+                <div class="col-sm-12 col-lg-12 mt-3">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-12 text-center">
+                            <h1 class="display-6">Orientações</h1>
+                        </div>
+                        <div class="col-sm-12 col-lg-12 text-center">
+                            <p class="lead"><b>Missier</b><br />Sempre tenha atenção e verifique os dados relacionados ao criador da rifa/sorteio.</p>
+                            <p class="lead"><b>Criador da rifa/sorteio</b><br />@Model.Raffle.RaffleGeneralDescription</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <p class="lead text-center my-5">Infelizmente houve um erro ao abrir os dados relacionados a este sorteio. Tente novamente mais tarde.</p>
+        }
+
+    </div>
+</div>
+
+<script>
+
+    document.getElementById('receiptFile').onchange = function () {
+        getBase64();
+    };
+
+    function getBase64() {
+
+        var file = document.getElementById("receiptFile").files[0];
+        var base64 = document.getElementById("base64");
+        var receipt = document.getElementById('receiptFile');
+
+
+        var v = new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        v.then(
+            data => {
+                var type = data.split(';');
+                var typeGeneral = type[0].split('/');
+                if (typeGeneral[0] != "data:image") {
+                    alert("Tipo de arquivo selecionado inválido!");
+                    receipt.value = '';
+                    return;
+                }
+
+                var filesize = ((file.size / 1024) / 1024).toFixed(4); // MB
+
+                if (filesize > 3) {
+                    alert("Tipo de arquivo selecionado inválido, excedeu o tamanho de 3 MB!");
+                    receipt.value = '';
+                    return;
+                }
+
+                base64.setAttribute("value", data);
+            }
+        );
+
+        return v;
+    }
+
+</script>
+
+<script src="~/js/ParticipantScripts/UserRaffleInterface.js"></script>

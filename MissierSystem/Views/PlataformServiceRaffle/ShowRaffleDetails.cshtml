@@ -1,0 +1,522 @@
+﻿@model MissierSystem.Models.Platform.Services.Raffle.WorkClasses.NumberStatusTotal
+
+@{
+    if (Model.Raffle != null)
+    {
+        ViewData["Title"] = Model.Raffle.RaffleName + " - Sorteio/Rifa";
+    }
+    else
+    {
+        ViewData["Title"] = " Não encontrado - Sorteio/Rifa";
+    }
+
+    var dic = new Dictionary<string, int>();
+
+    var RaffleTotalNumbers = Model.RaffleTotalNumbers;
+    var CountStart = 1;
+    var CountStop = 200;
+    var end = 200;
+    bool stoploop = false;
+    string typeType = "normal";
+            if (Model.Raffle.RaffleCloseOption)
+            {
+        typeType = "manual";
+            }
+}
+<input type="hidden" name="Manual" id="Manual" value="@typeType" />
+
+<div class="participateSelectNumberMainPage">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <span class="navbar-brand"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</span>
+            @if (Model.Raffle != null)
+            {
+                <span class="lead text-center text-light">@Model.Raffle.RaffleName</span>
+            }
+
+            <div class="">
+                <a class="btn btn-outline-warning" style="margin-left:10px;" asp-area="" asp-controller="PlataformServiceRaffle" asp-action="RaffleMainPage">Voltar</a>
+                <a class="btn btn-outline-danger" asp-controller="Home" asp-action="GetOutFromLogin">Sair</a>
+            </div>
+
+        </div>
+    </nav>
+
+    @if (ViewBag.alert == "fail")
+    {
+        <div class="alert alert-danger alert-dismissible fade show container-fluid mt-2" role="alert">
+            <strong>Infelizmente houve um erro ao processar a mudança de status, tente novamente mais tarde.</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    else if (ViewBag.alert == "success")
+    {
+        <div class="alert alert-danger alert-dismissible fade show container-fluid mt-2" role="alert">
+            <strong>Alterado com sucesso!.</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="container-fluid">
+
+        <div class="row mb-5">
+
+            <div class="col-sm-12 col-lg-6">
+                <div class="accordion accordion-flush" id="raffleInformations">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-raffleInformations-1">
+                            <button class="accordion-button collapsed lead" type="button" data-bs-toggle="collapse" data-bs-target="#flush-raffleInformations-collapse-1" aria-expanded="false" aria-controls="flush-raffleInformations-collapse-1">
+                                Informaçãoes sobre o sorteio
+                            </button>
+                        </h2>
+                        <div id="flush-raffleInformations-collapse-1" class="accordion-collapse collapse" aria-labelledby="flush-raffleInformations-1" data-bs-parent="#raffleInformations">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="text-center m-auto">
+                                        <span class="lead">@Model.Raffle.RaffleName</span><br />
+                                        <span>@Model.Raffle.RafflePremiationDescription</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                                    <div class="row" style="width:100%">
+                                        <div class="col-sm-12 col-lg-3 m-0">
+                                            <b>Valor: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleNumbersValue.ToString("C2", ViewBag.Culture)</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-6 m-0">
+                                            <b>Max. de Nº por participante: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleUserMaxNumbers</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-3 m-0">
+                                            <b>Total de Nº: </b>
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleMaxNumber</span>
+                                        </div>
+                                    </div>
+
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="row" style="width:100%">
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Disponível: </b>
+                                            <span class="badge bg-success rounded-pill">@Model.AvaliableNumber</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Reservado:  </b>
+                                            <span class="badge bg-warning rounded-pill">@Model.SchaduleNumber</span> |
+                                        </div>
+                                        <div class="col-sm-12 col-lg-4 m-0">
+                                            <b>Ocupado</b>
+                                            <span class="badge bg-danger rounded-pill">@Model.UnavaliableNumber</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="col-sm-12 col-lg-6">
+                    <a class="btn btn-warning" id="editInformation" onclick="ShowHideEditInformation()">Editar Informações</a>
+                </div>*@
+        </div>
+
+        @if (Model.NumberStatus != null || Model.Raffle.RaffleCloseOption)
+        {
+            <div class="accordion accordion-flush" id="accordionPanelsRaffle">
+                <div class="row ">
+
+                    <div class="col-sm-12 col-lg-6 mb-5">
+                        @if (RaffleTotalNumbers < 201)
+                        {
+                            <div class="col-sm-12 col-lg-12">
+                                @for (int i = CountStart; i <= RaffleTotalNumbers; i++)
+                                {
+
+                                    var find = false;
+                                    var status = 3;
+                                    foreach (var number in Model.NumberStatus)
+                                    {
+                                        if (number.Number == i)
+                                        {
+                                            find = true;
+                                            status = number.Status;
+                                            break;
+                                        }
+                                    }
+
+                                    if (find)
+                                    {
+                                        var stringToRout = "?raffleId=" + Model.Raffle.Id.ToString() + "&number=" + i;
+
+                                        if (status == 3)
+                                        {
+
+                                            if (Model.Raffle.RaffleCloseOption)
+                                            {
+                                                <a class="btn btn-danger m-1" style="width:50px" onclick="GetParticipantInformationByNumber('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id')">@i</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-danger m-1" style="width:50px" onclick="GetParticipantInformationByNumber('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">@i</a>
+                                            }
+                                        }
+                                        else if (status == 2)
+                                        {
+                                            <a class="btn btn-warning m-1" style="width:50px" onclick="GetParticipantInformationByNumber('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">@i</a>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        if (Model.Raffle.RaffleCloseOption)
+                                        {
+                                            <a class="btn btn-success m-1" id="@i" style="width:50px" onclick="RaffleManualConfirmation('@i')">@i</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success m-1" id="@i" style="width:50px">@i</a>
+
+                                        }
+                                    }
+
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            @do
+                            {
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-12">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="flush-headingOne-@CountStart">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne-@CountStart" aria-expanded="false" aria-controls="flush-collapseOne-@CountStart">
+                                                    Números de @CountStart a @(end)
+                                                </button>
+                                            </h2>
+                                            <div id="flush-collapseOne-@CountStart" class="accordion-collapse collapse" aria-labelledby="flush-headingOne-@CountStart" data-bs-parent="#accordionPanelsRaffle">
+                                                <div class="mt-3">
+
+                                                    @for (int i = CountStart; i <= RaffleTotalNumbers; i++)
+                                                    {
+                                                        if (i == CountStop + 1)
+                                                        {
+                                                            CountStart = CountStop + 1;
+                                                            CountStop += 200;
+
+                                                            end = CountStop;
+
+                                                            if (RaffleTotalNumbers - i < 200)
+                                                            {
+                                                                end = RaffleTotalNumbers;
+                                                            }
+
+                                                            break;
+                                                        }
+
+                                                        if (i == RaffleTotalNumbers)
+                                                        {
+                                                            stoploop = true;
+                                                        }
+
+                                                        var find = false;
+                                                        var status = 3;
+                                                        foreach (var number in Model.NumberStatus)
+                                                        {
+                                                            if (number.Number == i)
+                                                            {
+                                                                find = true;
+                                                                status = number.Status;
+                                                                break;
+                                                            }
+                                                        }
+
+                                                        if (find)
+                                                        {
+                                                            var stringToRout = "?raffleId=" + Model.Raffle.Id.ToString() + "&number=" + i;
+
+                                                            if (status == 3)
+                                                            {
+                                                                if (Model.Raffle.RaffleCloseOption)
+                                                                {
+                                                                    <a class="btn btn-danger m-1" style="width:50px" onclick="GetParticipantInformationByNumber('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id')">@i</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a class="btn btn-danger m-1" style="width:50px" onclick="GetParticipantInformationByNumber('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">@i</a>
+                                                                }
+                                                            }
+                                                            else if (status == 2)
+                                                            {
+                                                                <a class="btn btn-warning m-1" style="width:50px" onclick="GetParticipantInformationByNumber('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">@i</a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (Model.Raffle.RaffleCloseOption)
+                                                            {
+                                                                <a class="btn btn-success m-1" id="@i" style="width:50px" onclick="RaffleManualConfirmation('@i')">@i</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a class="btn btn-success m-1" id="@i" style="width:50px">@i</a>
+                                                            }
+                                                        }
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            } while (!stoploop);
+                        }
+                    </div>
+
+                    <div class="col-sm-12 col-lg-6">
+                        <div class="row">
+
+                            <div class="col-sm-12 col-lg-12">
+                                <div id="alertMessage"></div>
+                                <h1 class="display-6 text-center">Info. do Participante</h1>
+                            </div>
+
+                            @*<div class="col-sm-12 col-lg-12">
+
+                                    <div class="row">
+                                        <div class="col-sm-8 col-lg-8">
+                                            <input class="form-control" name="searchParticipant" id="searchParticipant" maxlength="30" />
+                                        </div>
+                                        <div class="col-sm-3 col-lg-3">
+                                            <a class="btn btn-success">Buscar</a>
+                                        </div>
+                                    </div>
+                                </div>*@
+
+                            <div class="col-sm-12 col-lg-12">
+
+                                <hr />
+                                <div class="row ">
+                                    <div class="col-sm-4 col-lg-6">
+                                        <div id="ParticipantNumberInformation" class="text-break">
+                                            <!--Traz informações do Usuario-->
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-lg-4 ">
+
+                                        @if (!Model.Raffle.RaffleCloseOption)
+                                        {
+                                            <div class="card" style="width: 18rem; " id="hideImageCard">
+                                                <div>
+                                                    <img src="" id="receiptImage" alt="Imagem do Comprovante" title="Imagem do Comprovante" data-bs-toggle="modal" data-bs-target="#modalReceiptImage" class="card-img-top" style="width: 18rem; height: 15rem;" />
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title"><span class="lead" id="receiptValueUserSaid"></span> </h5>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                    <div id="receiptFile" class="mt-2">
+
+                                    </div>
+
+                                    @if (Model.Raffle.RaffleCloseOption)
+                                    {
+                                        <form asp-action="RaffleConfirmNumberSelled" method="post">
+                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                            <input type="hidden" value="0" name="NumberBought" id="NumberBought" />
+                                            <input type="hidden" value="@Model.Raffle.Id" name="RaffleId" id="RaffleId" />
+                                            <input type="hidden" value="1" readonly id="CloseOption" />
+                                            <div class="form-group">
+                                                <label>Identificação do participante</label>
+                                                <input type="text" id="Identity" name="Identity" onkeyup="Restartconcience()"
+                                                       placeholder="Mínimo de 10 caracteres" class="form-control" required min="10" maxlength="100" />
+                                            </div>
+
+                                            @if (Model.Raffle.RaffleStatus == 1)
+                                            {
+                                                <div class="form-group form-check ">
+                                                    <label class="form-check-label mt-4">
+                                                        <input class="form-check-input" type="checkbox" id="concience" onclick="AllowConfirmPaymentManualOption()" asp-for="ConfirmBuy" /> Estou ciente que estou confimando um pagamento.
+                                                    </label>
+                                                    <span asp-validation-for="ConfirmBuy" class="text-danger"></span>
+                                                </div>
+                                                <div class="form-group my-3 d-grid gap-4">
+                                                    <input type="submit" disabled="disabled" id="confirmPay" value="Confirmar Pagamento" class="btn btn-danger my-3 " />
+                                                </div>
+                                            }
+
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <div class="row">
+                                            <div class="col-sm-12 col-lg-6" id="confirmPaymentFormDiv">
+                                                <form id="formAproved" asp-action="RaffleConfirmNumberSelled" method="post">
+                                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                    <input type="hidden" value="0" name="NumberBought" id="NumberBought" />
+                                                    <input type="hidden" value="1" name="aprovedValue" id="aprovedValue" />
+                                                    <input type="hidden" value="@Model.Raffle.Id" name="RaffleId" id="RaffleId" />
+                                                    <input type="hidden" value="0" readonly id="CloseOption" />
+
+                                                    <div class="form-group form-check ">
+                                                        <label class="form-check-label mt-4">
+                                                            <input class="form-check-input" type="checkbox" id="concience" onclick="AllowConfirmPayment()" asp-for="ConfirmBuy" /> Estou ciente que estou confimando um pagamento.
+                                                        </label>
+                                                        <span asp-validation-for="ConfirmBuy" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group my-3 d-grid gap-4">
+                                                        <input type="submit" disabled="disabled" id="confirmPay" value="Confirmar Pagamento" class="btn btn-success my-3 " />
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="col-sm-12 col-lg-6" id="refusePaymentFormDiv">
+                                                <form id="formRefused" asp-action="RaffleRefuseNumberSelled" method="post">
+                                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                    <input type="hidden" value="0" name="NumberBoughtRefuse" id="NumberBoughtRefuse" />
+                                                    <input type="hidden" value="0" name="aprovedValue" id="aprovedValue" />
+                                                    <input type="hidden" value="@Model.Raffle.Id" name="RaffleId" id="RaffleId" />
+                                                    <input type="hidden" value="0" readonly id="CloseOption" />
+                                                    <div class="form-group form-check ">
+                                                        <label class="form-check-label mt-4">
+                                                            <input class="form-check-input" type="checkbox" id="concienceRefuse" onclick="RefuseConfirmPayment()" asp-for="RefuseBuy" /> Estou ciente que estou recusando um pagamento.
+                                                        </label>
+                                                        <span asp-validation-for="RefuseBuy" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group my-3 d-grid gap-4">
+                                                        <input type="submit" disabled="disabled" id="refusePay" value="Recusar Pagamento" class="btn btn-danger my-3 " />
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+
+                            @*<div id="AllSearches">
+
+
+
+                                    @if (ViewBag.listOfSearchParticipant != null)
+                                    {
+                                        foreach (var participantResult in ViewBag.listOfSearchParticipant)
+                                        {
+
+                                        }
+                                    }
+                                </div>*@
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            @*<div class="row" id="updateInformation">
+                    <hr />
+                    <div id="alert"></div>
+                    <div class="col-sm-12 col-lg-12">
+                        <h1 class="display-6 text-center mt-3">Atualizar Informações</h1>
+                    </div>
+                    <div class="col-sm-12 col-lg-12">
+                        <div id="update">
+                            <input type="hidden" name="raffleIdUpdate" id="raffleIdUpdate" value="@Model.Raffle.Id"/>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-12 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Máximo de número por usuário</label>
+                                        <input type="number" class="form-control" id="userMaxNumber" min="1" max="2" name="userMaxNumber" value="@Model.Raffle.RaffleUserMaxNumbers" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Data de inicio</label>
+                                        <input type="number" class="form-control" id="beginDate" min="0" max="7" name="beginDate" value="0" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Data de finalização</label>
+                                        <input type="number" class="form-control" id="endDate" min="1" max="91" name="endDate" value="1" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-lg-9">
+                                    <div class="form-group">
+                                        <label>Informações de Pagamento</label>
+                                        <textarea class="form-control" id="description" name="description" rows="5"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-lg-9">
+                                    <div class="form-group my-3 d-grid gap-4">
+                                        <input type="button" onclick="UpdateRaffleInformtions('@Url.Action("RaffleUpdateInformations", "PlataformServiceRaffle")')"  value="Confirmar Pagamento" class="btn btn-danger my-3 " />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+        }
+        else
+        {
+            <p class="lead text-center my-5">Sorteio/Rifa ainda não possui dados relacionados aos particiantes</p>
+        }
+
+    </div>
+
+</div>
+
+<div id="modalReceiptImage" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title lead fw-bolder" id="receiptTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="lead" id="receiptInformations"></p>
+                <div class="lead" >
+                    <img src="" id="receiptImageModal" width="100%" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/ParticipantScripts/UserRaffleInterface.js"></script>
+
+<script type="text/javascript">
+    //$("#updateInformation").hide();
+    close = document.getElementById("CloseOption").value;
+    if (close != 1) {
+        document.getElementById("hideImageCard").style.display = "none";
+    }
+
+    function ShowHideEditInformation() {
+        $("#updateInformation").toggle();
+    }
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,89 @@
+﻿@model MissierSystem.Models.GeneralModels.Models.UserModelItens.LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+@if (!String.IsNullOrEmpty(ViewBag.alert))
+{
+    if (ViewBag.alert == "NotFound")
+    {
+        <div class="container-fluid mt-4">
+            <div class="alert alert-danger text-center lead" role="alert">
+                Usuário não encontrado! Email/senha incorreto(s).
+            </div>
+        </div>
+    }
+    else if (ViewBag.alert == "Error")
+    {
+        <div class="container-fluid mt-4">
+            <div class="alert alert-danger text-center lead" role="alert">
+                Infelizmente houve um erro inesperado ao acessar os dados da sua conta, tente novamente mais tarde..
+            </div>
+        </div>
+    }
+    else if (ViewBag.alert == "ToSeeRaffle")
+    {
+        <div class="container-fluid mt-4">
+            <div class="alert alert-warning text-center lead" role="alert">
+                É preciso ter uma conta no Missier para participar de um sorteio/rifa.<br /> Efetue o login ou cadastre-se.
+            </div>
+        </div>
+    }
+
+
+}
+
+<div class="fixed-top"></div>
+
+<div class="card" id="loginScreen">
+    <img id="logoLoginScreen" src="~/image/geral/logo/LogoDiffer.png" class="card-img-top my-3" alt="Missier Bot">
+    <div class="card-body">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="LoginType" value="@ViewBag.redirectTo" />
+            <input type="hidden" name="raffleId" value="@ViewBag.raffleId" />
+            <input type="hidden" name="owner" value="@ViewBag.owner" />
+            <div class="form-group">
+                <label asp-for="Email" class="control-label mb-1">Email <i class="fas fa-at"></i></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <label asp-for="Password" class="control-label mb-1">Senha <i class="fas fa-lock"></i></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2 d-grid gap-2 mb-2">
+                <input type="submit" value="Entrar" class="btn btn-success btn-block mt-2" />
+
+                @{
+                    var parameters = new Dictionary<string, string>()
+                                                            {
+                         {"localUse", ViewBag.redirectTo.ToString()},
+                         {"raffleId", ViewBag.owner.ToString()}
+
+                    };
+                }
+
+                <a class="btn btn-danger btn-block" asp-action="NewUsersignUp" asp-controller="UserBasicInfo" asp-all-route-data="parameters">Criar um conta</a>
+                @*@if (ViewBag.alert == "ToSeeRaffle")
+                {
+                    <a class="btn btn-info btn-block" asp-action="NewUsersignUp" asp-controller="UserBasicInfo" asp-all-route-data="parameters">Entrar como convidado</a>
+
+                }*@
+            </div>
+        </form>
+
+        @*<a class="font-weight-lighter text-center" asp-action="RescuePassword" target="_blank">Esqueci minha senha</a>*@
+    </div>
+</div>
+
+@*<script type="text/javascript">
+    document.getElementById("footerMissier").style.display = "none";
+</script>*@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

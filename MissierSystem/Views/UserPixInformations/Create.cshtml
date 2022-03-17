@@ -1,0 +1,124 @@
+﻿@model MissierSystem.Models.GeneralModels.Models.UserExtraModels.UserPixInformation
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    #teste:hover {
+        background-color: red;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5" style="width: 100%; height: 10%; box-shadow: 1px 2px 25px black" id="platformMainNavbar">
+
+    <div class="container-fluid">
+        <div style="margin-left: 2px;">
+            <a href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" class="img-fluid" title="Missier System" alt="Missier System"></a>
+        </div>
+        @*<a class="navbar-brand" href="#">Missier System</a>*@
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Missier</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Meus Serviços
+                    </a>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="RaffleMainPage" asp-controller="PlataformServiceRaffle">Sorteio/Rifa</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Minha Conta
+                    </a>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown2">
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserSocialMidias">Redes Sociais</a></li>
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Index" asp-controller="UserBankInformations">Contas Bancárias</a></li>
+                        @*<li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserPixInformations" asp-all-route-data="param">PIX</a></li>*@
+                    </ul>
+                </li>
+            </ul>
+            <div class="d-flex m-2">
+                <a class="btn btn-outline-danger" asp-controller="Home" asp-action="GetOutFromLogin">Sair</a>
+            </div>
+        </div>
+
+        
+    </div>
+</nav>
+
+@if (!String.IsNullOrEmpty(ViewBag.alert))
+{
+    if (ViewBag.alert == "error")
+    {
+        <div class="container-fluid mt-4">
+            <div class="alert alert-danger text-center lead" role="alert">
+                Falha ao salvar os dados!
+            </div>
+        </div>
+    }
+    else if (ViewBag.alert == "success")
+    {
+        <div class="container-fluid mt-4">
+            <div class="alert alert-success text-center lead" role="alert">
+                Dados salvos com sucesso!
+            </div>
+        </div>
+    }
+}
+
+<div class="row">
+    <div class="col-sm-12 col-lg-12 text-center">
+        <h1 class="display-4">Cadastre sua chave PIX <i class="fas fa-key" style="color: gold"></i></h1>
+    </div>
+</div>
+<hr />
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-lg-6">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="IdBasicUser" value="@ViewBag.userId" class="form-control" />
+
+                <div class="row">
+                    <div class="col-sm-12 col-lg-6">
+                        <div class="form-group">
+                            <label asp-for="PixKeyType" class="control-label lead"></label><span style="color:red">*</span>
+                            <select asp-for="PixKeyType" class="form-control align-content-center">
+                                <option value="1">CPF/CNPJ</option>
+                                <option value="2">Email</option>
+                                <option value="3">Nº de telefone</option>
+                                <option value="4">Chave aleatória</option>
+                            </select>
+                            <span asp-validation-for="PixKeyType" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-6 text-center">
+                        <div class="form-group">
+                            <label asp-for="PixKey" class="control-label lead"></label><span style="color:red">*</span>
+                            <input asp-for="PixKey" class="form-control text-center" />
+                            <span asp-validation-for="PixKey" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <span>*Adicione os dados sem pontuação/caracteres especiais.*</span>
+                <div class="form-group d-grid gap-4 mt-4 text-center">
+                    <input type="submit" value="Salvar Mudanças" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

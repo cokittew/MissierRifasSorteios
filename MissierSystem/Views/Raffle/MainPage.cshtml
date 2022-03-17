@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewData["Title"] = "Sorteio/Rifa - Main Page";
+}
+
+<nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: rgb(40 147 179)">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
+        <div>
+            <a class="btn btn-warning text-end" asp-area="" asp-controller="Home" asp-action="MainPageParticipant">Voltar</a>
+            <a class="btn btn-danger" asp-area="" asp-controller="Home" asp-action="GetOutFromLogin">Sair</a>
+        </div>
+    </div>
+</nav>
+
+<div id="raffleHeader" class="container-fluid">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="display-5">Encontre um Sorteio/Rifa</h1>
+            <p class="lead">"A melhor chance é aquela que se cria."</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div id="raffleSearchArea" class="p-3" style="box-shadow: 1px 2px 25px black">
+                <div class="row justify-content-center">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <input class="form-control mt-1" id="raffleNameNickSearch" name="raffleNameNickSearch" title="Digite o nome do sorteio/usuário." placeholder="Digite o nome do sorteio/usuário" />
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <input class="form-control mt-1" id="raffleCodeSearch" name="raffleCodeSearch" title="Digite o nome do sorteio/rifa." placeholder="Digite o código do sorteio" />
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <select class="form-control mt-1" id="raffleNameTypeSearch" name="raffleNameTypeSearch" title="Status do sorteio/rifa">
+                                <option value="1">Acontecendo</option>
+                                <option value="2">Agendado</option>
+                                <option value="3">Finalizados</option>
+                            </select>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 text-center">
+                        <div class="form-group d-grid gap-4">
+                            <input type="submit" value="Buscar" onclick="RaffleSearchFilterNameCode('@Url.Action("RaffleList", "Raffle")')" class="btn btn-outline-info mt-1" style="color:black;" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div id="raffleListArea" class="mt-2 mb-4" style="box-shadow: 1px 2px 25px black">
+                
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

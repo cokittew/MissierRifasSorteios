@@ -1,0 +1,50 @@
+﻿@model MissierSystem.Models.Platform.Services.Raffle.WorkClasses.RaffleParticipant.RaffleToPayPackage
+
+@{
+    Layout = null;
+}
+
+<html lang="pt-br">
+<head>
+    <title>Payment - MissierSystem</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/LoginDefault.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap5/css/bootstrap.min.css" />
+</head>
+<body>
+    <input type="hidden" value="@ViewBag.referenceId" name="referenceId" id="referenceId" />
+
+    <div class="cho-container"></div>
+
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+    <script>
+        var id = document.getElementById('referenceId').value;
+        alert(id);
+
+        // Adicione as credenciais do SDK
+        const mp = new MercadoPago('TEST-f89c1425-efa8-4655-aa37-613fe20a1312', {
+            locale: 'es-AR'
+        });
+
+        // Inicialize o checkout
+        mp.checkout({
+            preference: {
+                id: id
+            },
+            render: {
+                container: '.cho-container', // Indica onde o botão de pagamento será exibido
+                label: 'Pagar', // Muda o texto do botão de pagamento (opcional)
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+
+
+
+
+

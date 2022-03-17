@@ -1,0 +1,136 @@
+﻿@model IEnumerable<MissierSystem.Models.Platform.Services.Raffle.PlatformServiceRaffle>
+
+@{
+    Layout = null;
+
+}
+
+@if (Model.Count() > 0)
+{
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+
+        @foreach (var item in Model)
+        {
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingOne-@item.Id">
+
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne-@item.Id" aria-expanded="false" aria-controls="flush-collapseOne-@item.Id">
+                    <b>
+                        <span class="lead font-weight-normal">@item.RaffleName</span>
+
+                        @if (item.RaffleStatus == 1)
+                        {
+                            <span class="badge bg-success rounded-pill ml-2">Acontecendo</span>
+                        }
+                        else if (item.RaffleStatus == 2)
+                        {
+                            <span class="badge bg-warning rounded-pill ml-2">Agendado</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger rounded-pill ml-2">Finalizado</span>
+                            @if (!String.IsNullOrEmpty(item.RaffleNumberResult))
+                            {
+                                <span class="badge bg-success rounded-pill ml-2">Veja o resultado!</span>
+                            }
+                        }
+
+                    </b>
+
+                </button>
+
+            </h2>
+
+            <div id="flush-collapseOne-@item.Id" class="accordion-collapse collapse" aria-labelledby="flush-headingOne-@item.Id" data-bs-parent="#accordionFlushExample">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <b>Total de números</b>
+                        <span class="badge bg-primary rounded-pill">@item.RaffleMaxNumber</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Valor por número
+                        <span class="badge bg-primary rounded-pill">@item.RaffleNumbersValue.ToString("C2", ViewBag.Culture)</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Máximo de números por participante
+                        <span class="badge bg-primary rounded-pill">@item.RaffleUserMaxNumbers</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Data de Início:
+                        @{
+                            var raffleStartDate = item.RaffleStartDate.ToString("dd/MM/yyyy");
+                        }
+
+                        <span class="badge bg-primary rounded-pill">@raffleStartDate</span>
+                        Data de Término:
+                        @if (DateTime.Parse("2016-10-01").Date.CompareTo(item.RaffleEndDate) == 0)
+                        {
+                            <span class="badge bg-primary rounded-pill">Indeterminado/Quando todos os<br /> números forem vendidos.</span>
+                        }
+                        else
+                        {
+                            var raffleEndDate = item.RaffleEndDate.ToString("dd/MM/yyyy");
+                            <span class="badge bg-primary rounded-pill">@raffleEndDate</span>
+                        }
+                    </li>
+                    @if (!String.IsNullOrEmpty(item.RaffleNumberResult))
+                    {
+
+                        var r = item.RaffleNumberResult.Split(":");
+
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <b class="lead">Resultado Final</b>
+                            @foreach (var number in r)
+                            {
+                                if (!String.IsNullOrEmpty(number))
+                                {
+                                    <span class="badge bg-success rounded-pill p-2">@number</span>
+                                }
+                            }
+
+                        </li>
+                    }
+                </ul>
+
+                @if (item.RaffleStatus == 1)
+                {
+                    if (item.RaffleType == 1)
+                    {
+                        if (item.RaffleCloseOption)
+                        {
+                            var data = new Dictionary<string, string>() { { "identity", item.Identity.ToString() } };
+                            <a class="btn btn-info float-end m-2" asp-action="RaffleUserDirectLink" asp-controller="Raffle" asp-all-route-data="data">Visualizar</a>
+                        }
+                        else
+                        {
+                            var data = new Dictionary<string, string>() { { "raffleId", item.Id.ToString() } };
+                            <a class="btn btn-danger float-end m-2" asp-action="SelectedRaffleParticipate" asp-controller="Raffle" asp-all-route-data="data">Participar</a>
+                        }
+                    }
+                    else if(item.RaffleType == 3)
+                    {
+                        if (item.RaffleCloseOption)
+                        {
+                            var data = new Dictionary<string, string>() { { "identity", item.Identity.ToString() } };
+                            <a class="btn btn-info float-end m-2" asp-action="RaffleUserDirectLink" asp-controller="Raffle" asp-all-route-data="data">Visualizar</a>
+                        }
+                        else
+                        {
+                            var data = new Dictionary<string, string>() { { "raffleId", item.Id.ToString() } };
+                            <a class="btn btn-danger float-end m-2" asp-action="AmorinStyle" asp-controller="Raffle" asp-all-route-data="data">Participar</a>
+                        }
+
+                    }
+                }
+
+
+            </div>
+        </div>
+        }
+
+    </div>
+}
+else
+{
+    <p class="lead text-center">Nenhum sorteio foi encontrado!</p>
+}

@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Missier</title>
+    <link rel="stylesheet" href="~/css/LoginDefault.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap5/css/bootstrap.min.css" />
+    <link rel="icon" type="image/x-icon" href="/image/geral/logo/bar.ico" style="background-color:black;" />
+
+</head>
+<body id="backgroundLoginScreen">
+
+    <div>
+
+        <main role="main" style="margin-bottom: 150px;">
+            @RenderBody()
+        </main>
+        @*<div class="text-center" id="footerMissier" style="background-color: black;">
+            <span class="lead" style="color: white"> &copy; Missier</span>
+        </div>*@
+
+
+    </div>
+
+    <script src="https://kit.fontawesome.com/d83b21e690.js" crossorigin="anonymous"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap5/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/PlatformScripts/PlatformAllActions.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

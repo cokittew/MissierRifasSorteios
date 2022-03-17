@@ -1,0 +1,70 @@
+﻿@model IEnumerable<string>
+
+@{
+    Layout = null;
+
+    var jsonModel = Json.Serialize(Model).ToString();
+
+    var parms = new Dictionary<string, string>
+            {
+                { "raffleInfoId", ViewBag.raffleId },
+                { "numberSelected", ViewBag.listSelectNumbers },
+                { "userId", ViewBag.userId },
+            };
+
+    //var parmsBuy = new Dictionary<string, string>
+    //        {
+    //            { "raffleInfoId", ViewBag.raffleId },
+    //            { "numberSelected", ViewBag.listSelectNumbers },
+    //            { "userId", ViewBag.userId },
+    //            { "add", "true" },
+    //            { "numbers", jsonModel },
+    //        };
+}
+
+<div id="raffleBuyArea">
+    <div class="row mt-5 pre-scrollable">
+        <div class="col-sm-12 col-lg-12">
+            <h1 class="lead">Números selecionados: </h1>
+            <hr />
+        </div>
+        <div class="col-sm-12 col-lg-12">
+
+            <div id="SelectedNumbers">
+                @if (Convert.ToUInt32(ViewBag.listSelectNumbers) > 0)
+                {
+                    <a class="btn btn-success m-1">@ViewBag.listSelectNumbers</a>
+                    <div class="d-grid g-2">
+                        <a class="btn btn-outline-info btn-block" onclick="AddSelectNumberInList('@Url.Action("CreateNumberSelectPackage","Raffle")', '@ViewBag.listSelectNumbers', '@ViewBag.raffleId' , '@ViewBag.userId', 'true', @jsonModel)">Adicionar número</a>
+                    </div>
+                }
+
+            </div>
+
+            <div id="SelectedNumbers">
+                @foreach (var number in Model)
+                {
+                    <a class="btn btn-success m-1">@number</a>
+                }
+            </div>
+
+
+            @if (Model != null)
+            {
+                if (Model.Count() > 0)
+                {
+                    <div class="d-grid g-2">
+                        <a class="btn btn-outline-danger btn-block" asp-action="RaffleMarkPlaceBuyNumberMercadoPago" asp-area="Raffle" asp-all-route-data="parms">Comprar</a>
+                    </div>
+                }
+            }
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+

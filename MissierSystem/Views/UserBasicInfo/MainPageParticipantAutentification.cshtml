@@ -1,0 +1,48 @@
+﻿@model MissierSystem.Models.Validation.UserTelegramValidation
+@{
+    ViewData["Title"] = "Autenticação";
+}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5" style="width: 100%; height: 10%; box-shadow: 1px 2px 25px black" id="platformMainNavbar">
+
+    <div class="container-fluid">
+        <div style="margin-left: 2px;">
+            <a href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" class="img-fluid" title="Missier System" alt="Missier System"></a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="">
+            <a class="btn btn-outline-danger" style="margin-right:10px;" asp-area="" asp-controller="SystemUserPlatform" asp-action="MainPagePlatform">Já me Autentiquei!</a>
+        </div>
+
+    </div>
+
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-sm-12 text-center">
+        <span class="display-6">Acesse o Telegram e faça sua validação através do nosso BOT.</span>
+
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-sm-12 text-center">
+        <span class="display-2"><a href="https://t.me/MissierOficialBot" target="_blank"><i class="fab fa-telegram"></i></a></span>
+
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-sm-12 text-center">
+        <span class="display-6">Código de validação: </span>
+        <span class="display-4"><b>@ViewBag.userName-@Model.CodeAccess</b></span>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

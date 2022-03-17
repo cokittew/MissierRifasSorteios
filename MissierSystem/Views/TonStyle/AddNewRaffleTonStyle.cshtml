@@ -1,0 +1,120 @@
+﻿@model MissierSystem.Models.TonModality.RaffleBusinessRaffle
+
+@{
+    ViewData["Title"] = "Ton Sorteios e Rifas";
+}
+
+<div>
+    <nav class="navbar navbar-expand-lg navbar-dark text-light" style="background-color: black">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
+            <div>
+                <span class="lead">Olá, seja bem-vindo!</span>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="CreateRaffle">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="IdBasicUser" class="form-control" />
+                    <span asp-validation-for="IdBasicUser" class="text-danger"></span>
+                    <input type="hidden" id="base64" name="base64" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="RaffleName" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                    <input asp-for="RaffleName" autofocus class="form-control text-center" title="Digite o nome do seu sorteio/rifa." placeholder="Digite o nome do seu sorteio" />
+                    <span asp-validation-for="RaffleName" class="text-danger"></span>
+                </div>
+                @*<div class="form-group">
+                    <label asp-for="RaffleGeneralDescription" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i class="fas fa-question-circle"></i>
+                    </a>
+                    <textarea asp-for="RaffleGeneralDescription" class="form-control text-center" title="Informações para os Participantes." placeholder="Capriche!"></textarea>
+                    <span asp-validation-for="RaffleGeneralDescription" class="text-danger"></span>
+                </div>*@
+                <div class="form-group">
+                    <label asp-for="RafflePremiationDescription" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                    <textarea asp-for="RafflePremiationDescription" class="form-control text-center" title="Digite qual será a premiação." placeholder="Qual será o prêmio?"></textarea>
+                    <span asp-validation-for="RafflePremiationDescription" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RaffleNumbersValue" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
+                    <input asp-for="RaffleNumbersValue" class="form-control text-center" type="number" title="Digite o valor de cada número." placeholder="Valor de custo por número" />
+                    <span asp-validation-for="RaffleNumbersValue" class="text-danger"></span>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-sm-8">
+                        <input class="form-control" type="file" name="receiptFile" id="receiptFile" accept="image/*" required />
+                        <p><b style="color:red;">* Apenas imagens Max. 3MB*</b> </p>
+                    </div>
+                </div>
+
+                <div class="form-group my-3 d-grid gap-4">
+                    <input type="submit" value="Adicionar Sorteio" class="btn btn-success my-3 " />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="RaffleViewList">Back to List</a>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    document.getElementById('receiptFile').onchange = function () {
+        getBase64();
+    };
+
+    function getBase64() {
+
+        var file = document.getElementById("receiptFile").files[0];
+        var base64 = document.getElementById("base64");
+        var receipt = document.getElementById('receiptFile');
+
+
+        var v = new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        v.then(
+            data => {
+                var type = data.split(';');
+                var typeGeneral = type[0].split('/');
+                if (typeGeneral[0] != "data:image") {
+                    alert("Tipo de arquivo selecionado inválido!");
+                    receipt.value = '';
+                    return;
+                }
+
+                var filesize = ((file.size / 1024) / 1024).toFixed(4); // MB
+
+                if (filesize > 3) {
+                    alert("Tipo de arquivo selecionado inválido, excedeu o tamanho de 3 MB!");
+                    receipt.value = '';
+                    return;
+                }
+
+                base64.setAttribute("value", data);
+            }
+        );
+
+        return v;
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,255 @@
+﻿@model MissierSystem.Models.Platform.Services.Raffle.WorkClasses.RaffleActionsModel.RaffleAllWeNeed
+
+@{
+    ViewData["Title"] = "Sorteios/Rifas";
+}
+
+<style>
+    #teste:hover {
+        background-color: red;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5" style="width: 100%; height: 10%; box-shadow: 1px 2px 25px black" id="platformMainNavbar">
+
+    <div class="container-fluid">
+        <div style="margin-left: 2px;">
+            <a href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" class="img-fluid" title="Missier System" alt="Missier System"></a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Missier</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Minha Conta
+                    </a>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown2">
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserSocialMidias">Redes Sociais</a></li>
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Index" asp-controller="UserBankInformations">Contas Bancárias</a></li>
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserPixInformations">PIX</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            @if (Model.UserData != null)
+            {
+                <div class="float-lg-right lead ">
+                    <span style="color:white; margin-right: 10px;">
+                        Olá @Model.UserData.UserFirstName!
+                    </span>
+                </div>
+            }
+
+            <div class="">
+                <a class="btn btn-outline-warning" style="margin-right:10px;" asp-area="" asp-controller="SystemUserPlatform" asp-action="MainPagePlatform">Voltar</a>
+                <a class="btn btn-outline-danger" asp-action="GetOutFromLogin" asp-controller="Home">Sair</a>
+            </div>
+
+        </div>
+
+    </div>
+</nav>
+
+@if (!String.IsNullOrEmpty(ViewBag.alert))
+{
+    if (ViewBag.alert == "fail")
+    {
+        <div class="container-fluid mt-2">
+            <div class="alert alert-danger text-center" role="alert">
+                Infelizmente houve um erro ao acessar o serviço, tente novamente mais tarde.
+            </div>
+        </div>
+    }
+
+    if (ViewBag.alert == "failed")
+    {
+        <div class="container-fluid mt-2">
+            <div class="alert alert-danger text-center" role="alert">
+                Infelizmente houve um erro ao processar seu pagamento em nosso sistema, entre em contato conosco <a href="#">aqui</a> e siga os passos para confirmar seu pagamento.
+                Nos desculpe o transtorno.
+            </div>
+        </div>
+    }
+
+    if (ViewBag.alert == "approved")
+    {
+        <div class="container-fluid mt-2">
+            <div class="alert alert-success text-center" role="alert">
+                Pagamento efetuado com sucesso! Não perca tempo já inicie sua rifa/sorteio!
+            </div>
+        </div>
+    }
+}
+
+
+
+@if (Model.UserData != null)
+{
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-sm-12 col-lg-7">
+            <a class="btn btn-warning" asp-action="ListRaffleView" asp-controller="PlataformServiceRaffle">Meus Sorteios</a>
+            <a class="btn btn-success" asp-action="AddNewRaffle" asp-controller="PlataformServiceRaffle">Novo Sorteio</a>
+            @*<a class="btn btn-dark my-2" asp-action="" asp-controller="PlataformServiceRaffle">Esconder Todos os itens da página.</a>*@
+        </div>
+    </div>
+    <div id="raffleButtonMenu">
+        <div class="d-lg-inline mt-3">
+            <div class="row justify-content-end">
+
+                <div class="col-sm-12 col-lg-1 text-lg-end text-sm-center">
+                    <span class="lead ">Você tem </span>
+                </div>
+                <div class="col-sm-12 col-lg-1">
+                    <input type="number" class="form-control text-center" value="@Model.UserData.UserBasic.UserNumberBag" readonly />
+                </div>
+                @if (Model.UserData.UserBasic.UserNumberBag < 10)
+                {
+                    <div class="col-sm-12 col-lg-2 text-lg-start text-sm-center">
+                        <span class="lead">Número(s) <i class="fas fa-sad-tear"></i></span>
+                    </div>
+                }
+                else if (Model.UserData.UserBasic.UserNumberBag > 10 && Model.UserData.UserBasic.UserNumberBag < 30)
+                {
+                    <div class="col-sm-12 col-lg-2 text-lg-start text-sm-center">
+                        <span class="lead">Número(s) <i class="fas fa-smile-beam"></i></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-12 col-lg-2 text-lg-start text-sm-center">
+                        <span class="lead">Número(s) <i class="fas fa-grin-stars"></i></span>
+                    </div>
+                }
+
+            </div>
+
+            <div class="row justify-content-end">
+                <div class="col-sm-12 col-lg-4 text-center">
+                    <div class="form-group my-3 d-grid gap-4">
+                        <a class="btn btn-danger ml-4" onclick="showMarketPlace()">Comprar mais <i class="fas fa-grin-stars"></i></a>
+                    </div>
+
+                </div>
+            </div>
+
+            <hr />
+        </div>
+    </div>
+
+    <div id="PrePaymentSide" style="box-shadow: 1px 2px 25px black">
+        <div class="bg-dark p-3 text-light">
+            <form asp-action="RaffleMarkPlaceBuyNumberMercadoPago">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-12 text-center mb-2">
+                        <span class="display-6">Comprar Mais Números</span><br />
+                        <span class="lead">*Mínimo de 30 números*</span>
+                    </div>
+                    <div class="col-sm-12 col-lg-12 mt-1">
+                        <div class="row justify-content-center ">
+                            <div class="col-sm-12 col-lg-1 text-lg-end text-sm-center p-1">
+                                <span class="lead">Quantidade:</span>
+                            </div>
+                            <div class="col-sm-12 col-lg-2">
+                                <input name="Quantity" autofocus type="number" onkeypress="return SomenteNumero(event)" onkeyup="RaffleCalculateBuyNumber()" id="QuantityOfNumberToBuy" value="30" class="form-control text-center" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mt-1">
+                            <div class="col-sm-12 col-lg-1 text-lg-end text-sm-center p-1">
+                                <span class="lead">R$:</span>
+                            </div>
+                            <div class="col-sm-12 col-lg-2 text-center">
+                                <input type="number" name="Value" readonly inputmode="numeric" id="calculateValue" value="15" class="form-control text-center" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div id="discountSold" class="text-sm-center ">
+                            <span class="text-light">Descontos a partir de 50 números.</span>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-12 col-lg-12 text-center">
+                        <div class="form-group my-3 d-grid gap-4">
+                            <input type="submit" class="btn btn-danger ml-4" style="font-family:Arial; font-weight:600; font-size: larger;" value="Comprar" id="ConfirmSellNumber" />
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <hr />
+
+</div> 
+}
+else
+{
+    <div class="container-fluid mt-2">
+        <div class="alert alert-danger text-center" role="alert">
+            O sistema não conseguiu identificar os dados ligados ao seu usuário, tente entrar novamente no sistema.
+        </div>
+    </div>
+
+}
+
+
+<script type="text/javascript">
+
+    function showMarketPlace() {
+        $("#PrePaymentSide").toggle("fast");
+        $("#QuantityOfNumberToBuy").focus();
+    }
+
+    RaffleSearchFilterNameCode = (url) => {
+        var code = document.getElementById("raffleCodeSearch");
+        var name = document.getElementById("raffleNameNickSearch");
+        var type = document.getElementById("raffleNameTypeSearch");
+
+        url = url + "?code=" + code.value + "&nameNick=" + name.value + "&type=" + type.value;
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (res) {
+                //$("#raffleListArea").empty();
+                // $("#raffleListArea").html(res);
+            }
+        })
+    }
+
+    //myModal.addEventListener('shown.bs.modal', function () {
+    //    myInput.focus()
+    //})
+
+    function SomenteNumero(e) {
+        //alert('teste')
+        var tecla = (window.event) ? event.keyCode : e.which;
+        if (tecla > 47 && tecla < 58)
+            return true;
+        else {
+            return false;
+        }
+    }
+
+
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

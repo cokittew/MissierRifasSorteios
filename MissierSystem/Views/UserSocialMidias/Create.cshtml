@@ -1,0 +1,176 @@
+﻿@model MissierSystem.Models.GeneralModels.Models.UserSocialMidia
+
+@{
+    var valueId = Model != null ? Model.Id : 0;
+
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    #teste:hover {
+        background-color: red;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5" style="width: 100%; height: 10%; box-shadow: 1px 2px 25px black" id="platformMainNavbar">
+
+    <div class="container-fluid">
+        <div style="margin-left: 2px;">
+            <a href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" class="img-fluid" title="Missier System" alt="Missier System"></a>
+        </div>
+        @*<a class="navbar-brand" href="#">Missier System</a>*@
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Missier</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Meus Serviços
+                    </a>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="RaffleMainPage" asp-controller="PlataformServiceRaffle">Sorteio/Rifa</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Minha Conta
+                    </a>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown2">
+                        @*<li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserSocialMidias" asp-all-route-data="param">Redes Sociais</a></li>*@
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Index" asp-controller="UserBankInformations">Contas Bancárias</a></li>
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserPixInformations">PIX</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="d-flex m-2">
+                <a class="btn btn-outline-danger" asp-controller="Home" asp-action="GetOutFromLogin">Sair</a>
+            </div>
+
+        </div>
+
+    </div>
+</nav>
+
+@if (!String.IsNullOrEmpty(ViewBag.alert))
+{
+    if (ViewBag.alert == "error")
+    {
+        <div class="container-fluid mt-4">
+            <div class="alert alert-danger text-center lead" role="alert">
+                Falha ao salvar os dados!
+            </div>
+        </div>
+    }
+    else if (ViewBag.alert == "success")
+    {
+        <div class="container-fluid mt-4">
+            <div class="alert alert-success text-center lead" role="alert">
+                Dados salvos com sucesso!
+            </div>
+        </div>
+    }
+}
+
+<div class="row">
+    <div class="col-sm-12 col-lg-12 text-center">
+        <h1 class="display-4">Cadastre suas redes sociais</h1>
+    </div>
+</div>
+<hr />
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-lg-6 text-center">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" value="@valueId" />
+                <input type="hidden" asp-for="IdBasicUser" value="@ViewBag.userId" class="form-control" />
+
+                <div class="row">
+                    <div class="col-sm-12 col-lg-6">
+                        <div class="form-group">
+                            <label asp-for="Instagram" class="control-label lead"></label><i class="fab fa-instagram p-1" style="color:orange;"></i>
+                            <input asp-for="Instagram" class="form-control text-center" />
+                            <span asp-validation-for="Instagram" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-6">
+                        <div class="form-group">
+                            <label asp-for="Twitter" class="control-label lead"></label><i class="fab fa-twitter p-1" style="color:deepskyblue;"></i>
+                            <input asp-for="Twitter" class="form-control text-center" />
+                            <span asp-validation-for="Twitter" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-6 mt-2">
+                        <div class="form-group">
+                            <label asp-for="Youtube" class="control-label lead"></label><i class="fab fa-youtube p-1" style="color:red;"></i>
+                            <input asp-for="Youtube" class="form-control text-center" />
+                            <span asp-validation-for="Youtube" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-6 mt-2">
+                        <div class="form-group">
+                            <label asp-for="Facebook" class="control-label lead"></label><i class="fab fa-facebook p-1" style="color:darkblue;"></i>
+                            <input asp-for="Facebook" class="form-control text-center" />
+                            <span asp-validation-for="Facebook" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-6 mt-2">
+                        <div class="form-group">
+                            <label asp-for="Reddit" class="control-label lead"></label><i class="fab fa-reddit p-1" style="color:orangered;"></i>
+                            <input asp-for="Reddit" class="form-control text-center" />
+                            <span asp-validation-for="Reddit" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-6 mt-2">
+                        <div class="form-group">
+                            <label asp-for="WhatsApp" class="control-label lead"></label><i class="fab fa-whatsapp p-1" style="color:green;"></i>
+                            <input asp-for="WhatsApp" type="tel" class="form-control text-center" />
+                            <span asp-validation-for="WhatsApp" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-6 mt-2">
+                        <div class="form-group">
+                            <label asp-for="TikTok" class="control-label lead"></label><i class="fab fa-tiktok p-1"></i>
+                            <input asp-for="TikTok" class="form-control text-center" />
+                            <span asp-validation-for="TikTok" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-sm-12 col-lg-12">
+                        <div class="form-group">
+                            <label asp-for="AnotherInformations" class="control-label lead">Outras informações</label>
+
+                            <textarea asp-for="AnotherInformations" class="form-control text-center" rows="7" placeholder=""></textarea>
+                            <span asp-validation-for="AnotherInformations" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group d-grid gap-4 mt-2">
+                    <input type="submit" value="Salvar Mudanças" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    var myModal = document.getElementById('myModal')
+    var myInput = document.getElementById('myInput')
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

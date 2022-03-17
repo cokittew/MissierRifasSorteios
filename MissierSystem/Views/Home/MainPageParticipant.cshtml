@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(40 147 179)">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
+
+            <div class="d-flex">
+                <a class="btn btn-info" style="margin-right:10px;" asp-action="LoginPlatform" asp-controller="UserBasicInfo">Acessar Plataforma</a>
+                <a class="btn btn-danger" asp-controller="Home" asp-action="GetOutFromLogin">Sair</a>
+            </div>
+
+        </div>
+    </nav>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-lg-12 text-center mt-2">
+            <h1 class="display-3 mb-0">Sorteio?!</h1>
+            <hr class="align-content-center mb-2" style="width: 200px; height:2px; margin:auto; color: black" />
+            <a class="btn btn-outline-success mb-3" asp-action="MainPage" asp-controller="Raffle"><span class="lead"><b>Procurar um Sorteio</b></span> </a>
+            @*<p class="display-4 bt-5"> Que um tal um desses?</p>
+            <hr class="align-content-center mb-2" style="width: 400px; height:2px; margin:auto; color: black" />*@
+
+        </div>
+        @*<div class="col-sm-12 col-lg-12 pt-2" style="background-color: aquamarine">
+            <div class="row" style="margin:auto">
+
+                <div class="col-sm-12 col-lg-3 text-center mb-sm-2">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Sorteio Tal</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">de Tal</h6>
+                            <p class="card-text">Premio tal para tal que tal e tal vale tal e tal tal tal</p>
+                            <hr class="align-content-center mb-2" style="width: 200px; height:2px; margin:auto; color: black" />
+                            <a href="#" class="btn btn-outline-danger"><span class="lead"><b>Participar</b></span></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-lg-3 text-center mb-sm-2">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Sorteio Tal</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">de Tal</h6>
+                            <p class="card-text">Premio tal para tal que tal e tal vale tal e tal tal tal</p>
+                            <a href="#" class="btn btn-outline-danger"><span class="lead"><b>Participar</b></span></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-lg-3 text-center mb-sm-2">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Sorteio Tal</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">de Tal</h6>
+                            <p class="card-text">Premio tal para tal que tal e tal vale tal e tal tal tal</p>
+                            <a href="#" class="btn btn-outline-danger"><span class="lead"><b>Participar</b></span></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-lg-3 text-center mb-sm-2">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Sorteio Tal</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">de Tal</h6>
+                            <p class="card-text">Premio tal para tal que tal e tal vale tal e tal tal tal</p>
+                            <a href="#" class="btn btn-outline-danger"><span class="lead"><b>Participar</b></span></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>*@
+    </div>
+
+    <div class="row"></div>
+
+</div>

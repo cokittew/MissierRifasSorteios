@@ -1,0 +1,100 @@
+﻿
+@{
+    string f = Convert.ToString(ViewBag.Participant.Numbers);
+    var a = f.Split(',').Count();
+    var value = (ViewBag.Raffle.RaffleNumbersValue * a).ToString("C2");
+
+    Layout = null;
+
+}
+
+<html lang="pt-br">
+<head>
+    <title>Pagamento/Compra - MissierSystem</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/LoginDefault.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap5/css/bootstrap.min.css" />
+</head>
+<body class="container-fluid">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5" style="width: 100%; height: 110px; box-shadow: 1px 2px 25px black" id="platformMainNavbar">
+
+        <div class="container-fluid">
+            <div style="margin-left: 2px;">
+                <a href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" class="img-fluid" title="Missier System" alt="Missier System"></a>
+            </div>
+
+            <div class="float-lg-right lead">
+                <span style="color:white;">
+                    Pagamento
+                </span>
+            </div>
+
+            <div class="d-flex m-2">
+                    <a class="btn btn-outline-danger" asp-controller="TonStyle" asp-action="InicialPage">Sair</a>
+                </div>
+        </div>
+    </nav>
+
+    @if (!ViewBag.DeuRuim)
+    {
+        <div class="row" >
+            <div class="col-sm-12">
+                <span class="display-5">Informações</span>
+                <hr />
+            </div>
+            <div class="col-sm-12">
+                <span class="lead"><b>Nome do Participante:</b><br /> @ViewBag.Participant.FullName</span><br />
+                <span class="lead"><b>Número de Telefone:</b> @ViewBag.Participant.PhoneNumber</span><br />
+                <span class="lead"><b>Email: </b> @ViewBag.Participant.Email</span><br />
+                <span class="lead"><b>Quantidade:  </b> @a número(s)</span><br />
+                <span class="lead"><b>Seus Números: </b> @ViewBag.Participant.Numbers</span><br />
+                <span class="lead"><b>Valor: </b> @value</span><br />
+            </div>
+        </div>
+
+        <p class="fw-bold text-danger">Anote seus números.</p>
+
+        <input type="hidden" value="@ViewBag.referenceId" name="referenceId" id="referenceId" />
+        <div class="d-grid gap-4 mt-3">
+            <div class="cho-container"></div>
+        </div>
+    }
+    else
+    {
+        <span class="lead">Infelizmente houve algum erro ao buscar os dados relacionados a sua transação, tente novamente.</span>
+    }
+
+
+
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+    <script>
+        var id = document.getElementById('referenceId').value;
+
+        // Adicione as credenciais do SDK
+        const mp = new MercadoPago('APP_USR-fa5bb9d2-8fa1-47af-a936-6bac506b1ee2' /*'TEST-f89c1425-efa8-4655-aa37-613fe20a1312'*/, {
+            locale: 'pt-BR'
+        });
+
+        // Inicialize o checkout
+        mp.checkout({
+            preference: {
+                id: id
+            },
+            render: {
+                container: '.cho-container', // Indica onde o botão de pagamento será exibido
+                label: 'Pagar Número(s)', // Muda o texto do botão de pagamento (opcional)
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+
+
+
+
+

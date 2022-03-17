@@ -1,0 +1,100 @@
+﻿@model IEnumerable<MissierSystem.Models.TonModality.RaffleBusinessRaffle>
+
+
+@{
+    ViewData["Title"] = "Ton Sorteios e Rifas - Lista";
+}
+
+<div>
+    <nav class="navbar navbar-expand-lg navbar-dark text-light" style="background-color: black">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
+            <div>
+                <span class="lead">Olá, seja bem-vindo!</span>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<p>
+    <a asp-action="SelectAndReserveIndex">Adicionar Novo Sorteio</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdBasicUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Identity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RaffleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RaffleGeneralDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RafflePremiationDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RaffleNumbersValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RaffleStartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RaffleEndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RaffleStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Removed)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdBasicUser)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Identity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RaffleName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RaffleGeneralDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RafflePremiationDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RaffleNumbersValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RaffleStartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RaffleEndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RaffleStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Removed)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

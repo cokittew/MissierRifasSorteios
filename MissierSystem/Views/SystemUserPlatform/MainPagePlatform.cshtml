@@ -1,0 +1,120 @@
+﻿@model MissierSystem.Models.GeneralModels.Models.UserModelItens.UserPlatform
+
+@{
+    ViewData["Title"] = "Plataforma - Inicial";
+}
+
+<style>
+    #teste:hover {
+        background-color: red;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5" style="width: 100%; height: 10%; box-shadow: 1px 2px 25px black" id="platformMainNavbar">
+
+    <div class="container-fluid">
+        <div style="margin-left: 2px;">
+            <a href="#"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" class="img-fluid" title="Missier System" alt="Missier System"></a>
+        </div>
+        @*<a class="navbar-brand" href="#">Missier System</a>*@
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Missier</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Minha Conta
+                    </a>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown2">
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserSocialMidias">Redes Sociais</a></li>
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Index" asp-controller="UserBankInformations">Contas Bancárias</a></li>
+                        <li><a class="dropdown-item" style="color: white" id="teste" asp-action="Create" asp-controller="UserPixInformations">PIX</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="float-lg-right lead">
+                <span style="color:white;">
+                    Olá @Model.UserFirstName!
+                </span>
+            </div>
+            <div class="d-flex m-2">
+                <a class="btn btn-outline-warning text-end" style="margin-right: 10px;" asp-area="" asp-controller="Home" asp-action="MainPageParticipant">Voltar</a>
+                <a class="btn btn-outline-danger" asp-action="GetOutFromLogin" asp-controller="Home">Sair</a>
+            </div>
+        </div>
+
+        
+    </div>
+</nav>
+
+<div class="row">
+    <div class="col-sm-12 col-lg-12">
+        <div class="container-fluid">
+            <a class="btn btn-danger float-lg-start" style="color: white; margin-right: 5px;" asp-action="RaffleMainPage" asp-controller="PlataformServiceRaffle">Ir para Sorteio/Rifa</a>
+            <a class="btn btn-info float-lg-start" style="color: white" asp-action="RaffleTips" asp-controller="SystemUserPlatform">Dicas para Começar</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid"><hr class="my-2" /></div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class=" col-sm-12 col-lg-12">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12 text-center">
+                    <h1 class="display-5 ">Informações</h1>
+                    <p class="lead">
+                        Bem-vindo a área de gestão de Rifas e Sorteios! Sinta-se a vontade para explorar e iniciar seus sorteios.<br />
+                        Siga abaixo as novas melhorias que serão adicionadas em breve.
+                    </p>
+                    <ul class="list-group">
+                        <li class="list-group-item active">Novo BOT na plataforma para melhorias na dinâmica de compra, venda e busca de rifas e sorteios.</li>
+                        <li class="list-group-item ">Melhoria na interface visual de toda a plataforma para deixá-la mais intuitiva.</li>
+                        <li class="list-group-item list-group-item-info">Tutoriais em vídeo explicando todos os processos para a criação e gestão de um rifa/sorteio.</li>
+                        <li class="list-group-item">Mais opções, liberdade e possibilidades na criação de sorteios/rifas.</li>
+                        <li class="list-group-item list-group-item-info">Integração de novos meios de pagamentos para os usuários, para recebimento automático e direto em sua conta,
+                        sem a necessidade de confirmar números ou gerir comprovantes.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-lg-12">
+        <div class="row">
+            <div class="col-sm-12 col-lg-12 text-center mt-5">
+                <h1 class="display-6">Tutorial Básico</h1>
+            </div>
+            <div class="col-sm-12 col-lg-12 text-center">
+                <p class="lead">O primeiro passo para utilizar a plataforma é ir na aba 'Meu perfil' e preencher os dados pedidos em cada 
+                item do menu, principalmente a que contém suas redes sociais e os dados para pagamento, elas são essênciais para o envio 
+                dos comprovantes de pagamento pela parte dos participantes de seu sorteio.</p>
+                <p class="lead">Após isso, você estará livre para clicar no botão vermelho 'Ir para Sorteio/Rifa' no início da página e conhecer o ambiente que lhe dará o necessário
+                    para criar suas rifas/sorteios.</p>
+                <p class="lead">
+                    Para criar uma rifa/sorteio você precisar ter números em sua conta para usar no momento da criação (Você receberá 10 números gratuitos para
+                    tester a plataforma), mas não se apavore!
+                    Cada número custa R$0,50 e dependendo da quantidade receba descontos especiais que com certeza vão aquecer seu coração.
+                </p>
+                <p class="lead">Após finalizar sua compra, clique no botão 'Novo sorteio' e preencha os dados do formulário e pronto!</p>
+                <p class="lead">Agora é sua vez, administre com atenção suas rifas/sorteios, os números reservados ficarão nesse status por 24hr. Após isso, o número
+                estará novamente disponível. Então, recebeu o pagamento? Confirme e finalize a compra do número do seu participante e evite transtornos. </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

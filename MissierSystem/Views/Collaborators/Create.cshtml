@@ -1,0 +1,59 @@
+﻿@model MissierSystem.Models.TonModality.RaffleBusinessCollaborator
+
+@{
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label><span style="color:red">*</span>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PersonalCode" class="control-label"></label><span style="color:red">*</span>
+                <input asp-for="PersonalCode" class="form-control" />
+                <span asp-validation-for="PersonalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label><span style="color:red">*</span>
+                <input asp-for="Email" type="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label><span style="color:red">*</span>
+                <input asp-for="Phone" class="form-control" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" placeholder="(99) 99999-9999" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PixType" class="control-label"></label><span style="color:red">*</span>
+                <select asp-for="PixType" class="form-control align-content-center">
+                    <option value="1">CPF/CNPJ</option>
+                    <option value="2">Email</option>
+                    <option value="3" selected>Nº de telefone</option>
+                    <option value="4">Chave aleatória</option>
+                </select>
+                <span asp-validation-for="PixType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PixKey" class="control-label"></label><span style="color:red">*</span>
+                <input asp-for="PixKey" class="form-control" />
+                <span asp-validation-for="PixKey" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
