@@ -119,7 +119,7 @@
 
     @foreach (var item in Model)
     {
-        <div class="card justify-content-center mt-2" style="width: 24rem; float: left">
+        <div class="card justify-content-center mt-2" style="width: 24rem; float: left; margin-right: 5px;">
             @if (!String.IsNullOrEmpty(item.RaffleReceiptFile))
             {
                 var path = item.Id.ToString() + "image";
@@ -128,8 +128,7 @@
             <div class="card-body text-center">
                 <h5 class="card-title">@item.RaffleName</h5>
                 <p class="card-text">@item.RafflePremiationDescription</p>
-                @*<p class="card-text">@item.RaffleGeneralDescription</p>*@
-                <p class="card-text">Valor do número: <b>@item.RaffleNumbersValue.ToString("C2")</b></p>
+                <p class="card-text">Valor do número: <b>@item.RaffleNumbersValue.ToString("C2", ViewBag.Currency)</b></p>
 
                 @if (item.RaffleStatus == 1)
                 {

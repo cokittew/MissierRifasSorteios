@@ -45,6 +45,7 @@ namespace MissierSystem.Controllers
         public IActionResult InicialPage(string hasRegister)
         {
             ViewBag.hasRegister = hasRegister;
+            ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
             var r = _context.RaffleBusinessRaffle.Where(e => !e.Removed).ToList();
             return View(r);
         }
@@ -52,7 +53,8 @@ namespace MissierSystem.Controllers
         public IActionResult SelectAndReserveIndex(int id)
         {
             ViewBag.RaffleId = id;
-            var r=  _context.RaffleBusinessRaffle.Where(e => e.Id == Convert.ToInt32(id) && !e.Removed).FirstOrDefault();
+            ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
+            var r =  _context.RaffleBusinessRaffle.Where(e => e.Id == Convert.ToInt32(id) && !e.Removed).FirstOrDefault();
             ViewBag.Raffle = r;
             return View();
         }
@@ -246,6 +248,7 @@ namespace MissierSystem.Controllers
                 }
             }
 
+            ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
             return View();
         }
 
@@ -416,8 +419,6 @@ namespace MissierSystem.Controllers
 
             return Json(false);
         }
-
-
 
     }
 }

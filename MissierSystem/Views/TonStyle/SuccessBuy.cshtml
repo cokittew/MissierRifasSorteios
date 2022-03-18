@@ -2,7 +2,7 @@
 @{
     string f = Convert.ToString(ViewBag.Participant.Numbers);
     var a = f.Split(',').Count();
-    var value = (ViewBag.Raffle.RaffleNumbersValue * a).ToString("C2");
+    var value = (ViewBag.Raffle.RaffleNumbersValue * a).ToString("C2", ViewBag.Currency);
 
     Layout = null;
 
