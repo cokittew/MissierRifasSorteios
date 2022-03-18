@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,54 @@ namespace MissierSystem.Controllers
         {
             _context = context;
         }
+
+        public async Task<IActionResult> AccessPage()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AccessPageValidation(IFormCollection form)
+        {
+            var email = form["Email"];
+            if (String.IsNullOrEmpty(email))
+                return RedirectToAction("AccessPage");
+
+            var isValid = _context.RaffleBusinessCollaborator.Any(e => !e.Removed && e.Email == email);
+
+            if (isValid)
+            {
+                HttpContext.Session.SetString("UserLogId", email);
+                return RedirectToAction("CollaboratorMainPage");
+            }
+            else
+                return RedirectToAction("AccessPage");
+
+        }
+
+        public async Task<IActionResult> CollaboratorMainPage()
+        {
+            var email = HttpContext.Session.GetString("UserLogId");
+
+            if(String.IsNullOrEmpty(email))
+                return RedirectToAction("AccessPage");
+
+            var collaborator = _context.RaffleBusinessCollaborator.Where(e => !e.Removed && e.Email == email).FirstOrDefault();
+
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
         // GET: Collaborators
         public async Task<IActionResult> Index()
@@ -51,9 +100,6 @@ namespace MissierSystem.Controllers
             return View();
         }
 
-        // POST: Collaborators/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,PersonalCode,Phone,PixType,PixKey,FullName,Email")] RaffleBusinessCollaborator raffleBusinessCollaborator)
