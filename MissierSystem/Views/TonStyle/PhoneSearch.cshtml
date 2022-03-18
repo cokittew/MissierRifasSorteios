@@ -73,11 +73,11 @@
                             Ver Números
                         </button>
 
-                        @if (!String.IsNullOrEmpty(p.ReferenceId))
+                        @if (!String.IsNullOrEmpty(p.ReferenceId) && p.RaffleStatus != 3)
                         {
                             var reference = "reference" + p.Id.ToString() + p.NumberQuantity.ToString();
 
-                            <span class="btn btn-success" onclick="preparePayment('@reference')"> Pagar Meus Números</span>
+                            <span class="btn btn-success" onclick="preparePayment('@reference')"> Pagar Meu(s) Número(s)</span>
                             <input type="hidden" value="@p.ReferenceId" name="@reference" id="@reference" />
                         }
 
