@@ -79,7 +79,9 @@ namespace MissierSystem.Controllers
             int quantity = Convert.ToInt32(form["Numbers"]);
 
             if (quantity < 1)
-                return View("", raffleParticipant);
+            {
+                return View("SelectAndReserveIndex", raffleParticipant.Id);
+            }
 
             var raffle = _context.RaffleBusinessRaffle.Where(e => e.Id == raffleParticipant.RaffleId && !e.Removed)
                 .Select(e => new RaffleBusinessRaffle() { Id = e.Id, RaffleNumbersValue = e.RaffleNumbersValue }).FirstOrDefault();
@@ -112,18 +114,20 @@ namespace MissierSystem.Controllers
 
             try
             {
+                await _context.Database.BeginTransactionAsync();
                 var participant = _context.RaffleBusinessParticipant.Add(raffleParticipant);
                 await _context.SaveChangesAsync();
 
                 var v = await CreatePaymentDate(quantity, raffleParticipant, raffle.RaffleNumbersValue);
 
                 var d = new Dictionary<string, string>()
-                {
-                    {"preferenceId", v },
-                    {"participantId",  raffleParticipant.Id.ToString()}
-                };
+                    {
+                        {"preferenceId", v },
+                        {"participantId",  raffleParticipant.Id.ToString()}
+                    };
 
                 return RedirectToAction("SuccessBuy", d);
+
             }
             catch (Exception ex)
             {
@@ -180,7 +184,7 @@ namespace MissierSystem.Controllers
                     PaymentMethods = paymentMethods,
                     BackUrls = new PreferenceBackUrlsRequest
                     {
-                        Success = _configuration["URLs:DefaultUrl"] + "TonStyle/RefreshSuccessPage",
+                        Success = _configuration["URLs:DefaultUrl"] + "TonStyle/RefreshPage",
                         Failure = _configuration["URLs:DefaultUrl"] + "TonStyle/RefreshPage",
                         Pending = _configuration["URLs:DefaultUrl"] + "TonStyle/RefreshPage",
                     },
@@ -208,7 +212,6 @@ namespace MissierSystem.Controllers
 
                     try
                     {
-                        _context.Database.BeginTransaction();
                         _context.UserPaymentRegister.Add(prePay);
                         await _context.SaveChangesAsync();
                         _context.Database.CommitTransaction();
@@ -224,13 +227,19 @@ namespace MissierSystem.Controllers
                     await _context.SaveChangesAsync();
                 }
             }
-            catch (Exception e) { }
+            catch (Exception e) { _context.Database.RollbackTransaction(); }
 
             return "";
         }
 
         public IActionResult SuccessBuy(string preferenceId, string participantId)
         {
+            if (String.IsNullOrEmpty(preferenceId) || participantId == "0")
+            {
+                ViewBag.DeuRuim = true;
+                return View();
+            }
+
             var participant = _context.RaffleBusinessParticipant.Where(e => e.Id.ToString() == participantId && !e.Removed).FirstOrDefault();
             if (participant == null)
                 ViewBag.DeuRuim = true;
@@ -241,6 +250,7 @@ namespace MissierSystem.Controllers
                     ViewBag.DeuRuim = true;
                 else
                 {
+                    participant.PhoneNumber = Convert.ToInt64(participant.PhoneNumber).ToString(@"(00) 00000-0000");
                     ViewBag.DeuRuim = false;
                     ViewBag.referenceId = preferenceId;
                     ViewBag.Participant = participant;
