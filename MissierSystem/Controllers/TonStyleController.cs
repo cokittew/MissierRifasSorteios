@@ -30,8 +30,21 @@ namespace MissierSystem.Controllers
             _configuration = Configuration;
         }
 
-        public IActionResult InicialPage(string raffleId)
+        public IActionResult RefreshSuccessPage()
         {
+            var c = new Dictionary<string, string>(){ {"hasRegister", "payed" } };
+            return RedirectToAction("InicialPage", c);
+        }
+
+        public IActionResult RefreshPage()
+        {
+            var c = new Dictionary<string, string>() { { "hasRegister", "registered" } };
+            return RedirectToAction("InicialPage", c);
+        }
+
+        public IActionResult InicialPage(string hasRegister)
+        {
+            ViewBag.hasRegister = hasRegister;
             var r = _context.RaffleBusinessRaffle.Where(e => !e.Removed).ToList();
             return View(r);
         }
@@ -165,9 +178,9 @@ namespace MissierSystem.Controllers
                     PaymentMethods = paymentMethods,
                     BackUrls = new PreferenceBackUrlsRequest
                     {
-                        Success = _configuration["URLs:DefaultUrl"] + "TonStyle/InicialPage",
-                        Failure = _configuration["URLs:DefaultUrl"] + "TonStyle/InicialPage",
-                        Pending = _configuration["URLs:DefaultUrl"] + "TonStyle/InicialPage",
+                        Success = _configuration["URLs:DefaultUrl"] + "TonStyle/RefreshSuccessPage",
+                        Failure = _configuration["URLs:DefaultUrl"] + "TonStyle/RefreshPage",
+                        Pending = _configuration["URLs:DefaultUrl"] + "TonStyle/RefreshPage",
                     },
                     AutoReturn = "approved",
                     NotificationUrl = "https://missier.azurewebsites.net/paymentspace/ReceiveNotification",
@@ -291,6 +304,7 @@ namespace MissierSystem.Controllers
         {
             var pattern = new Regex("[^0-9]");
             var number = pattern.Replace(form["PhoneSearch"], string.Empty);
+            var status = form["Status"].ToString();
             var phone = number;
 
             var deuRuim = true;
@@ -312,8 +326,10 @@ namespace MissierSystem.Controllers
                         .ToList();
                     if (participantList.Count > 0)
                     {
+                        var remo = status == "approved" ? true : false;
+
                         var paymentList = _context.UserPaymentRegister
-                            .Where(e => !e.Removed && e.TransactionType == 2)
+                            .Where(e => e.Removed == remo && e.TransactionType == 2 && e.FinalStatus == status)
                             .Select(e=> new UserPaymentRegister() 
                             {
                                 Id = e.Id, ReferenceId = e.ReferenceId,
@@ -350,7 +366,8 @@ namespace MissierSystem.Controllers
                             participant.NumberQuantity =  objectPayment == null ? 0 : objectPayment.NumberQuantity;
                             participant.TotalValue = objectPayment == null ? "" : (objectPayment.NumberQuantity * objectPayment.TotalValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
                         }
-
+                        ViewBag.Status = status;
+                        ViewBag.Phone = form["PhoneSearch"];
                         ViewBag.Participant = participantList.Where(e => e.Value > 0 && e.NumberQuantity > 0);
                         ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
                     }

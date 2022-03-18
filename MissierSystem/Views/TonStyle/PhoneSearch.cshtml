@@ -13,77 +13,124 @@
     </nav>
 </div>
 
+<div class="container-fluid mt-2 bg-dark p-3" style="border-radius: 15px 15px">
+    <form asp-action="PhoneSearch" onsubmit="return Validation(event)">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <input type="text" class="form-control text-center" min="15" required placeholder="(99) 99999-9999"
+                               id="PhoneSearch" name="PhoneSearch" value="@ViewBag.Phone"
+                               onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" />
+
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <input type="hidden" value="@ViewBag.Status" id="statusBag" />
+                        <select name="Status" id="Status" required class="form-control">
+                            <option value="Start">Pendente</option>
+                            <option value="approved">Pago</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 d-grid gap-5">
+                        <button type="submit" class="btn btn-warning">Buscar Meus Pedidos</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
 <div class="container-fluid">
     <div class=" mt-3">
         @if (ViewBag.Participant != null)
         {
             @foreach (var p in ViewBag.Participant)
             {
-        <div class="my-3 bg-dark text-light p-3" style="border-radius: 10px 10px">
-            <span><b>Nome</b>: @p.FullName</span><br />
-            <span><b>Prêmio</b>: @p.RafflePremiation</span><br />
-            <span><b>Valor do número</b>: @p.Value.ToString("C2", ViewBag.Currency)</span><br />
-            <span><b>Quantidade Comprada</b>: @p.NumberQuantity</span><br />
-            <span><b>Total</b>: @p.TotalValue</span><br />
+                <div class="my-3 bg-dark text-light p-3" style="border-radius: 10px 10px">
+                    <span><b>Nome</b>: @p.FullName</span><br />
+                    <span><b>Prêmio</b>: @p.RafflePremiation</span><br />
+                    <span><b>Valor do número</b>: @p.Value.ToString("C2", ViewBag.Currency)</span><br />
+                    <span><b>Quantidade Comprada</b>: @p.NumberQuantity</span><br />
+                    <span><b>Total</b>: @p.TotalValue</span><br />
 
-            @if (p.RaffleStatus == 3)
-            {
-                <span>Status: <b class="text-success">Pago</b></span><br />
-            }
-            else
-            {
-                <span>Status: <b class="text-warning">Pendente</b></span><br />
-            }
+                    @if (p.RaffleStatus == 3)
+                    {
+                        <span>Status: <b class="text-success">Pago</b></span><br />
+                    }
+                    else
+                    {
+                        <span>Status: <b class="text-warning">Pendente</b></span><br />
+                    }
 
-            <span><b>Telefone</b>: @p.PhoneNumber</span><br />
+                    <span><b>Telefone</b>: @p.PhoneNumber</span><br />
 
-            @{var selector = "numbers" + p.Id.ToString() + p.NumberQuantity.ToString();}
+                    @{var selector = "numbers" + p.Id.ToString() + p.NumberQuantity.ToString();}
 
-        <p class="mt-2">
-            <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#@selector" aria-expanded="false" aria-controls="@selector">
-                Ver Números
-            </button>
+                    <p class="mt-2">
+                        <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#@selector" aria-expanded="false" aria-controls="@selector">
+                            Ver Números
+                        </button>
 
-            @if (!String.IsNullOrEmpty(p.ReferenceId))
-            {
-                var reference = "reference" + p.Id.ToString() + p.NumberQuantity.ToString();
+                        @if (!String.IsNullOrEmpty(p.ReferenceId))
+                        {
+                            var reference = "reference" + p.Id.ToString() + p.NumberQuantity.ToString();
 
-                <span class="btn btn-success" onclick="preparePayment('@reference')"> Pagar Meus Números</span>
-                <input type="hidden" value="@p.ReferenceId" name="@reference" id="@reference" />
-            }
+                            <span class="btn btn-success" onclick="preparePayment('@reference')"> Pagar Meus Números</span>
+                            <input type="hidden" value="@p.ReferenceId" name="@reference" id="@reference" />
+                        }
 
-        </p>
-            <div>
-                <div class="collapse collapse-horizontal" id="@selector">
-                    <div class="card card-body text-dark lead">
-                        @p.Numbers
+                    </p>
+                    <div>
+                        <div class="collapse collapse-horizontal" id="@selector">
+                            <div class="card card-body text-dark lead">
+                                @p.Numbers
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-        </div>
+                </div>
 
             }
         }
 
+    </div>
+</div>
+<script src="https://sdk.mercadopago.com/js/v2"></script>
 
-        <script src="https://sdk.mercadopago.com/js/v2"></script>
+<script>
 
-        <script>
+    document.getElementById('Status').value = document.getElementById('statusBag').value
 
-            function preparePayment(reference) {
+    function Validation(e) {
+        var value = document.getElementById('PhoneSearch').value.length;
+        if (value != 15) {
+            alert("Número de telefone invalido, digite os 11 caracteres.")
+            e.preventDefault();
+            return false;
+        }
 
-                var id = document.getElementById(reference).value;
-                const mp = new MercadoPago('APP_USR-fa5bb9d2-8fa1-47af-a936-6bac506b1ee2' /*'TEST-f89c1425-efa8-4655-aa37-613fe20a1312'*/, {
-                    locale: 'pt-BR'
-                });
+        return true;
+    }
 
-                const checkout = mp.checkout({
-                    preference: {
-                        id: id
-                    },
-                    autoOpen: true,
-                });
-            }
- 
-        </script>
+    function preparePayment(reference) {
+
+        var id = document.getElementById(reference).value;
+        const mp = new MercadoPago('APP_USR-fa5bb9d2-8fa1-47af-a936-6bac506b1ee2' /*'TEST-f89c1425-efa8-4655-aa37-613fe20a1312'*/, {
+            locale: 'pt-BR'
+        });
+
+        const checkout = mp.checkout({
+            preference: {
+                id: id
+            },
+            autoOpen: true,
+        });
+    }
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
