@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MissierSystem.DataContext;
 using MissierSystem.Models.TonModality;
+using MissierSystem.Service.HelperServices;
 using MissierSystem.Service.TokenServices;
 
 namespace MissierSystem.Controllers
@@ -30,7 +31,7 @@ namespace MissierSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> AccessPageValidation(IFormCollection form)
         {
-            var email = form["Email"];
+            var email = form["Email"].ToString();
             if (String.IsNullOrEmpty(email))
                 return RedirectToAction("AccessPage");
 
@@ -38,7 +39,7 @@ namespace MissierSystem.Controllers
 
             if (isValid)
             {
-                HttpContext.Session.SetString("UserLogId", email);
+                HttpContext.Session.SetString("EmailCollaborator", email);
                 return RedirectToAction("CollaboratorMainPage");
             }
             else
@@ -48,14 +49,44 @@ namespace MissierSystem.Controllers
 
         public async Task<IActionResult> CollaboratorMainPage()
         {
-            var email = HttpContext.Session.GetString("UserLogId");
+            var email = HttpContext.Session.GetString("EmailCollaborator");
 
             if(String.IsNullOrEmpty(email))
                 return RedirectToAction("AccessPage");
 
-            var collaborator = _context.RaffleBusinessCollaborator.Where(e => !e.Removed && e.Email == email).FirstOrDefault();
+            var collaborator = _context.RaffleBusinessCollaborator.Where(e => !e.Removed && e.Email == email)
+                .Select(e=> new RaffleBusinessCollaborator()
+                {
+                    Id = e.Id,
+                    PersonalCode = e.PersonalCode,
+                    PixKey = e.PixKey,
+                    PixType = e.PixType,
+                    FirstName = SeveralFunctions.GetUserFirstName(e.FullName),
+                    YourCash = e.YourCash,
+                    YourCashPercentage = e.YourCashPercentage,
+                    Phone = Convert.ToInt64(e.Phone).ToString(@"(00) 00000-0000"),
+                    Email = e.Email,
+                    FullName = e.FullName
 
-            return View();
+                })
+                .FirstOrDefault();
+
+            if(collaborator != null)
+                collaborator.PeriodRegisters =  await _context.CollaboratorPaymentRegister
+                    .Where(e => !e.Removed && e.CollaboratorId == collaborator.Id)
+                    .Select(e=> new CollaboratorPaymentRegister() 
+                    {
+                        Id = e.Id,
+                        IsPayed = e.IsPayed,
+                        Observation = e.Observation,
+                        PeriodValue = e.PeriodValue,
+                        PeriodTime = e.PeriodTime,
+                        PaymentDate = e.PaymentDate,
+                        ReceiptFile = String.IsNullOrEmpty(e.ReceiptFile) ? "" : e.ReceiptFile
+                    })
+                    .ToListAsync();
+
+            return View(collaborator);
         }
 
 

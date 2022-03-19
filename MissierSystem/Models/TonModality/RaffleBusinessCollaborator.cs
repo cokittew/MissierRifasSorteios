@@ -11,7 +11,7 @@ namespace MissierSystem.Models.TonModality
     [Table("raffle_business_collaborator")]
 
     public class RaffleBusinessCollaborator
-    {
+    {    
         [Key]
         public int Id { get; set; }
 
@@ -81,5 +81,14 @@ namespace MissierSystem.Models.TonModality
         [Column("removed")]
         [Display(Name = "Removido")]
         public bool Removed { get; set; }
+
+        [NotMapped]
+        public string FirstName { get; set; }
+        [NotMapped]
+        public string KeyTypeString { get; set; }
+
+        [NotMapped]
+        public List<CollaboratorPaymentRegister> PeriodRegisters { get; set; }
+
     }
 }

@@ -16,9 +16,10 @@
         <main role="main" style="margin-bottom: 25px;">
             @RenderBody()
         </main>
-        @*<div class="text-center" id="footerMissier" style="background-color: black;">
-            <span class="lead" style="color: white"> &copy; Missier</span>
-        </div>*@
+        <div class="text-center p-2" id="footerMissier" style="background-color: darkslategray;">
+            <span class="lead" style="color: white"> &copy; Missier - @DateTime.Now.Year</span>
+            <a class="navbar-brand p-2 float-right" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" width="50px" /></a>
+        </div>
 
 
     </div>

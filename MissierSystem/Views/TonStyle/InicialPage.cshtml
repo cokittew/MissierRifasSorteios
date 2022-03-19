@@ -15,6 +15,8 @@
     </nav>
 </div>
 
+<div></div>
+
 <div class="container-fluid">
 
     @if (ViewBag.hasRegister != null)
@@ -119,7 +121,7 @@
 
     @foreach (var item in Model)
     {
-        <div class="card justify-content-center mt-2" style="width: 24rem; float: left; margin-right: 5px;">
+        <div class="card justify-content-center mt-2" style="width: 24rem; display:inline-block;  margin-right: 5px;">
             @if (!String.IsNullOrEmpty(item.RaffleReceiptFile))
             {
                 var path = item.Id.ToString() + "image";

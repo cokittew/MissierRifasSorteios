@@ -30,10 +30,10 @@
             <div class="form-group">
                 <label asp-for="PixType" class="control-label"></label><span style="color:red">*</span>
                 <select asp-for="PixType" class="form-control align-content-center">
-                    <option value="1">CPF/CNPJ</option>
-                    <option value="2">Email</option>
-                    <option value="3" selected>Nº de telefone</option>
-                    <option value="4">Chave aleatória</option>
+                    <option value="CPF/CNPJ">CPF/CNPJ</option>
+                    <option value="Email">Email</option>
+                    <option value="Nº de telefone" selected>Nº de telefone</option>
+                    <option value="Chave aleatória">Chave aleatória</option>
                 </select>
                 <span asp-validation-for="PixType" class="text-danger"></span>
             </div>

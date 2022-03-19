@@ -301,3 +301,27 @@ removed bit default(0)
 );
 
 --drop table raffle_business_collaborator;
+
+create table misser_worker(
+id int identity, primary key(id),
+full_name varchar(200) not null,
+email varchar(250) COLLATE SQL_Latin1_General_CP1_CS_AS not null,
+pass_word varchar(20) not null,
+beginning_date dateTime default (GetDate()),
+hasPermission bit default(0),
+removed bit default(0)
+);
+
+create table collaborator_payment_register(
+id int identity, primary key(id),
+collaborator_id int, foreign key(collaborator_id) references raffle_business_collaborator(id),
+missier_worker_id int, foreign key(missier_worker_id) references misser_worker(id),
+period_value decimal(14,2) not null,
+period_time date not null,
+receipt_file nvarchar(max) null,
+observation text null,
+payment_date datetime,
+is_payed bit default(0),
+removed bit default(0),
+beginning_date dateTime default (GetDate()),
+);

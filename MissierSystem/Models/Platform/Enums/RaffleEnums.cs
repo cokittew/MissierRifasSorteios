@@ -22,5 +22,17 @@ namespace MissierSystem.Models.Platform.Enums
             Todos = 4,
         }
 
+        public static string GetPixTypeName(int type)
+        {
+            switch (type)
+            {
+                case 1: return "CPF/CNPJ";
+                case 2: return "Email";
+                case 3: return "Telefone";
+                case 4: return "Chave Aleatória";
+                default: return "";
+            }
+        }
+
     }
 }

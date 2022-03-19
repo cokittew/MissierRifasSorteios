@@ -43,6 +43,7 @@ namespace MissierSystem.DataContext
         public DbSet<MissierSystem.Models.TonModality.RaffleBusinessRaffle> RaffleBusinessRaffle { get; set; }
         public DbSet<MissierSystem.Models.TonModality.RaffleBusinessParticipant> RaffleBusinessParticipant { get; set; }
         public DbSet<MissierSystem.Models.TonModality.RaffleBusinessCollaborator> RaffleBusinessCollaborator { get; set; }
+        public DbSet<MissierSystem.Models.TonModality.CollaboratorPaymentRegister> CollaboratorPaymentRegister { get; set; }
 
     }
 }
