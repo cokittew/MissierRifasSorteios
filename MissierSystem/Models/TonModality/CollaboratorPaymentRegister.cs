@@ -14,6 +14,12 @@ namespace MissierSystem.Models.TonModality
         [Key]
         public int Id { get; set; }
 
+        [Column("id_identity")]
+        [Display(Name = "Código Único")]
+        [MaxLength(10, ErrorMessage = "Identity ultrapassou o limite de 10 caracteres")]
+        [Required(ErrorMessage = "Este campo é obrigatório!")]
+        public string Identity { get; set; }
+
         [ForeignKey("collaborator_id")]
         [Column("collaborator_id")]
         [Display(Name = "Id do Colaborador")]

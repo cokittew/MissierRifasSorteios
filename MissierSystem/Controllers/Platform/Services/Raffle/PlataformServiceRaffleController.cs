@@ -24,6 +24,7 @@ using Microsoft.Extensions.Configuration;
 using MissierSystem.Models.GeneralModels.Models.UserExtraModels;
 using System.Globalization;
 using MissierSystem.Service.Telegram;
+using MissierSystem.Models.TonModality;
 
 namespace MissierSystem.Controllers.Platform.Services.Raffle
 {
@@ -78,6 +79,7 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                     {
                         IdBasicUser = u.IdBasicUser,
                         FullName = u.FullName,
+                        Email = u.Email
 
                     }).FirstOrDefault();
 
@@ -86,9 +88,15 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                     {
                         Id = u.Id,
                         UserNumberBag = u.UserNumberBag,
+                        IdIdentity = u.IdIdentity
 
                     }).FirstOrDefault();
 
+                var worker = _context.MissierWorker
+                    .Where(e => !e.Removed && e.FullName == userInfo.FullName && e.HasPermission && e.Email == userInfo.Email)
+                    .Select(e=> new MissierWorker() {Id = e.Id, HasPermission = e.HasPermission, HasPermissionCollaborator = e.HasPermissionCollaborator })
+                    .FirstOrDefault();
+                ViewBag.Worker = worker;
 
             } catch (Exception) {
                 ViewBag.alert = "error";

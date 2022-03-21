@@ -7,7 +7,7 @@
 <div>
     <nav class="navbar navbar-expand-lg navbar-dark text-light" style="background-color: black">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
+            <a class="navbar-brand" asp-area="" asp-controller="TonStyle" asp-action="InicialPage"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
             <div>
                 <span class="lead">Olá, seja bem-vindo!</span>
             </div>
@@ -16,6 +16,9 @@
 </div>
 
 <div class="container-fluid mt-4">
+
+    <a asp-action="InicialPage" class="btn d-block btn-success mb-1">Ver Outros Sorteios</a>
+    <a asp-controller="Home" asp-action="Index" class="btn d-block btn-warning mb-2"><b>Quero ganhar dinheiro fazendo sorteio!</b></a>
 
     <div class="row">
         <div class="col-sm-12">

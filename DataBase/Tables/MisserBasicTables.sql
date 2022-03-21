@@ -304,16 +304,24 @@ removed bit default(0)
 
 create table misser_worker(
 id int identity, primary key(id),
+id_identity varchar(10) COLLATE SQL_Latin1_General_CP1_CS_AS not null unique,
 full_name varchar(200) not null,
 email varchar(250) COLLATE SQL_Latin1_General_CP1_CS_AS not null,
 pass_word varchar(20) not null,
 beginning_date dateTime default (GetDate()),
 hasPermission bit default(0),
+hasPermissionCollaborator bit default(0),
 removed bit default(0)
 );
 
+drop table misser_worker
+alter table misser_worker add id_identity varchar(10) COLLATE SQL_Latin1_General_CP1_CS_AS not null unique
+alter table misser_worker add hasPermissionCollaborator bit default(0)
+
+
 create table collaborator_payment_register(
 id int identity, primary key(id),
+id_identity varchar(10) COLLATE SQL_Latin1_General_CP1_CS_AS not null unique,
 collaborator_id int, foreign key(collaborator_id) references raffle_business_collaborator(id),
 missier_worker_id int, foreign key(missier_worker_id) references misser_worker(id),
 period_value decimal(14,2) not null,
@@ -325,3 +333,7 @@ is_payed bit default(0),
 removed bit default(0),
 beginning_date dateTime default (GetDate()),
 );
+
+drop table collaborator_payment_register
+
+alter table collaborator_payment_register add id_identity varchar(10) COLLATE SQL_Latin1_General_CP1_CS_AS not null unique

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MissierSystem.DataContext;
+using MissierSystem.Models.GeneralModels.Models;
 using MissierSystem.Models.TonModality;
 using MissierSystem.Service.HelperServices;
 using MissierSystem.Service.TokenServices;
@@ -22,6 +24,40 @@ namespace MissierSystem.Controllers
         {
             _context = context;
         }
+
+        private int? IsAutenticated(bool admin = true)
+        {
+            var id = HttpContext.Session.GetInt32("UserLogId");
+            if (id == 0 || id == null || id != 1)
+                return 0;
+
+            var user = _context.UserBasicInfo.Where(e => e.IdBasicUser == id)
+                .Select(e => new UserBasicInfo() { Id = e.Id, Email = e.Email, FullName = e.FullName }).FirstOrDefault();
+
+            if (user != null)
+            {
+                bool worker;
+                if (admin)
+                    worker = _context.MissierWorker.Any(e => (!e.Removed && e.HasPermission && e.HasPermissionCollaborator) && (e.FullName == user.FullName && e.Email == user.Email));
+                else
+                    worker = _context.MissierWorker.Any(e => (!e.Removed && e.HasPermission) && (e.FullName == user.FullName && e.Email == user.Email));
+
+                if (worker)
+                    return id;
+                else
+                {
+                    HttpContext.Session.SetInt32("UserLogId", 0);
+                    return 0;
+                }
+            }
+            else
+            {
+                HttpContext.Session.SetInt32("UserLogId", 0);
+                return 0;
+            }
+
+        }
+
 
         public async Task<IActionResult> AccessPage()
         {
@@ -86,6 +122,8 @@ namespace MissierSystem.Controllers
                     })
                     .ToListAsync();
 
+            ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
+
             return View(collaborator);
         }
 
@@ -104,6 +142,11 @@ namespace MissierSystem.Controllers
         // GET: Collaborators
         public async Task<IActionResult> Index()
         {
+            var idUser = IsAutenticated();
+
+            if (idUser == 0 || idUser == null)
+                return RedirectToAction("GetOutFromLogin", "Home");
+
             return View(await _context.RaffleBusinessCollaborator.ToListAsync());
         }
 

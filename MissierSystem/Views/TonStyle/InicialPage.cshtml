@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MissierSystem.Models.TonModality.RaffleBusinessRaffle>
 
 @{
-    ViewData["Title"] = "Ton Sorteios e Rifas - Lista";
+    ViewData["Title"] = "Missier Sorteios e Rifas - Lista";
 }
 
 <div>
@@ -93,6 +93,12 @@
             </div>
         </div>
     </div>
+
+</div>
+
+<div class="container-fluid mt-1">
+    <a asp-controller="Home" asp-action="Index" class="btn d-block btn-warning mb-2"><b>Quero ganhar dinheiro fazendo sorteio!</b></a>
+
 </div>
 
 <div class="container-fluid mt-2 bg-dark p-3" style="border-radius: 15px 15px">
@@ -129,8 +135,12 @@
             }
             <div class="card-body text-center">
                 <h5 class="card-title">@item.RaffleName</h5>
-                <p class="card-text">@item.RafflePremiationDescription</p>
-                <p class="card-text">Valor do número: <b>@item.RaffleNumbersValue.ToString("C2", ViewBag.Currency)</b></p>
+                @if (!String.IsNullOrEmpty(item.RaffleGeneralDescription))
+                {
+                    <span class="card-text">@item.RaffleGeneralDescription</span><br />
+                }
+                <span class="card-text">@item.RafflePremiationDescription</span><br />
+                <span class="card-text">Valor do número: <b>@item.RaffleNumbersValue.ToString("C2", ViewBag.Currency)</b></span>
 
                 @if (item.RaffleStatus == 1)
                 {

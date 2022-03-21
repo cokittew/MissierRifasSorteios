@@ -53,7 +53,7 @@ namespace MissierSystem.Models.TonModality
         [Column("participant_status")]
         [Display(Name = "Estatus Atual")]
         [Required(ErrorMessage = "Este campo é obrigatório!")]
-        public int RaffleStatus { get; set; }
+        public int ParticipantStatus { get; set; }
 
         [Column("collaborator_code")]
         [Display(Name = "Código de Convite")]
@@ -90,6 +90,9 @@ namespace MissierSystem.Models.TonModality
         public decimal Value { get; set; }
         [NotMapped]
         public string TotalValue { get; set; }
+        [NotMapped]
+        public string StatusRaffle { get; set; }
+
         [NotMapped]
         public int StatusPay { get; set; }
         

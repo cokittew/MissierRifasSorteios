@@ -5,7 +5,7 @@
 <div>
     <nav class="navbar navbar-expand-lg navbar-dark text-light" style="background-color: black">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
+            <a class="navbar-brand" asp-area="" asp-controller="TonStyle" asp-action="InicialPage"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
             <div>
                 <span class="lead">Olá, seja bem-vindo!</span>
             </div>
@@ -52,11 +52,12 @@
                 <div class="my-3 bg-dark text-light p-3" style="border-radius: 10px 10px">
                     <span><b>Nome</b>: @p.FullName</span><br />
                     <span><b>Prêmio</b>: @p.RafflePremiation</span><br />
+                    <span><b>Situação Atual da Rifa</b>: @p.StatusRaffle</span><br />
                     <span><b>Valor do número</b>: @p.Value.ToString("C2", ViewBag.Currency)</span><br />
                     <span><b>Quantidade Comprada</b>: @p.NumberQuantity</span><br />
                     <span><b>Total</b>: @p.TotalValue</span><br />
 
-                    @if (p.RaffleStatus == 3)
+                    @if (p.ParticipantStatus == 3)
                     {
                         <span>Status: <b class="text-success">Pago</b></span><br />
                     }
@@ -74,7 +75,7 @@
                             Ver Números
                         </button>
 
-                        @if (!String.IsNullOrEmpty(p.ReferenceId) && p.RaffleStatus != 3)
+                        @if (!String.IsNullOrEmpty(p.ReferenceId) && p.ParticipantStatus != 3)
                         {
                             var reference = "reference" + p.Id.ToString() + p.NumberQuantity.ToString();
 

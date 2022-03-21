@@ -7,7 +7,7 @@
 <div>
     <nav class="navbar navbar-expand-lg navbar-dark text-light" style="background-color: black">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
+            <a class="navbar-brand" asp-area="" asp-controller="TonStyle" asp-action="InicialPage"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
             <div>
                 <span class="lead">Olá, seja bem-vindo!</span>
             </div>
@@ -22,7 +22,7 @@
             <form asp-action="CreateRaffle">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <input type="hidden" asp-for="IdBasicUser" class="form-control" />
+                    <input type="hidden" asp-for="IdBasicUser" value="@ViewBag.UserId" class="form-control" />
                     <span asp-validation-for="IdBasicUser" class="text-danger"></span>
                     <input type="hidden" id="base64" name="base64" />
                 </div>
@@ -31,14 +31,11 @@
                     <input asp-for="RaffleName" autofocus class="form-control text-center" title="Digite o nome do seu sorteio/rifa." placeholder="Digite o nome do seu sorteio" />
                     <span asp-validation-for="RaffleName" class="text-danger"></span>
                 </div>
-                @*<div class="form-group">
+                <div class="form-group">
                     <label asp-for="RaffleGeneralDescription" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <i class="fas fa-question-circle"></i>
-                    </a>
                     <textarea asp-for="RaffleGeneralDescription" class="form-control text-center" title="Informações para os Participantes." placeholder="Capriche!"></textarea>
                     <span asp-validation-for="RaffleGeneralDescription" class="text-danger"></span>
-                </div>*@
+                </div>
                 <div class="form-group">
                     <label asp-for="RafflePremiationDescription" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
                     <textarea asp-for="RafflePremiationDescription" class="form-control text-center" title="Digite qual será a premiação." placeholder="Qual será o prêmio?"></textarea>

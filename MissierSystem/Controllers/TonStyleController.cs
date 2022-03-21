@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MissierSystem.DataContext;
+using MissierSystem.Models.GeneralModels.Models;
 using MissierSystem.Models.Platform.Enums;
 using MissierSystem.Models.TonModality;
 using MissierSystem.Service.MercadoPago;
@@ -30,6 +31,39 @@ namespace MissierSystem.Controllers
             _configuration = Configuration;
         }
 
+        private int? IsAutenticated(bool admin = false)
+        {
+            var id = HttpContext.Session.GetInt32("UserLogId");
+            if (id == 0 || id == null || id != 1)
+                return 0;
+
+            var user = _context.UserBasicInfo.Where(e => e.IdBasicUser == id)
+                .Select(e => new UserBasicInfo() { Id = e.Id, Email = e.Email, FullName = e.FullName }).FirstOrDefault();
+
+            if(user != null)
+            {
+                bool worker;
+                if (admin)
+                    worker = _context.MissierWorker.Any(e => (!e.Removed && e.HasPermission && e.HasPermissionCollaborator) && (e.FullName == user.FullName && e.Email == user.Email));
+                else
+                     worker =_context.MissierWorker.Any(e => (!e.Removed && e.HasPermission) && (e.FullName == user.FullName && e.Email == user.Email));
+
+                if (worker)
+                    return id;
+                else
+                {
+                    HttpContext.Session.SetInt32("UserLogId", 0);
+                    return 0;
+                }
+            }
+            else
+            {
+                HttpContext.Session.SetInt32("UserLogId", 0);
+                return 0;
+            }
+
+        }
+
         public IActionResult RefreshSuccessPage()
         {
             var c = new Dictionary<string, string>(){ {"hasRegister", "payed" } };
@@ -47,6 +81,18 @@ namespace MissierSystem.Controllers
             ViewBag.hasRegister = hasRegister;
             ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
             var r = _context.RaffleBusinessRaffle.Where(e => !e.Removed).ToList();
+            return View(r);
+        }
+
+        public IActionResult InicialPageAdmin()
+        {
+            var idUser = IsAutenticated();
+
+            if (idUser == 0 || idUser == null)
+                return RedirectToAction("GetOutFromLogin", "Home");
+
+            ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
+            var r = _context.RaffleBusinessRaffle.Where(e => !e.Removed && e.IdBasicUser == idUser).ToList();
             return View(r);
         }
 
@@ -92,11 +138,19 @@ namespace MissierSystem.Controllers
             for (int i = 0; i < quantity; i++)
             {
                 var randomNumber = r.Next(01000, 99999);
+                var toPut = randomNumber.ToString("D5");
 
-                if (l.Any(e => e == randomNumber.ToString("D5")))
+                if (l.Any(e => e == toPut))
                     i -= 1;
                 else
-                    l.Add(randomNumber.ToString("D5"));
+                {
+                    var has = _context.RaffleBusinessParticipant.Any(e => e.RaffleId == raffle.Id && e.Numbers.Contains(toPut));
+
+                    if(!has)
+                        l.Add(toPut);
+                    else
+                        i -= 1;
+                }
             }
 
             var s = l.FirstOrDefault();
@@ -109,7 +163,7 @@ namespace MissierSystem.Controllers
             raffleParticipant.Numbers = s;
             raffleParticipant.Identity = RandomToken.RandomString(10);
             raffleParticipant.Removed = false; 
-            raffleParticipant.RaffleStatus = 1;
+            raffleParticipant.ParticipantStatus = 1;
 
 
             try
@@ -264,6 +318,12 @@ namespace MissierSystem.Controllers
 
         public IActionResult AddNewRaffleTonStyle()
         {
+            var idUser = IsAutenticated();
+
+            if (idUser == 0 || idUser == null)
+                return RedirectToAction("GetOutFromLogin", "Home");
+
+            ViewBag.UserId = idUser.Value;
             return View();
         }
 
@@ -271,10 +331,16 @@ namespace MissierSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateRaffle(IFormCollection form)
         {
+            var idUser = IsAutenticated();
+            var userIdRout = Convert.ToInt32(form["IdBasicUser"]);
+
+            if (idUser == 0 || idUser == null || idUser != userIdRout)
+                return RedirectToAction("GetOutFromLogin", "Home");
+
             RaffleBusinessRaffle raffle = new RaffleBusinessRaffle();
-            raffle.IdBasicUser = 1;
+            raffle.IdBasicUser = idUser.Value;
             raffle.RaffleName = form["RaffleName"];
-            raffle.RaffleGeneralDescription = ""; // form["RaffleGeneralDescription"];
+            raffle.RaffleGeneralDescription = form["RaffleGeneralDescription"];
             raffle.RafflePremiationDescription = form["RafflePremiationDescription"];
             raffle.RaffleReceiptFile = form["base64"].ToString();
             var n = form["RaffleNumbersValue"].ToString().Replace(".", ",");
@@ -296,6 +362,58 @@ namespace MissierSystem.Controllers
             await _context.SaveChangesAsync();
 
             return View("AddNewRaffleTonStyle", new RaffleBusinessRaffle());
+        }
+
+        public IActionResult RaffleDatails()
+        {
+            var idUser = IsAutenticated();
+
+            if (idUser == 0 || idUser == null)
+                return RedirectToAction("GetOutFromLogin", "Home");
+
+            ViewBag.UserId = idUser.Value;
+            return View();
+        }
+
+        public async Task<IActionResult> RemoveRaffle(int id)
+        {
+            var idUser = IsAutenticated();
+
+            if (idUser == 0 || idUser == null)
+                return RedirectToAction("GetOutFromLogin", "Home");
+
+            var p = _context.RaffleBusinessParticipant.Where(e => e.RaffleId == id).Select(e => new RaffleBusinessParticipant() { Id = e.Id }).ToList();
+            var v = _context.RaffleBusinessRaffle.Where(e => e.Id == id && !e.Removed)
+                .Select(e => new RaffleBusinessRaffle() { Id = e.Id, RaffleStatus = e.RaffleStatus })
+                .FirstOrDefault();
+
+            if(v.RaffleStatus == 3)
+            {
+                v.Removed = true;
+                _context.RaffleBusinessRaffle.Attach(v).Property(e => e.Removed).IsModified = true;
+            }
+            else
+            {
+                if (p.Count() > 0)
+                {
+                    v.RaffleStatus = 3;
+                    _context.RaffleBusinessRaffle.Attach(v).Property(e => e.RaffleStatus).IsModified = true;
+                }
+                else
+                {
+                    v.Removed = true;
+                    _context.RaffleBusinessRaffle.Attach(v).Property(e => e.Removed).IsModified = true;
+                }
+
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e) { }
+
+            return RedirectToAction("InicialPageAdmin");
         }
 
         private int GetStatusFromDate(DateTime initial)
@@ -320,8 +438,6 @@ namespace MissierSystem.Controllers
             var status = form["Status"].ToString();
             var phone = number;
 
-            var deuRuim = true;
-
             if (!String.IsNullOrEmpty(phone))
             {
                 if (phone.Length == 11)
@@ -334,7 +450,7 @@ namespace MissierSystem.Controllers
                             Numbers = e.Numbers,
                             PhoneNumber = Convert.ToInt64(e.PhoneNumber).ToString(@"(00) 00000-0000"),
                             RaffleId = e.RaffleId,
-                            RaffleStatus = e.RaffleStatus
+                            ParticipantStatus = e.ParticipantStatus
                         })
                         .ToList();
                     if (participantList.Count > 0)
@@ -354,13 +470,13 @@ namespace MissierSystem.Controllers
                             }).ToList();
 
                         var raffleList = _context.RaffleBusinessRaffle
-                            .Where(e => !e.Removed && e.RaffleStatus == 1)
+                            .Where(e => !e.Removed)
                             .Select(e => new RaffleBusinessRaffle()
                             {
                                 Id = e.Id,
                                 RaffleName = e.RaffleName,
                                 RafflePremiationDescription = e.RafflePremiationDescription,
-
+                                RaffleStatus = e.RaffleStatus
                             });
 
                         UserPaymentRegister objectPayment;
@@ -371,14 +487,16 @@ namespace MissierSystem.Controllers
                             objectPayment = paymentList.Where(e => e.IdBasicUser == participant.Id).FirstOrDefault();
                             objectRaffle = raffleList.Where(e => e.Id == participant.RaffleId).FirstOrDefault();
 
-                            participant.RaffleName = objectRaffle.RaffleName;
-                            participant.RafflePremiation = objectRaffle.RafflePremiationDescription;
+                            participant.RaffleName = objectRaffle != null ? objectRaffle.RaffleName : "Rifa Excluída.";
+                            participant.RafflePremiation = objectRaffle != null ? objectRaffle.RafflePremiationDescription : "Rifa Excluída.";
+                            participant.StatusRaffle = objectRaffle != null ? objectRaffle.RaffleStatus == 1 ? "Disponível" : "Encerrado" : "Excluída";
 
                             participant.ReferenceId = objectPayment == null ? "" : objectPayment.ReferenceId;
                             participant.Value = objectPayment == null ? 0 : objectPayment.TotalValue;
                             participant.NumberQuantity =  objectPayment == null ? 0 : objectPayment.NumberQuantity;
                             participant.TotalValue = objectPayment == null ? "" : (objectPayment.NumberQuantity * objectPayment.TotalValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
                         }
+
                         ViewBag.Status = status;
                         ViewBag.Phone = form["PhoneSearch"];
                         ViewBag.Participant = participantList.Where(e => e.Value > 0 && e.NumberQuantity > 0);

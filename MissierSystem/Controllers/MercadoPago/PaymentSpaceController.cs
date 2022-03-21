@@ -108,7 +108,7 @@ namespace MissierSystem.Controllers.MercadoPago
                             .Select(e => new RaffleBusinessParticipant()
                             {
                                 Id = e.Id,
-                                RaffleStatus = 3,
+                                ParticipantStatus = 3,
                                 CollaboratorCode = e.CollaboratorCode
                                 
                             }).FirstOrDefault();
@@ -152,7 +152,7 @@ namespace MissierSystem.Controllers.MercadoPago
                                     await _context.SaveChangesAsync();
 
                                     _context.RaffleBusinessParticipant.Update(user);
-                                    _context.Attach(user).Property(e => e.RaffleStatus).IsModified = true;
+                                    _context.Attach(user).Property(e => e.ParticipantStatus).IsModified = true;
                                     await _context.SaveChangesAsync();
 
                                     _context.Database.CommitTransaction();

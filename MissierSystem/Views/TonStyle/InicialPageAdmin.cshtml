@@ -1,0 +1,89 @@
+﻿@model IEnumerable<MissierSystem.Models.TonModality.RaffleBusinessRaffle>
+
+
+@{
+    ViewData["Title"] = "Admin - Missier Sorteios e Rifas";
+}
+
+<div>
+    <nav class="navbar navbar-expand-lg navbar-dark text-light" style="background-color: black">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="TonStyle" asp-action="InicialPage"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</a>
+            <div>
+                <span class="lead">Olá, seja bem-vindo!</span><br />
+                <a class="btn btn-outline-danger" asp-controller="TonStyle" asp-action="AddNewRaffleTonStyle">Criar Novo Sorteio</a>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div class="container-fluid mt-3">
+
+    @foreach (var item in Model)
+    {
+        <div class="card justify-content-center mt-2" style="width: 24rem; display:inline-block;  margin-right: 5px;">
+            @if (!String.IsNullOrEmpty(item.RaffleReceiptFile))
+            {
+                var path = item.Id.ToString() + "image";
+                <img src="@item.RaffleReceiptFile" id="@path" style="width: 24rem;" class="card-img-top" alt="...">
+            }
+        <div class="card-body text-center">
+            <h5 class="card-title">@item.RaffleName</h5><br />
+            <span class="card-text">@item.RaffleGeneralDescription</span><br />
+            <span class="card-text">@item.RafflePremiationDescription</span><br />
+            <span class="card-text">Valor do número: <b>@item.RaffleNumbersValue.ToString("C2", ViewBag.Currency)</b></span>
+
+            @if (item.RaffleStatus == 1)
+            {
+                <p class="card-text">Status: <span style="color:green"> Disponível </span></p>
+
+            }
+            else
+            {
+                <p class="card-text">Status: <span style="color:red">Encerrado</span></p>
+            }
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="d-grid gap-4">
+                        <a asp-action="RaffleDatails" asp-route-id="@item.Id" class="btn btn-outline-dark">Ver Estatisticas</a>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="d-grid gap-4">
+                        <a asp-action="RemoveRaffle" asp-route-id="@item.Id" class="btn btn-outline-danger">Excluir Rifa</a>
+                        @*<a asp-action="Remove" asp-route-id="@item.Id" class="btn btn-outline-danger">Excluir Rifa</a>*@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+    }
+
+</div>
+
+<script>
+    function loadImage(path) {
+
+        var data = document.getElementById(path).getAttribute('src');
+        console.log(path + " " + data)
+
+        var f = data.split(';');
+        var f2 = f[0].split(':');
+
+        const blob = b64toBlob(f[1].replace("base64,", ""), f2[1]);
+        const blobUrl = URL.createObjectURL(blob);
+    }
+
+    function ExcluirRaffle(id) {
+
+    }
+
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
