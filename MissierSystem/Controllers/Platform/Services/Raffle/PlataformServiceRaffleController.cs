@@ -669,7 +669,9 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                             FinalStatus = "Start",
                             NumberQuantity = pack.Quantity,
                             Reference = reference,
-                            TransactionType = 1
+                            TransactionType = 1,
+                            ReferenceId = preference.Id,
+                            TotalValue = pack.Quantity * price
                         };
 
                         try
@@ -689,10 +691,10 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                             _context.Database.CommitTransaction();
                             return View();
                         }
-                        catch (Exception) { _context.Database.RollbackTransaction(); }
+                        catch (Exception e) { _context.Database.RollbackTransaction(); }
                     }
                 }
-                catch (Exception) { }
+                catch (Exception e) { }
             }
 
             var parameters = new Dictionary<string, string>() { { "paymentAnswer", "fail" } };
