@@ -96,9 +96,10 @@ namespace MissierSystem.Controllers
             return View(r);
         }
 
-        public IActionResult SelectAndReserveIndex(int id)
+        public IActionResult SelectAndReserveIndex(int id, [FromQuery(Name = "convite")]string collaboratorCode = "")
         {
             ViewBag.RaffleId = id;
+            ViewBag.CollaboratorCode = collaboratorCode;
             ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
             var r =  _context.RaffleBusinessRaffle.Where(e => e.Id == Convert.ToInt32(id) && !e.Removed).FirstOrDefault();
             ViewBag.Raffle = r;
@@ -497,14 +498,15 @@ namespace MissierSystem.Controllers
                             participant.TotalValue = objectPayment == null ? "" : (objectPayment.NumberQuantity * objectPayment.TotalValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
                         }
 
-                        ViewBag.Status = status;
-                        ViewBag.Phone = form["PhoneSearch"];
+                        
                         ViewBag.Participant = participantList.Where(e => e.Value > 0 && e.NumberQuantity > 0);
                         ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
                     }
 
                 }
 
+                ViewBag.Status = status;
+                ViewBag.Phone = form["PhoneSearch"];
             }
 
             return View();

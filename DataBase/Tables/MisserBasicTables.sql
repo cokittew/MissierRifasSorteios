@@ -1,6 +1,6 @@
-create database UserClienteDataContext;
+--create database UserClienteDataContext;
 
-use UserClienteDataContext;
+--use UserClienteDataContext;
 
 -- User Interface and actions ----
 
@@ -203,12 +203,12 @@ beginning_date dateTime default (GetDate()),
 removed bit default(0)
 );
 
-alter table platform_payment_transactions add referenceId varchar(250) not null default('');
-alter table platform_payment_transactions add typeTransaction int not null default(1);
-alter table platform_payment_transactions add [id_raffle] [int] NULL;
-alter table platform_payment_transactions add totalValue decimal(14,2) not NULL default(0);
+--alter table platform_payment_transactions add referenceId varchar(250) not null default('');
+--alter table platform_payment_transactions add typeTransaction int not null default(1);
+--alter table platform_payment_transactions add [id_raffle] [int] NULL;
+--alter table platform_payment_transactions add totalValue decimal(14,2) not NULL default(0);
 
-drop table platform_payment_transactions;
+--drop table platform_payment_transactions;
 
 create table platform_service_raffle_payment_types_allowed(
 id int identity, primary key(id),
@@ -243,12 +243,12 @@ removed bit default(0),
 beginning_date dateTime default (GetDate())
 );
 
-drop table platform_service_raffle_files;
+--drop table platform_service_raffle_files;
 
-select * from platform_service_raffle_files;
+--select * from platform_service_raffle_files;
 
-alter table platform_service_raffle_files add pre_aproved bit default(1);
-update platform_service_raffle_files set aproved = 0;
+--alter table platform_service_raffle_files add pre_aproved bit default(1);
+--update platform_service_raffle_files set aproved = 0;
 
 create table raffle_business_participant(
 id int identity, primary key(id),
@@ -264,7 +264,7 @@ beginning_date dateTime default (GetDate()),
 removed bit default(0)
 );
 
-alter table raffle_business_participant add collaborator_code varchar(8) null;
+--alter table raffle_business_participant add collaborator_code varchar(8) null;
 
 create table raffle_business_raffle(
 id int identity, primary key(id),
@@ -282,7 +282,7 @@ beginning_date dateTime default (GetDate()),
 removed bit default(0)
 );
 
-alter table raffle_business_raffle add raffle_receipt_file nvarchar(max) null;
+--alter table raffle_business_raffle add raffle_receipt_file nvarchar(max) null;
 
 create table raffle_business_collaborator(
 id int identity, primary key(id),
@@ -314,9 +314,9 @@ hasPermissionCollaborator bit default(0),
 removed bit default(0)
 );
 
-drop table misser_worker
-alter table misser_worker add id_identity varchar(10) COLLATE SQL_Latin1_General_CP1_CS_AS not null unique
-alter table misser_worker add hasPermissionCollaborator bit default(0)
+--drop table misser_worker
+--alter table misser_worker add id_identity varchar(10) COLLATE SQL_Latin1_General_CP1_CS_AS not null unique
+--alter table misser_worker add hasPermissionCollaborator bit default(0)
 
 
 create table collaborator_payment_register(
@@ -334,6 +334,6 @@ removed bit default(0),
 beginning_date dateTime default (GetDate()),
 );
 
-drop table collaborator_payment_register
+--drop table collaborator_payment_register
 
-alter table collaborator_payment_register add id_identity varchar(10) COLLATE SQL_Latin1_General_CP1_CS_AS not null unique
+--alter table collaborator_payment_register add id_identity varchar(10) COLLATE SQL_Latin1_General_CP1_CS_AS not null unique

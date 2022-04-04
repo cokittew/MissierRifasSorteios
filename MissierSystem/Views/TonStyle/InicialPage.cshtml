@@ -11,6 +11,7 @@
             <div>
                 <span class="lead">Olá, seja bem-vindo!</span>
             </div>
+            <a  asp-action="AccessPage" asp-controller="Collaborators" class="btn d-block btn-outline-info mb-1">Sou Colaborador</a>
         </div>
     </nav>
 </div>
@@ -100,6 +101,12 @@
     <a asp-controller="Home" asp-action="Index" class="btn d-block btn-warning mb-2"><b>Quero ganhar dinheiro fazendo sorteio!</b></a>
 </div>
 
+<div class="container-fluid mt-1">
+    <a href="https://api.whatsapp.com/send?phone=5573999020709" target="_blank" class="btn d-block btn-outline-danger mb-2 lead">
+        <b>Quero ganhar dinheiro compartilhando sorteio!<i class="fab fa-whatsapp" style="color:green; margin-left: 3px;"></i></b></a>
+
+    @*<a asp-controller="Home" asp-action="Index" ><b></b></a>*@
+</div>
 
 <div class="container-fluid mt-2 bg-dark p-3">
     <form asp-action="PhoneSearch">
@@ -113,7 +120,7 @@
                                onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" />
                     </div>
                     <div class="col-sm-4 col-md-2 d-grid gap-5">
-                        <button type="submit" class="btn btn-warning">Buscar Meus Pedidos</button>
+                        <button type="submit" class="btn btn-warning ">Buscar Meus Pedidos</button>
                     </div>
                 </div>
             </div>

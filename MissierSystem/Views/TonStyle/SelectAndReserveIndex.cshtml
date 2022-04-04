@@ -62,7 +62,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="CollaboratorCode" class="control-label lead"></label>
-                    <input asp-for="CollaboratorCode" class="form-control" placeholder="Ex: AISUFTYHS" />
+                    <input asp-for="CollaboratorCode" value="@ViewBag.CollaboratorCode" class="form-control" placeholder="Ex: AISUFTYHS" />
                     <span asp-validation-for="CollaboratorCode" class="text-danger"></span>
                 </div>
 
@@ -96,7 +96,6 @@
 
                 </div>
 
-
             </form>
         </div>
     </div>
@@ -104,6 +103,13 @@
 </div>
 
 <script>
+
+    /*var v = '@ViewBag.CollaboratorCode';
+    if(v.length == 8){
+        document.getElementById('CollaboratorCode').setAttribute("readonly", "readonly")
+    }else{
+        document.getElementById('CollaboratorCode').removeAttribute("readonly");
+    }*/
 
     function AddNumbersQuantity(quantity) {
         var number = document.getElementById("Numbers");

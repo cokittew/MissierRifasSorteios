@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/missier-db-server/databases/MissierServiceDataBase",
+      "type": "mssql.azure",
+      "connectionId": "UserClienteDataContext",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

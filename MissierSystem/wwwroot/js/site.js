@@ -10,7 +10,6 @@ function hideShowPlatformSidebarMenu() {
     
 }
 
-
 function mask(o, f) {
     setTimeout(function () {
         var v = mphone(o.value);

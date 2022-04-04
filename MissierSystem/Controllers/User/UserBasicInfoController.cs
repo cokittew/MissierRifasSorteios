@@ -258,7 +258,8 @@ namespace MissierSystem.Controllers.User
                 try
                 {
                     _context.Database.BeginTransaction();
-                    var user = _context.Add(new UserBasic { UserNumberBag = 10, IdIdentity = RandomToken.RandomString(10) , BeginningDate = DateTime.Now });
+                    var user = _context.Add(new UserBasic 
+                    { UserNumberBag = 10, IdIdentity = RandomToken.RandomString(10) , BeginningDate = DateTime.Now, SignatureActive = true });
                     await _context.SaveChangesAsync();
 
                     if (user != null)
@@ -282,7 +283,7 @@ namespace MissierSystem.Controllers.User
                     {
                         UserId = userBasicInfo.IdBasicUser,
                         CodeAccess = RandomToken.RandomString(8),
-                        Removed = false
+                        Removed = true
                     };
 
                     var result = _context.UserTelegramValidation.Add(telegramValidation);
@@ -343,6 +344,7 @@ namespace MissierSystem.Controllers.User
                     Console.WriteLine(e);
                 }
             }
+
             return View(userBasicInfo);
         }
         #endregion
@@ -357,6 +359,7 @@ namespace MissierSystem.Controllers.User
             ViewBag.userName = userName;
             return View(token);
         }
+
         #region Remote Validations
         public async Task<IActionResult> VerifyNewEmail(string email)
         {

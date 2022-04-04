@@ -29,19 +29,25 @@
         </div>
         <div class="col-sm-12 col-lg-12 text-center p-4 text-light bg-dark" style="height: auto; border-radius: 10px">
             <div class="row">
-                <div class="col-sm-12 col-lg-4 pt-4 pb-4">
+                <div class="col-sm-12 col-lg-3 pt-4 pb-4">
                     <div class="d-grid gap-2">
-                        <a class="btn btn-danger pt-4 pb-4" asp-action="Login" asp-controller="UserBasicInfo" asp-all-route-data="@userServices"><span class="lead"><b>Participar de um Sorteio</b></span></a>
+                        <a class="btn btn-outline-info pt-4 pb-4" asp-action="InicialPage" asp-controller="TonStyle"><span class="lead"><b>Nossos Sorteios</b></span></a>
                         <hr class="mt-3" style="width: 80%; margin: auto;" />
                     </div>
                 </div>
-                <div class="col-sm-12 col-lg-4 pt-4 pb-4">
+                <div class="col-sm-12 col-lg-3 pt-4 pb-4">
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-danger pt-4 pb-4" asp-action="Login" asp-controller="UserBasicInfo" asp-all-route-data="@userServices"><span class="lead"><b>Sorteios de Usuários</b></span></a>
+                        <hr class="mt-3" style="width: 80%; margin: auto;" />
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-3 pt-4 pb-4">
                     <div class="d-grid gap-2">
                         <a class="btn btn-success pt-4 pb-4" asp-action="NewUsersignUp" asp-controller="UserBasicInfo"><span class="lead"> <b>Cadastrar-se e Participar</b></span></a>
                         <hr class="mt-2" style="width: 80%; margin: auto;" />
                     </div>
                 </div>
-                <div class="col-sm-12 col-lg-4 pt-4 pb-4">
+                <div class="col-sm-12 col-lg-3 pt-4 pb-4">
                     <div class="d-grid gap-2">
                         <a class="btn btn-warning pt-4 pb-4" asp-action="Login" asp-controller="UserBasicInfo" asp-all-route-data="@platform"><span class="lead"><b>Criar um Sorteio</b></span></a>
                         <hr class="mt-3" style="width: 80%; margin: auto;" />
