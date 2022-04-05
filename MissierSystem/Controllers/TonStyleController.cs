@@ -34,7 +34,7 @@ namespace MissierSystem.Controllers
         private int? IsAutenticated(bool admin = false)
         {
             var id = HttpContext.Session.GetInt32("UserLogId");
-            if (id == 0 || id == null || id != 1)
+            if (id == 0 || id == null)
                 return 0;
 
             var user = _context.UserBasicInfo.Where(e => e.IdBasicUser == id)
@@ -76,8 +76,18 @@ namespace MissierSystem.Controllers
             return RedirectToAction("InicialPage", c);
         }
 
-        public IActionResult InicialPage(string hasRegister)
+        public IActionResult InicialPage(string hasRegister, [FromQuery(Name = "convite")] string collaboratorCode = "")
         {
+
+            if (!String.IsNullOrEmpty(collaboratorCode) && collaboratorCode.Length == 8)
+            {
+                var exists = _context.RaffleBusinessCollaborator.Any(e => !e.Removed && e.PersonalCode.ToLower() == collaboratorCode.ToLower());
+                if (!exists)
+                    collaboratorCode = "";
+                else
+                    HttpContext.Session.SetString("collaboratorCode", collaboratorCode);
+            }
+
             ViewBag.hasRegister = hasRegister;
             ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
             var r = _context.RaffleBusinessRaffle.Where(e => !e.Removed).ToList();
@@ -105,6 +115,11 @@ namespace MissierSystem.Controllers
                 var exists = _context.RaffleBusinessCollaborator.Any(e => !e.Removed && e.PersonalCode.ToLower() == collaboratorCode.ToLower());
                 if (!exists)
                     collaboratorCode = "";
+                else
+                    HttpContext.Session.SetString("collaboratorCode", collaboratorCode);
+            }else if (!String.IsNullOrEmpty(HttpContext.Session.GetString("collaboratorCode")))
+            {
+                collaboratorCode = HttpContext.Session.GetString("collaboratorCode");
             }
 
             ViewBag.RaffleId = id;
@@ -124,6 +139,14 @@ namespace MissierSystem.Controllers
             raffleParticipant.Email = form["Email"];
             raffleParticipant.FullName = form["FullName"];
             raffleParticipant.CollaboratorCode = form["CollaboratorCode"];
+
+            if (String.IsNullOrEmpty(raffleParticipant.CollaboratorCode))
+            {
+                var code = HttpContext.Session.GetString("collaboratorCode");
+                raffleParticipant.CollaboratorCode = String.IsNullOrEmpty(code) ? "" : code;
+                HttpContext.Session.SetString("collaboratorCode", raffleParticipant.CollaboratorCode);
+            }
+
             if (!String.IsNullOrEmpty(raffleParticipant.CollaboratorCode))
                 raffleParticipant.CollaboratorCode = raffleParticipant.CollaboratorCode.ToLower();
             var pattern = new Regex("[^0-9]");
@@ -135,9 +158,7 @@ namespace MissierSystem.Controllers
             int quantity = Convert.ToInt32(form["Numbers"]);
 
             if (quantity < 1)
-            {
                 return View("SelectAndReserveIndex", raffleParticipant.Id);
-            }
 
             var raffle = _context.RaffleBusinessRaffle.Where(e => e.Id == raffleParticipant.RaffleId && !e.Removed)
                 .Select(e => new RaffleBusinessRaffle() { Id = e.Id, RaffleNumbersValue = e.RaffleNumbersValue }).FirstOrDefault();
@@ -523,22 +544,46 @@ namespace MissierSystem.Controllers
 
         public IActionResult VerifyPhoneNumber(string PhoneNumber, string PhoneNumber2)
         {
-            if (!String.IsNullOrEmpty(PhoneNumber) && !String.IsNullOrEmpty(PhoneNumber2))
+            if (!String.IsNullOrEmpty(PhoneNumber))
             {
-                var pattern = new Regex("[^0-9]");
-                var number = pattern.Replace(PhoneNumber, string.Empty);
-                PhoneNumber = number;
+                if (!String.IsNullOrEmpty(PhoneNumber2))
+                {
+                    var pattern = new Regex("[^0-9]");
+                    var number = pattern.Replace(PhoneNumber, string.Empty);
+                    PhoneNumber = number;
 
-                number = pattern.Replace(PhoneNumber2, string.Empty);
-                PhoneNumber2 = number;
+                    number = pattern.Replace(PhoneNumber2, string.Empty);
+                    PhoneNumber2 = number;
 
-                if (PhoneNumber != PhoneNumber2)
-                    return Json($"Números de telefone diferentes");
-                else
-                    return Json(true);
+                    if (PhoneNumber != PhoneNumber2)
+                        return Json($"Números de telefone diferentes");
+                    else
+                        return Json(true);
+                }
+                return Json(true);
+
             }
-            else
-                return Json(false);
+            else if(!String.IsNullOrEmpty(PhoneNumber2))
+            {
+                if (!String.IsNullOrEmpty(PhoneNumber))
+                {
+                    var pattern = new Regex("[^0-9]");
+                    var number = pattern.Replace(PhoneNumber, string.Empty);
+                    PhoneNumber = number;
+
+                    number = pattern.Replace(PhoneNumber2, string.Empty);
+                    PhoneNumber2 = number;
+
+                    if (PhoneNumber != PhoneNumber2)
+                        return Json($"Números de telefone diferentes");
+                    else
+                        return Json(true);
+                }
+                return Json(true);
+
+            }
+
+            return Json(true);
         }
 
         public IActionResult VerifyInviteCode(string collaboratorCode)

@@ -19,14 +19,15 @@
 
     <a asp-action="InicialPage" class="btn d-block btn-success mb-1">Ver Outros Sorteios</a>
 
-    <div class="container-fluid mt-1">
+    <div class=" mt-1">
         <a href="https://api.whatsapp.com/send?phone=5573999020709" target="_blank" class="btn d-block btn-outline-danger mb-2 lead">
             <b>Quero ganhar dinheiro compartilhando sorteio!<i class="fab fa-whatsapp" style="color:green; margin-left: 3px;"></i></b>
         </a>
-
-        @*<a asp-controller="Home" asp-action="Index" ><b></b></a>*@
     </div>
-    @*<a asp-controller="Home" asp-action="Index" class="btn d-block btn-warning mb-2"><b>Quero ganhar dinheiro fazendo sorteio!</b></a>*@
+
+    <div>
+        <img src="@ViewBag.Raffle.RaffleReceiptFile" style="width: 24rem;" class="card-img-top" alt="..." />
+    </div>
 
     <div class="row">
         <div class="col-sm-12">
@@ -58,7 +59,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="PhoneNumber" class="control-label lead"></label><span style="color: red"> *</span>
-                    <input asp-for="PhoneNumber" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);"
+                    <input asp-for="PhoneNumber" type="tel" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);"
                            class="form-control" placeholder="(99) 99999-9999" />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
@@ -77,7 +78,7 @@
                     }
                     else
                     {
-                        <input type="hidden" id="CollaboratorCode" name="CollaboratorCode" value="@ViewBag.RaffleId" />
+                        <input type="hidden" id="CollaboratorCode" name="CollaboratorCode" value="@ViewBag.CollaboratorCode" />
                     }
                 </div>
 

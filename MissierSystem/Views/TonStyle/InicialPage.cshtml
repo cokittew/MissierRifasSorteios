@@ -115,12 +115,12 @@
                 <div class="row">
                     <div class="col-sm-8 col-md-6">
                         <input type="hidden" name="Status" id="Status" value="Start" />
-                        <input type="text" class="form-control text-center" required min="15" placeholder="(99) 99999-9999"
+                        <input type="text" class="form-control text-center" required min="15" placeholder="Digite seu Telefone : (99) 99999-9999"
                                id="PhoneSearch" name="PhoneSearch"
                                onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" />
                     </div>
-                    <div class="col-sm-4 col-md-2 d-grid gap-5">
-                        <button type="submit" class="btn btn-warning ">Buscar Meus Pedidos</button>
+                    <div class="col-sm-4 col-md-4 d-grid gap-5">
+                        <button type="submit" class="btn btn-warning"> Procurar Minha(s) Compra(s)</button>
                     </div>
                 </div>
             </div>
@@ -140,31 +140,54 @@
                 var path = item.Id.ToString() + "image";
                 <img src="@item.RaffleReceiptFile" id="@path" style="width: 24rem;" class="card-img-top" alt="...">
             }
-            <div class="card-body text-center">
-                <h5 class="card-title">@item.RaffleName</h5>
-                @if (!String.IsNullOrEmpty(item.RaffleGeneralDescription))
-                {
-                    <span class="card-text">@item.RaffleGeneralDescription</span><br />
-                }
-                <span class="card-text">@item.RafflePremiationDescription</span><br />
-                <span class="card-text">Valor do número: <b>@item.RaffleNumbersValue.ToString("C2", ViewBag.Currency)</b></span>
+        <div class="card-body text-center">
+            <h5 class="card-title">@item.RaffleName</h5>
 
-                @if (item.RaffleStatus == 1)
-                {
-                    <p class="card-text">Status: <span style="color:green">Disponível</span></p>
-                    <div class="d-grid gap-4">
-                        <a asp-action="SelectAndReserveIndex" asp-route-id="@item.Id" class="btn btn-danger">Participar</a>
-                    </div>
-                }
-                else
-                {
-                    <p class="card-text">Status: <span style="color:red">Encerrado</span></p>
-                }
+            @*@if (!String.IsNullOrEmpty(item.RaffleGeneralDescription))
+        {
+            <span class="card-text">@item.RaffleGeneralDescription</span><br />
+        }
+        <span class="card-text">@item.RafflePremiationDescription</span><br />*@
+            <span class="card-text">Valor do número: <b>@item.RaffleNumbersValue.ToString("C2", ViewBag.Currency)</b></span>
 
-            </div>
+            @if (item.RaffleStatus == 1)
+            {
+                <p class="card-text">Status: <span style="color:green">Disponível</span></p>
+                <div class="d-grid gap-4">
+                    <a class="btn btn-success" data-bs-toggle="offcanvas" href="#offcanvasRaffleDatails" onclick="RaffleDetailsTonStyle('@item.RaffleName', '@item.RafflePremiationDescription', '@item.RaffleGeneralDescription')" role="button" aria-controls="offcanvasRaffleDatails">Detalhes</a>
+                </div>
+                <div class="d-grid gap-4 mt-2">
+                    <a asp-action="SelectAndReserveIndex" asp-route-id="@item.Id" class="btn btn-danger">Participar</a>
+                </div>
+            }
+            else
+            {
+                <p class="card-text">Status: <span style="color:red">Encerrado</span></p>
+                <div>
+                    <a class="btn btn-success" data-bs-toggle="offcanvas" href="#offcanvasRaffleDatails" onclick="RaffleDetailsTonStyle('@item.RaffleName', '@item.RafflePremiationDescription', '@item.RaffleGeneralDescription')" role="button" aria-controls="offcanvasRaffleDatails">Detalhes</a>
+                </div>
+            }
+
+        </div>
         </div>
     }
 
+</div>
+
+<div id="messages">
+    <div id="">
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRaffleDatails" aria-labelledby="offcanvasRaffleDatailsLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Detalhes sobre o sorteio</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <span class="lead fw-bolder">Nome da Rifa: </span> <span class="lead" id="raffleNameDatails"></span><br /><br />
+                <span class="lead fw-bolder">Detalhes: </span> <span class="lead" id="raffleDescriptionDatails"></span><br /><br />
+                <span class="lead fw-bolder">Detalhes da Premiação: </span> <span class="lead" id="rafflePremiationDatails"></span>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -180,6 +203,19 @@
         const blobUrl = URL.createObjectURL(blob);
 
     }
+
+    function RaffleDetailsTonStyle(name, premiation, description) {
+
+        var raffleNameDatails = document.getElementById('raffleNameDatails');
+        var raffleDescriptionDatails = document.getElementById('raffleDescriptionDatails');
+        var rafflePremiationDatails = document.getElementById('rafflePremiationDatails');
+
+        raffleNameDatails.innerText = name;
+        raffleDescriptionDatails.innerText = premiation;
+        rafflePremiationDatails.innerText = description;
+
+    }
+
 </script>
 
 
