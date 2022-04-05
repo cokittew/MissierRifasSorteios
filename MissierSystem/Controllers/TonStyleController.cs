@@ -253,7 +253,7 @@ namespace MissierSystem.Controllers
                         Pending = _configuration["URLs:DefaultUrl"] + "TonStyle/RefreshPage",
                     },
                     AutoReturn = "approved",
-                    NotificationUrl = "https://missier.azurewebsites.net/paymentspace/ReceiveNotification",
+                    NotificationUrl = "https://missiersorteios.azurewebsites.net/paymentspace/ReceiveNotification",
                     Payer = payer
                 };
 

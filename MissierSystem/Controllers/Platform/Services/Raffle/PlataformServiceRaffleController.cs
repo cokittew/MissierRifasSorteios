@@ -655,7 +655,7 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                             Pending = _configuration["URLs:DefaultUrl"] + "PlataformServiceRaffle/RaffleMainPage?paymentAnswer=pending",
                         },
                         AutoReturn = "approved",
-                        NotificationUrl = "https://missier.azurewebsites.net/paymentspace/ReceiveNotification",
+                        NotificationUrl = "https://missiersorteios.azurewebsites.net/paymentspace/ReceiveNotification",
                     };
 
                     var client = new PreferenceClient();
