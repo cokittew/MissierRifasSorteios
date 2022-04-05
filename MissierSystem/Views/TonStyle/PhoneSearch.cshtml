@@ -44,7 +44,18 @@
 
 </div>
 
+
 <div class="container-fluid">
+
+    @if (ViewBag.Status == "Start")
+    {
+        <p class="fw-bold text-danger my-2">
+            Caso seja redirecionado para o app do Mercado Pago, basta apenas
+            retornar para o navegador e continuar a sua compra. <i class="fa-solid fa-face-grin-wink"></i>
+        </p>
+    }
+
+
     <div class=" mt-3">
         @if (ViewBag.Participant != null)
         {
