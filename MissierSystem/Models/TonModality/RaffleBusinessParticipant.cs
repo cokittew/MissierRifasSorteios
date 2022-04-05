@@ -71,7 +71,6 @@ namespace MissierSystem.Models.TonModality
         [Required(ErrorMessage = "Este campo é obrigatório!")]
         [MaxLength(15, ErrorMessage = "Número Inválido!")]
         [MinLength(15, ErrorMessage = "Número Inválido!")]
-
         public string PhoneNumber2 { get; set; }
 
 

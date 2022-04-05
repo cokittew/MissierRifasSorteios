@@ -98,6 +98,15 @@ namespace MissierSystem.Controllers
 
         public IActionResult SelectAndReserveIndex(int id, [FromQuery(Name = "convite")]string collaboratorCode = "")
         {
+            if(id == 0) { return RedirectToAction("InicialPage"); }
+
+            if (!String.IsNullOrEmpty(collaboratorCode) && collaboratorCode.Length == 8)
+            {
+                var exists = _context.RaffleBusinessCollaborator.Any(e => !e.Removed && e.PersonalCode.ToLower() == collaboratorCode.ToLower());
+                if (!exists)
+                    collaboratorCode = "";
+            }
+
             ViewBag.RaffleId = id;
             ViewBag.CollaboratorCode = collaboratorCode;
             ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
