@@ -292,7 +292,7 @@ namespace MissierSystem.Controllers
                         TransactionType = 2,
                         IdRaffle = raffleParticipant.RaffleId,
                         ReferenceId = preference.Id,
-                        TotalValue = price,
+                        TotalValue = price * quantity,
                     };
 
                     try
