@@ -28,7 +28,7 @@
 <div class="participateSelectNumberMainPage">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container-fluid">
-            <span class="navbar-brand"><img src="~/image/geral/logo/mainLogoPageOriginal128x9.png" />Missier</span>
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index"><img src="~/image/geral/logo/missier_logo_pequeno.png" title="Missier Sorteios" alt="Missier Sorteios" /> <span class="ml-3 pt-4">Missier Sorteios</span></a>
             @if (Model.Raffle != null)
             {
                 <span class="lead text-center text-light">@Model.Raffle.RaffleName</span>
