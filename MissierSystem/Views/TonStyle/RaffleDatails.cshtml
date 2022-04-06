@@ -1,8 +1,52 @@
-﻿@model MissierSystem.Models.TonModality.RaffleBusinessRaffle
+﻿@model IEnumerable<MissierSystem.Models.TonModality.RaffleBusinessStatistic>
+
+@{ 
+    ViewData["Title"] = "Estatísticas";
+    var TotalTotal = (Model.Sum(e => e.RaffleNumbersValue)).ToString("C2", ViewBag.Culture);
+    var TotalNumberQuantity = Model.Sum(e => e.NumberQuantity);
+
+}
+
+<div class="container-fluid">
+
+    <div class="row  justify-content-end">
+        <div class="col-sm-12 col-lg-12 text-center mb-2">
+            <h1 class="display-5">Registro de Compras</h1>
+        </div>
+        <div class="col-sm-6 col-lg-3 text-end">
+            <span class=" lead"> <b>Total de Números Vendidos:</b> <span class="display-6 fw-bolder">@TotalNumberQuantity</span></span>
+        </div>
+        <div class="col-sm-6 col-lg-3 text-end">
+            <span class="lead"> <b>Total em Dinheiro:</b> <span class="display-6 fw-bolder">@TotalTotal</span></span>
+        </div>
+    </div>
+
+
+    <div class="list-group">
+        @foreach (var item in Model)
+        {
+            <a href="#" class="list-group-item list-group-item-action mb-2" aria-current="true">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@item.ParticipantFullName | @item.ParticipantPhoneNumber</h5>
+                    @*<small>3 days ago</small>*@
+                </div>
+                <p class="mb-1">
+                    <span>Quantidade de Números: </span> <small>@item.NumberQuantity</small><br />
+                    Seu(s) Número(s):
+                    @item.ParticipantNumbers
+                </p>
+                <small><span>Valor do Número: </span>@item.RaffleNumbersValue</small><br />
+                <small><span>Valor Total da Compra: </span>@item.TotalValue</small>
+            </a>
+        }
+
+    </div>
+
+</div>
+
+<script></script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 
-
-<script></script>

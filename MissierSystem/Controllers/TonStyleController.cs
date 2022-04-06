@@ -395,15 +395,85 @@ namespace MissierSystem.Controllers
             return View("AddNewRaffleTonStyle", new RaffleBusinessRaffle());
         }
 
-        public IActionResult RaffleDatails()
+        public IActionResult RaffleDatails(int id, string paymentStatus = "approved")
         {
             var idUser = IsAutenticated();
 
-            if (idUser == 0 || idUser == null)
+            if (idUser == 0 || idUser == null && id == 0)
                 return RedirectToAction("GetOutFromLogin", "Home");
 
+            var raffle = _context.RaffleBusinessRaffle.Where(e => e.Id == id && !e.Removed)
+                .Select(e=> new RaffleBusinessRaffle() 
+                {
+                    Id = e.Id,
+                    RaffleName = e.RaffleName,
+                    RaffleNumbersValue = e.RaffleNumbersValue
+                }).FirstOrDefault();
+
             ViewBag.UserId = idUser.Value;
-            return View();
+
+            if (raffle != null)
+            {
+                var paymentRegisterData = _context.UserPaymentRegister.Where(e => e.TransactionType == 2 && e.IdRaffle == id && e.FinalStatus == paymentStatus)
+                    .Select(e=> new UserPaymentRegister() 
+                    {
+                        Id = e.Id,
+                        IdBasicUser = e.IdBasicUser,
+                        FinalStatus = e.FinalStatus,
+                        NumberQuantity = e.NumberQuantity,
+                        TotalValue = e.TotalValue,
+                        
+                    }).ToList();
+
+                var participantRegisterData = _context.RaffleBusinessParticipant.Where(e => !e.Removed && e.RaffleId == id)
+                   .Select(e => new RaffleBusinessParticipant()
+                   {
+                       Id = e.Id,
+                       RaffleId = e.RaffleId,
+                       FullName = e.FullName,
+                       Numbers = e.Numbers,
+                       PhoneNumber = e.PhoneNumber,
+                   }).ToList();
+
+                var statistics = new List<RaffleBusinessStatistic>();
+                var currency = CultureInfo.CreateSpecificCulture("pt-BR");
+                ViewBag.Culture = currency;
+                foreach (var register in paymentRegisterData)
+                {
+                    var participant = participantRegisterData.Where(e => e.Id == register.IdBasicUser && e.RaffleId == raffle.Id).FirstOrDefault();
+
+                    if(participant != null)
+                    {
+                        var statistic = new RaffleBusinessStatistic()
+                        {
+                            ParticipantId = participant.Id,
+                            PaymentId = register.Id,
+                            RaffleId = raffle.Id,
+                            UserId = register.IdBasicUser,
+
+                            RaffleName = raffle.RaffleName,
+                            RaffleNumbersValueString = raffle.RaffleNumbersValue.ToString("C2", currency),
+                            RaffleNumbersValue = raffle.RaffleNumbersValue,
+
+                            ParticipantFullName = participant.FullName,
+                            ParticipantNumbers = participant.Numbers,
+                            ParticipantPhoneNumber = Convert.ToInt64(participant.PhoneNumber).ToString(@"(00) 00000-0000"),
+                            FinalStatus = register.FinalStatus,
+
+                            NumberQuantity = register.NumberQuantity,
+                            TotalValueString = register.TotalValue.ToString("C2", currency),
+                            TotalValue = register.TotalValue
+                        };
+
+                        statistics.Add(statistic);
+                    }
+
+                }
+
+                return View(statistics);
+            }
+
+            return View(new List<RaffleBusinessStatistic>());
         }
 
         public async Task<IActionResult> RemoveRaffle(int id)
