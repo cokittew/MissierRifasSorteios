@@ -422,6 +422,7 @@ namespace MissierSystem.Controllers
                         FinalStatus = e.FinalStatus,
                         NumberQuantity = e.NumberQuantity,
                         TotalValue = e.TotalValue,
+                        ValueWithTax = e.ValueWithTax
                         
                     }).ToList();
 
@@ -462,7 +463,9 @@ namespace MissierSystem.Controllers
 
                             NumberQuantity = register.NumberQuantity,
                             TotalValueString = register.TotalValue.ToString("C2", currency),
-                            TotalValue = register.TotalValue
+                            TotalValue = register.TotalValue,
+                            RaffleTatalTax = register.ValueWithTax,
+                            RaffleTatalTaxString = register.ValueWithTax.ToString("C2", currency),
                         };
 
                         statistics.Add(statistic);
@@ -556,10 +559,10 @@ namespace MissierSystem.Controllers
                         .ToList();
                     if (participantList.Count > 0)
                     {
-                        var remo = status == "approved" ? true : false;
+                        //var remo = status == "approved" ? true : false;
 
                         var paymentList = _context.UserPaymentRegister
-                            .Where(e => e.Removed == remo && e.TransactionType == 2 && e.FinalStatus == status)
+                            .Where(e => e.TransactionType == 2 && e.FinalStatus == status)
                             .Select(e=> new UserPaymentRegister() 
                             {
                                 Id = e.Id, ReferenceId = e.ReferenceId,
@@ -571,7 +574,7 @@ namespace MissierSystem.Controllers
                             }).ToList();
 
                         var raffleList = _context.RaffleBusinessRaffle
-                            .Where(e => !e.Removed)
+                            .Where(e => !e.Removed/* && e.RaffleStatus != 3*/)
                             .Select(e => new RaffleBusinessRaffle()
                             {
                                 Id = e.Id,

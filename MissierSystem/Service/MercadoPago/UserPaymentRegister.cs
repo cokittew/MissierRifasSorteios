@@ -57,6 +57,11 @@ namespace MissierSystem.Service.MercadoPago
         [Required(ErrorMessage = "Este campo é obrigatório!")]
         public decimal TotalValue { get; set; }
 
+        [Column("value_with_tax")]
+        [Display(Name = "Value Tax")]
+        [Required(ErrorMessage = "Este campo é obrigatório!")]
+        public decimal ValueWithTax { get; set; }
+
         [Column("removed")]
         [Display(Name = "Removido")]
         public bool Removed { get; set; }

@@ -45,6 +45,7 @@ namespace MissierSystem.Controllers.MercadoPago
             var jsonString = await response.Content.ReadAsStringAsync();
 
             var pay = JsonConvert.DeserializeObject<PaymentResult>(jsonString);
+            dynamic paymentAllData = JsonConvert.DeserializeObject(jsonString, typeof(object));
 
             var paymentSystemResult = "failed";
             if (pay != null)
@@ -77,7 +78,8 @@ namespace MissierSystem.Controllers.MercadoPago
                             {
                                 user.UserNumberBag += register.NumberQuantity;
                                 register.FinalStatus = "approved";
-                                register.Removed = true;
+                                //register.Removed = true;
+                                register.ValueWithTax = (decimal)paymentAllData.transaction_details.net_received_amount;
 
                                 try
                                 {
@@ -87,7 +89,7 @@ namespace MissierSystem.Controllers.MercadoPago
                                     _context.Attach(register).Property(e => e.FinalStatus).IsModified = true;
                                     await _context.SaveChangesAsync();
                                     _context.UserPaymentRegister.Update(register);
-                                    _context.Attach(register).Property(e => e.Removed).IsModified = true;
+                                    _context.Attach(register).Property(e => e.ValueWithTax).IsModified = true;
                                     await _context.SaveChangesAsync();
 
                                     _context.UserBasic.Update(user);
@@ -116,7 +118,8 @@ namespace MissierSystem.Controllers.MercadoPago
                             if (user != null)
                             {
                                 register.FinalStatus = "approved";
-                                register.Removed = true;
+                                register.ValueWithTax = (decimal)paymentAllData.transaction_details.net_received_amount;
+                                //register.Removed = true;
                                 try
                                 {
                                     _context.Database.BeginTransaction();
@@ -148,7 +151,7 @@ namespace MissierSystem.Controllers.MercadoPago
                                     _context.Attach(register).Property(e => e.FinalStatus).IsModified = true;
                                     await _context.SaveChangesAsync();
                                     _context.UserPaymentRegister.Update(register);
-                                    _context.Attach(register).Property(e => e.Removed).IsModified = true;
+                                    _context.Attach(register).Property(e => e.ValueWithTax).IsModified = true;
                                     await _context.SaveChangesAsync();
 
                                     _context.RaffleBusinessParticipant.Update(user);

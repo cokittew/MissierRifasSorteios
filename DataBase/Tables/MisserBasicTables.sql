@@ -149,10 +149,12 @@ raffle_winners_number int not null default(1),
 raffle_numbers_result varchar(250),
 beginning_date dateTime default (GetDate()),
 raffle_close_option bit default(0),
+raffle_type [int] NOT NULL,
 removed bit default(0)
 );
 
 --alter table platform_service_raffle add raffle_winners_number int not null default(1)
+--alter table platform_service_raffle add raffle_type [int] NOT NULL default(1)
 
 --alter table platform_service_raffle add raffle_numbers_result varchar(250);
 --alter table platform_service_raffle add raffle_close_option bit default(0);
@@ -198,6 +200,7 @@ final_status varchar(30) not null,
 number_quantity int not null,
 typeTransaction int not null default(1),
 totalValue decimal(14,2) not NULL default(0),
+value_with_tax decimal(14,2) not NULL default(0),
 referenceId varchar(250) not null default(''),
 beginning_date dateTime default (GetDate()),
 removed bit default(0)
@@ -207,6 +210,7 @@ removed bit default(0)
 --alter table platform_payment_transactions add typeTransaction int not null default(1);
 --alter table platform_payment_transactions add [id_raffle] [int] NULL;
 --alter table platform_payment_transactions add totalValue decimal(14,2) not NULL default(0);
+alter table platform_payment_transactions add value_with_tax decimal(14,2) not NULL default(0);
 
 --drop table platform_payment_transactions;
 

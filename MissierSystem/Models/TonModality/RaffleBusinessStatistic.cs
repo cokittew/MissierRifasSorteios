@@ -25,5 +25,8 @@ namespace MissierSystem.Models.TonModality
         public string RaffleNumbersValueString { get; set; }
         public decimal RaffleNumbersValue { get; set; }
 
+        public string RaffleTatalTaxString { get; set; }
+        public decimal RaffleTatalTax { get; set; }
+
     }
 }

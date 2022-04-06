@@ -4,6 +4,7 @@
     ViewData["Title"] = "Estatísticas";
     var TotalTotal = (Model.Sum(e => e.RaffleNumbersValue)).ToString("C2", ViewBag.Culture);
     var TotalNumberQuantity = Model.Sum(e => e.NumberQuantity);
+    var TotalWithTax = Model.Sum(e => e.RaffleTatalTax).ToString("C2", ViewBag.Culture);
 
 }
 
@@ -17,7 +18,10 @@
             <span class=" lead"> <b>Total de Números Vendidos:</b> <span class="display-6 fw-bolder">@TotalNumberQuantity</span></span>
         </div>
         <div class="col-sm-6 col-lg-3 text-end">
-            <span class="lead"> <b>Total em Dinheiro:</b> <span class="display-6 fw-bolder">@TotalTotal</span></span>
+            <span class="lead"> <b>Total Bruto:</b> <span class="display-6 fw-bolder">@TotalTotal</span></span>
+        </div>
+        <div class="col-sm-6 col-lg-3 text-end">
+            <span class="lead"> <b>Total em Líquido:</b> <span class="display-6 fw-bolder">@TotalWithTax</span></span>
         </div>
     </div>
 
