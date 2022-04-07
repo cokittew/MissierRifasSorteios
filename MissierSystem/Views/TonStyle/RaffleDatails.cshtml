@@ -2,7 +2,7 @@
 
 @{ 
     ViewData["Title"] = "Estatísticas";
-    var TotalTotal = (Model.Sum(e => e.RaffleNumbersValue)).ToString("C2", ViewBag.Culture);
+    var TotalTotal = (Model.Sum(e => e.TotalValue)).ToString("C2", ViewBag.Culture);
     var TotalNumberQuantity = Model.Sum(e => e.NumberQuantity);
     var TotalWithTax = Model.Sum(e => e.RaffleTatalTax).ToString("C2", ViewBag.Culture);
 
@@ -13,6 +13,7 @@
     <div class="row  justify-content-end">
         <div class="col-sm-12 col-lg-12 text-center mb-2">
             <h1 class="display-5">Registro de Compras</h1>
+            <span class="lead text-center">@Model.FirstOrDefault().RaffleName | @Model.FirstOrDefault().RaffleNumbersValueString</span>
         </div>
         <div class="col-sm-6 col-lg-3 text-end">
             <span class=" lead"> <b>Total de Números Vendidos:</b> <span class="display-6 fw-bolder">@TotalNumberQuantity</span></span>
@@ -39,8 +40,8 @@
                     Seu(s) Número(s):
                     @item.ParticipantNumbers
                 </p>
-                <small><span>Valor do Número: </span>@item.RaffleNumbersValue</small><br />
-                <small><span>Valor Total da Compra: </span>@item.TotalValue</small>
+                @*<small><span>Valor do Número: </span>@item.RaffleNumbersValue</small><br />*@
+                <small><span>Valor Total da Compra: </span>@item.TotalValueString</small>
             </a>
         }
 

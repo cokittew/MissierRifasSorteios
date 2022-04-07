@@ -16,8 +16,6 @@
     </nav>
 </div>
 
-<div></div>
-
 <div class="container-fluid">
 
     @if (ViewBag.hasRegister != null)
@@ -40,95 +38,100 @@
 
 </div>
 
-
-<div class="container-fluid d-grid gap-4 mt-2">
-    <a class="btn btn-success" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">Veja Aqui as Orientações Sobre os Sorteios</a>
-
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Tudo Sobre os Sorteios</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div>
-                <p>É muito fácil participar.</p>
-                <p>Após clicar em participar no sorteio escolhido.</p>
-                <p>1. Preencha seus dados</p>
-                <p>2. Selecione quantos números quiser</p>
-                <p>3. Efetue o pagamento (Seus números ficarão em reserva por 1hr)</p>
-                <p>4. Após o pagamento, anote os números gerados e aguarde o sorteio.</p>
-                <p>5. Após o sorteio, caso tenha sido você o vencedor, entraremos em contato pelo seu telefone.</p>
-
-                Mais informações via stories do Instagram: <a href="https://www.instagram.com/evertons12/" target="_blank">@@evertons12</a>
-            </div>
-            <div class="mt-4">
-                <span class="lead fw-bolder">Regulamentos</span>
-                <hr />
-                <p>
-                    O sorteio acontecerá <b>APÓS</b> a venda de <b>TODOS os números.</b>
-                </p>
-                <p>
-                    O número sorteado utilizado para determinar o contemplado será formado pelos 5 últimos algarismos do 1º prêmio extraído
-                    pela Loteria Federal, lidos da esquerda para direita, conforme o exemplo abaixo:
-                </p>
-                <p class="fw-bold">Extração da Loteria Federal do Brasil.</p>
-                <p>
-                    1º prêmio = 3 1 5 9 4 5<br />
-                    2º prêmio = 0 4 6 7 2 9<br />
-                    3º prêmio = 2 5 3 0 0 8<br />
-                    <b>O número Sorteado é: 15945 (exemplo)</b>
-                </p>
-                <p>
-                    Caso ninguém tenha obtido o número do 1º prêmio, será utilizado o 2º prêmio. 46729 (exemplo)
-                    Sendo 0% de chances de alguém burlar o resultado.
-                </p>
-                <p>Todas as Quartas-feiras e Sábados as 19h acontece o sorteio do bilhete premiado na Loteria Federal.</p>
-                <p>
-                    A data do sorteio será marcada após a venda de todas as cotas. Será baseada no resultado do 1º
-                    prêmio da Loteria Federal da semana subsequente a venda de 100% das cotas.
-                    Sendo assim o resultado do sorteio pode ser adiantado ou adiado.
-                </p>
-
-                <p class="fw-bolder">Caso ninguém ganhe pela Loteria Federal faremos o sorteio pelo sorteador próprio do sistema.</p>
-
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<div class="container-fluid mt-1">
-    <a asp-controller="Home" asp-action="Index" class="btn d-block btn-warning mb-2"><b>Quero ganhar dinheiro fazendo sorteio!</b></a>
-</div>
-
-<div class="container-fluid mt-1">
-    <a href="https://api.whatsapp.com/send?phone=5573999020709" target="_blank" class="btn d-block btn-outline-danger mb-2 lead">
-        <b>Quero ganhar dinheiro compartilhando sorteio!<i class="fab fa-whatsapp" style="color:green; margin-left: 3px;"></i></b></a>
-
-    @*<a asp-controller="Home" asp-action="Index" ><b></b></a>*@
-</div>
-
 <div class="container-fluid mt-2 bg-dark p-3">
     <form asp-action="PhoneSearch">
-        <div class="row ">
+        <div class="row justify-content-center">
             <div class="col-sm-12 col-md-12">
-                <div class="row">
-                    <div class="col-sm-8 col-md-6">
+                <div class="row justify-content-end">
+                    <div class="col-sm-8 col-md-3">
                         <input type="hidden" name="Status" id="Status" value="Start" />
                         <input type="text" class="form-control text-center" required min="15" placeholder="Digite seu Telefone : (99) 99999-9999"
                                id="PhoneSearch" name="PhoneSearch"
                                onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" />
                     </div>
-                    <div class="col-sm-4 col-md-4 d-grid gap-5">
-                        <button type="submit" class="btn btn-warning"> Procurar Minha(s) Compra(s)</button>
+                    <div class="col-sm-4 col-md-3 d-grid gap-5">
+                        <button type="submit" class="btn btn-outline-warning"> Consultar Minha(s) Compra(s)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div class="row">
+    <div class="com-sm-12 col-lg-4">
+        <div class="container-fluid d-grid gap-4 mt-2">
+            <a class="btn btn-success" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">Veja Aqui as Orientações Sobre os Sorteios</a>
+
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Tudo Sobre os Sorteios</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div>
+                        <p>É muito fácil participar.</p>
+                        <p>Após clicar em participar no sorteio escolhido.</p>
+                        <p>1. Preencha seus dados</p>
+                        <p>2. Selecione quantos números quiser</p>
+                        <p>3. Efetue o pagamento (Seus números ficarão em reserva por 1hr)</p>
+                        <p>4. Após o pagamento, anote os números gerados e aguarde o sorteio.</p>
+                        <p>5. Após o sorteio, caso tenha sido você o vencedor, entraremos em contato pelo seu telefone.</p>
+
+                        Mais informações via stories do Instagram: <a href="https://www.instagram.com/missiersorteios/" target="_blank">@@Missier Sorteios</a>
+                    </div>
+                    <div class="mt-4">
+                        <span class="lead fw-bolder">Regulamentos</span>
+                        <hr />
+                        <p>
+                            O sorteio acontecerá <b>APÓS</b> a venda de <b>TODOS os números.</b>
+                        </p>
+                        <p>
+                            O número sorteado utilizado para determinar o contemplado será formado pelos 5 últimos algarismos do 1º prêmio extraído
+                            pela Loteria Federal, lidos da esquerda para direita, conforme o exemplo abaixo:
+                        </p>
+                        <p class="fw-bold">Extração da Loteria Federal do Brasil.</p>
+                        <p>
+                            1º prêmio = 3 1 5 9 4 5<br />
+                            2º prêmio = 0 4 6 7 2 9<br />
+                            3º prêmio = 2 5 3 0 0 8<br />
+                            <b>O número Sorteado é: 15945 (exemplo)</b>
+                        </p>
+                        <p>
+                            Caso ninguém tenha obtido o número do 1º prêmio, será utilizado o 2º prêmio. 46729 (exemplo)
+                            Sendo 0% de chances de alguém burlar o resultado.
+                        </p>
+                        <p>Todas as Quartas-feiras e Sábados as 19h acontece o sorteio do bilhete premiado na Loteria Federal.</p>
+                        <p>
+                            A data do sorteio será marcada após a venda de todas as cotas. Será baseada no resultado do 1º
+                            prêmio da Loteria Federal da semana subsequente a venda de 100% das cotas.
+                            Sendo assim o resultado do sorteio pode ser adiantado ou adiado.
+                        </p>
+
+                        <p class="fw-bolder">Caso ninguém ganhe pela Loteria Federal faremos o sorteio pelo sorteador próprio do sistema.</p>
+
                     </div>
                 </div>
             </div>
 
         </div>
-    </form>
+    </div>
+    <div class="com-sm-12 col-lg-4">
+        <div class="container-fluid mt-2">
+            <a asp-controller="Home" asp-action="Index" class="btn d-block btn-warning mb-2"><b>Quero ganhar dinheiro fazendo sorteio!</b></a>
+        </div>
+    </div>
+    <div class="com-sm-12 col-lg-4">
+        <div class="container-fluid mt-2">
+            <a href="https://api.whatsapp.com/send?phone=5573999020709" target="_blank" class="btn d-block btn-outline-danger mb-2 lead">
+                <b>Ganhar dinheiro compartilhando sorteio!<i class="fab fa-whatsapp" style="color:green; margin-left: 3px;"></i></b>
+            </a>
+        </div>
 
+    </div>
 </div>
+
 
 <div class="container-fluid mt-3">
 
@@ -143,11 +146,6 @@
         <div class="card-body text-center">
             <h5 class="card-title">@item.RaffleName</h5>
 
-            @*@if (!String.IsNullOrEmpty(item.RaffleGeneralDescription))
-        {
-            <span class="card-text">@item.RaffleGeneralDescription</span><br />
-        }
-        <span class="card-text">@item.RafflePremiationDescription</span><br />*@
             <span class="card-text">Valor do número: <b>@item.RaffleNumbersValue.ToString("C2", ViewBag.Currency)</b></span>
 
             @if (item.RaffleStatus == 1)

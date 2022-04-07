@@ -35,7 +35,7 @@
                         </select>
                     </div>
                     <div class="col-sm-4 d-grid gap-5">
-                        <button type="submit" class="btn btn-warning">Buscar Meus Pedidos</button>
+                        <button type="submit" class="btn btn-warning">Consultar Minha(s) Compra(s)</button>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
             {
                 <div class="my-3 bg-dark text-light p-3" style="border-radius: 10px 10px">
                     <span><b>Nome</b>: @p.FullName</span><br />
-                    <span><b>Prêmio</b>: @p.RafflePremiation</span><br />
+                    <span><b>Prêmio</b>: @p.RaffleName</span><br />
                     <span><b>Situação Atual da Rifa</b>: @p.StatusRaffle</span><br />
                     <span><b>Valor do número</b>: @p.Value.ToString("C2", ViewBag.Currency)</span><br />
                     <span><b>Quantidade Comprada</b>: @p.NumberQuantity</span><br />

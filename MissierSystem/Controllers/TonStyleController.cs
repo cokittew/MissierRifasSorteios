@@ -533,8 +533,8 @@ namespace MissierSystem.Controllers
             return View(_context.RaffleBusinessRaffle.Where(e=> !e.Removed).ToList());
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
         public IActionResult PhoneSearch(IFormCollection form)
         {
             var pattern = new Regex("[^0-9]");
