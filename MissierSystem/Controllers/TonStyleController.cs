@@ -580,7 +580,8 @@ namespace MissierSystem.Controllers
                                 Id = e.Id,
                                 RaffleName = e.RaffleName,
                                 RafflePremiationDescription = e.RafflePremiationDescription,
-                                RaffleStatus = e.RaffleStatus
+                                RaffleStatus = e.RaffleStatus,
+                                RaffleNumbersValue = e.RaffleNumbersValue
                             });
 
                         UserPaymentRegister objectPayment;
@@ -596,12 +597,11 @@ namespace MissierSystem.Controllers
                             participant.StatusRaffle = objectRaffle != null ? objectRaffle.RaffleStatus == 1 ? "Disponível" : "Encerrado" : "Excluída";
 
                             participant.ReferenceId = objectPayment == null ? "" : objectPayment.ReferenceId;
-                            participant.Value = objectPayment == null ? 0 : objectPayment.TotalValue;
+                            participant.Value = objectRaffle == null ? 0 : objectRaffle.RaffleNumbersValue;
                             participant.NumberQuantity =  objectPayment == null ? 0 : objectPayment.NumberQuantity;
-                            participant.TotalValue = objectPayment == null ? "" : (objectPayment.NumberQuantity * objectPayment.TotalValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
+                            participant.TotalValue = objectPayment == null ? "" : (objectPayment.TotalValue).ToString("C2", CultureInfo.CreateSpecificCulture("pt-BR"));
                         }
-
-                        
+                  
                         ViewBag.Participant = participantList.Where(e => e.Value > 0 && e.NumberQuantity > 0);
                         ViewBag.Currency = CultureInfo.CreateSpecificCulture("pt-BR");
                     }
