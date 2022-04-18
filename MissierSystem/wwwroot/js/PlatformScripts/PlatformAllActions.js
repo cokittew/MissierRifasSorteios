@@ -104,19 +104,19 @@ RaffleCalculateBuyNumber = () => {
 
         if (quant.value < 50) {
             value = parseFloat(quant.value * valueInitial).toFixed(2);
-            discount.innerHTML = "<span class=\"text - light\">Descontos a partir de 50 números.</span>"
+            discount.innerHTML = "<span class=\"text - light\">Descontos incríveis a partir de 50 números.</span>"
         }else if (quant.value >= 50 && quant.value <= 100) {
-            valueInitial = 0.47;
+            valueInitial = 0.35;
             var discountValue = parseFloat(quant.value * 0.50).toFixed(2);
             value = parseFloat(quant.value * valueInitial).toFixed(2);
             discount.innerHTML = `<span class=\"text-light\">De R$ ${discountValue} por <b>R$ ${value}</b></span>`;
         }else if (quant.value > 100 && quant.value <= 400) {
-            valueInitial = 0.45;
+            valueInitial = 0.30;
             var discountValue = parseFloat(quant.value * 0.50).toFixed(2);
             value = parseFloat(quant.value * valueInitial).toFixed(2);
             discount.innerHTML = `<span class=\"text-light\">De R$ ${discountValue} por <b>R$ ${value}</b></span>`;
         } else if (quant.value > 400) {
-            valueInitial = 0.44;
+            valueInitial = 0.25;
             var discountValue = parseFloat(quant.value * 0.50).toFixed(2);
             value = parseFloat(quant.value * valueInitial).toFixed(2);
             discount.innerHTML = `<span class=\"text-light\">De R$ ${discountValue} por <b>R$ ${value}</b></span>`;

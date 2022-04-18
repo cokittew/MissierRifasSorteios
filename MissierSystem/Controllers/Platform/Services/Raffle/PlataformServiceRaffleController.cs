@@ -585,18 +585,20 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
             if (userId == 0 || userId == null)
                 return RedirectToAction("GetOutFromLogin", "Home");
 
+            var payerDATA = _context.UserBasicInfo.Where(e => !e.Removed && e.IdBasicUser == userId).Select(e => new UserBasicInfo() { FullName = e.FullName, Email = e.Email }).FirstOrDefault();
+
             if (pack.Quantity >= 30)
             {
                 var price = (decimal)0.5;
 
                 if (pack.Quantity >= 50 && pack.Quantity <= 100)
-                    price = (decimal)0.47;
+                    price = (decimal)0.35;
 
                 else if (pack.Quantity > 100 && pack.Quantity <= 400)
-                    price = (decimal)0.45;
+                    price = (decimal)0.30;
 
                 else if (pack.Quantity > 400)
-                    price = (decimal)0.44;
+                    price = (decimal)0.25;
 
 
                 decimal value = pack.Quantity * price;
@@ -611,10 +613,10 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                 {
                     ExcludedPaymentTypes = new List<PreferencePaymentTypeRequest>
                     {
-                        //new PreferencePaymentTypeRequest
-                        //{
-                        //    Id = "ticket", //BOLETO
-                        //},
+                        new PreferencePaymentTypeRequest
+                        {
+                            Id = "ticket", //BOLETO
+                        },
                         new PreferencePaymentTypeRequest
                         {
                             Id = "digital_currency", //GIFTCard
@@ -629,6 +631,12 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                         //},
                     },
                     Installments = 12,
+                };
+
+                var payer = new PreferencePayerRequest()
+                {
+                    Email = payerDATA.Email,
+                    Name = payerDATA.FullName,
                 };
 
                 try

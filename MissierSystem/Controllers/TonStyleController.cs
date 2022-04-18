@@ -234,6 +234,10 @@ namespace MissierSystem.Controllers
                     {
                         new PreferencePaymentTypeRequest
                         {
+                            Id = "ticket", //BOLETO
+                        },
+                        new PreferencePaymentTypeRequest
+                        {
                             Id = "digital_currency", //GIFTCard
                         },
                         new PreferencePaymentTypeRequest
@@ -242,7 +246,7 @@ namespace MissierSystem.Controllers
                         },
 
                     },
-                Installments = 12,
+                Installments = 6,
             };
 
             var payer = new PreferencePayerRequest()
