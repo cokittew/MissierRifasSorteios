@@ -40,7 +40,7 @@
             <div class="alert alert-success alert-dismissible fade show container-fluid mt-4 text-center" role="alert">
                 <strong>
                     Seu(s) número(s) foram reservados com sucesso! Os dados para pagamento estão no fim da página. Leia as orientações atentamente.<br />
-                    Números em reserva por um perído de 24hr!
+                    Número(s) em reserva por um período de 24hr!
                 </strong>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -103,7 +103,7 @@
                                     <div class="row" style="width:100%">
                                         <div class="col-sm-12 col-lg-3 m-0">
                                             <b>Valor: </b>
-                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleNumbersValue.ToString("C2")</span> |
+                                            <span class="badge bg-primary rounded-pill">@Model.Raffle.RaffleNumbersValue.ToString("C2", ViewBag.Culture)</span> |
                                         </div>
                                         <div class="col-sm-12 col-lg-6 m-0">
                                             <b>Max. de Nº por participante: </b>
@@ -521,7 +521,7 @@
                                                 {*@
                                             <div class="row">
                                                 <div class="col-sm-8">
-                                                    <input class="form-control" type="file" name="receiptFile" id="receiptFile" accept="image/*" />
+                                                    <input class="form-control" type="file" name="receiptFile" id="receiptFile" required accept="image/*" />
                                                     <p><b style="color:red;">* Apenas imagens Max. 3MB*</b> </p>
                                                 </div>
                                             </div>

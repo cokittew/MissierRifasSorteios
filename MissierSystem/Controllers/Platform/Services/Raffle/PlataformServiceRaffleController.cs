@@ -664,6 +664,7 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                         },
                         AutoReturn = "approved",
                         NotificationUrl = "https://missiersorteios.azurewebsites.net/paymentspace/ReceiveNotification",
+                        Payer = payer
                     };
 
                     var client = new PreferenceClient();
