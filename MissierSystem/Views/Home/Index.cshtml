@@ -65,7 +65,80 @@
             <hr class="mb-3" />
         </div>
 
-        <div class="col-sm-12 col-lg-12 text-center p-4 text-light bg-dark" style="height: auto; border-radius: 10px" id="passPassVideos">
+        <div id="pre-videoTutorial"></div>
+
+    </div>
+
+    <div class="row my-1 text-center justify-content-center p-3 mt-4">
+        <h1 class="display-6 m-0">Tutoriais - Modalidades</h1>
+        <div class="col-3 text-center m-0">
+            <button class="btn btn-info mt-2" id="passPassModalityBtn" value="show" onclick="LayoutChangeState('modality')"> Mostrar Vídeos </button>
+
+            <hr class="mb-3" />
+        </div>
+
+        <div id="pre-videoTypeTutorial"></div>
+
+
+        
+    </div>
+
+</div>
+
+<!--Modals of Tutorials-->
+
+<div class="modal fade" id="learnMoreAutomatized" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sorteio Dinâmico</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="learnMoreManual" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sorteio Manual</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var pass1 = 0;
+    var pass2 = 0;
+    document.getElementById("passPassVideos").style.display = "none";
+    document.getElementById("modalityVideos").style.display = "none";
+
+    function LayoutChangeState(what) {
+        if (what == "passPass") {
+            $("#passPassVideos").toggle('fast');
+
+            var pass = document.getElementById('passPassBtn').getAttribute("value");
+            if (pass == "hide") {
+                document.getElementById('passPassBtn').innerText = "Mostrar Vídeos";
+                document.getElementById('passPassBtn').setAttribute('value', 'show');
+                document.getElementById('passPassBtn').setAttribute('class', 'btn btn-info mt-2');
+            } else {
+                if (pass1 == 0) {
+                    document.getElementById('pre-videoTutorial').innerHTML = ` <div class="col-sm-12 col-lg-12 text-center p-4 text-light bg-dark" style="height: auto; border-radius: 10px" id="passPassVideos">
             <div class="row">
                 <div class="col-sm-12 col-lg-6 pt-4 pb-4 text-center">
                     <div class="row">
@@ -176,150 +249,9 @@
                 </div>
             </div>
 
-        </div>
-    </div>
-
-    <div class="row my-1 text-center justify-content-center p-3 mt-4">
-        <h1 class="display-6 m-0">Tutoriais - Modalidades</h1>
-        <div class="col-3 text-center m-0">
-            <button class="btn btn-info mt-2" id="passPassModalityBtn" value="show" onclick="LayoutChangeState('modality')"> Mostrar Vídeos </button>
-
-            <hr class="mb-3" />
-        </div>
-        <div class="col-sm-12 col-lg-12 text-center p-4 text-light bg-dark" style="height: auto; border-radius: 10px" id="modalityVideos">
-            <div class="row">
-                <div class="col-sm-12 col-lg-6 pt-4 pb-4 text-center">
-                    <div class="row">
-                        <div class="col-12">
-                            <h1 class="display-6"><b>Sorteio Dinâmico</b></h1>
-                            <hr />
-                        </div>
-                        <div class="col-12">
-                            <div class="ratio ratio-16x9">
-                                <iframe src="https://www.youtube.com/embed/qvJYLVWDKus" title="Plataforma Para Criação e Gestão de Sorteios/Rifas" allowfullscreen></iframe>
-                            </div>
-                        </div>
-                        <div class="col-12 mt-2">
-                            <div class="row justify-content-center">
-                                <div class="col-6 ">
-                                    <div class="d-grid gap-2 mt-2">
-                                        <a class="btn btn-outline-light pt-1 pb-1" data-bs-toggle="modal" data-bs-target="#learnMoreAutomatized"><span class="lead">Saiba mais</span></a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-sm-12 col-lg-6 pt-4 pb-4">
-                    <div class="row">
-                        <div class="col-12">
-                            <h1 class="display-6"><b>Sorteio Manual</b></h1>
-                            <hr />
-                        </div>
-                        <div class="col-12">
-                            <div class="ratio ratio-16x9">
-                                <iframe src="https://www.youtube.com/embed/7_yoInMdIGw" title="Plataforma pra Criação e Gestão de Sorteios - Sorteio Manual" allowfullscreen></iframe>
-                            </div>
-                        </div>
-                        <div class="col-12 mt-2">
-                            <div class="row justify-content-center">
-                                <div class="col-6 ">
-                                    <div class="d-grid gap-2 mt-2">
-                                        <a class="btn btn-outline-light pt-1 pb-1" data-bs-toggle="modal" data-bs-target="#learnMoreManual"><span class="lead">Saiba mais</span></a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-12 col-lg-6 pt-4 pb-4 text-center">
-                    <div class="row">
-                        <div class="col-12">
-                            <h1 class="display-6"><b>Sorteio "Jogo do Bicho"</b></h1>
-                            <hr />
-                        </div>
-                        <div class="col-12">
-                            <div class="ratio ratio-16x9">
-                                <iframe src="https://www.youtube.com/embed/6xEurXyFVro" title="Jogo do Bicho - Novidade" allowfullscreen></iframe>
-                            </div>
-                        </div>
-                        <div class="col-12 mt-2">
-                            <div class="row justify-content-center">
-                                <div class="col-6 ">
-                                    <div class="d-grid gap-2 mt-2">
-                                        <a class="btn btn-outline-light pt-1 pb-1" data-bs-toggle="modal" data-bs-target="#learnMoreAutomatized"><span class="lead">Saiba mais</span></a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!--Modals of Tutorials-->
-
-<div class="modal fade" id="learnMoreAutomatized" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Sorteio Dinâmico</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="learnMoreManual" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Sorteio Manual</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-
-    document.getElementById("passPassVideos").style.display = "none";
-    document.getElementById("modalityVideos").style.display = "none";
-
-    function LayoutChangeState(what) {
-        if (what == "passPass") {
-            $("#passPassVideos").toggle('fast');
-
-            var pass = document.getElementById('passPassBtn').getAttribute("value");
-            if (pass == "hide") {
-                document.getElementById('passPassBtn').innerText = "Mostrar Vídeos";
-                document.getElementById('passPassBtn').setAttribute('value', 'show');
-                document.getElementById('passPassBtn').setAttribute('class', 'btn btn-info mt-2');
-
-
-            } else {
+        </div>`
+                    pass1 = 1;
+                }
                 document.getElementById('passPassBtn').innerText ="Esconder Vídeos";
                 document.getElementById('passPassBtn').setAttribute('value', 'hide');
                 document.getElementById('passPassBtn').setAttribute('class', 'btn btn-dark mt-2');
@@ -336,6 +268,87 @@
 
 
             } else {
+                if (pass2 == 0) {
+                    document.getElementById('pre-videoTypeTutorial').innerHTML = `<div class="col-sm-12 col-lg-12 text-center p-4 text-light bg-dark" style="height: auto; border-radius: 10px" id="modalityVideos">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6 pt-4 pb-4 text-center">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h1 class="display-6"><b>Sorteio Dinâmico</b></h1>
+                                    <hr />
+                                </div>
+                                <div class="col-12">
+                                    <div class="ratio ratio-16x9">
+                                        <iframe src="https://www.youtube.com/embed/qvJYLVWDKus" title="Plataforma Para Criação e Gestão de Sorteios/Rifas" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row justify-content-center">
+                                        <div class="col-6 ">
+                                            <div class="d-grid gap-2 mt-2">
+                                                <a class="btn btn-outline-light pt-1 pb-1" data-bs-toggle="modal" data-bs-target="#learnMoreAutomatized"><span class="lead">Saiba mais</span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12 col-lg-6 pt-4 pb-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h1 class="display-6"><b>Sorteio Manual</b></h1>
+                                    <hr />
+                                </div>
+                                <div class="col-12">
+                                    <div class="ratio ratio-16x9">
+                                        <iframe src="https://www.youtube.com/embed/7_yoInMdIGw" title="Plataforma pra Criação e Gestão de Sorteios - Sorteio Manual" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row justify-content-center">
+                                        <div class="col-6 ">
+                                            <div class="d-grid gap-2 mt-2">
+                                                <a class="btn btn-outline-light pt-1 pb-1" data-bs-toggle="modal" data-bs-target="#learnMoreManual"><span class="lead">Saiba mais</span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-lg-6 pt-4 pb-4 text-center">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h1 class="display-6"><b>Sorteio "Jogo do Bicho"</b></h1>
+                                    <hr />
+                                </div>
+                                <div class="col-12">
+                                    <div class="ratio ratio-16x9">
+                                        <iframe src="https://www.youtube.com/embed/6xEurXyFVro" title="Jogo do Bicho - Novidade" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row justify-content-center">
+                                        <div class="col-6 ">
+                                            <div class="d-grid gap-2 mt-2">
+                                                <a class="btn btn-outline-light pt-1 pb-1" data-bs-toggle="modal" data-bs-target="#learnMoreAutomatized"><span class="lead">Saiba mais</span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>`
+                    pass2 = 1;
+
+                }
                 document.getElementById('passPassModalityBtn').innerText = "Esconder Vídeos";
                 document.getElementById('passPassModalityBtn').setAttribute('value', 'hide');
                 document.getElementById('passPassModalityBtn').setAttribute('class', 'btn btn-dark mt-2');
