@@ -118,7 +118,7 @@
                                     <small><b>Pago:</b> @register.PaymentDate.ToString("dd/MM/yyyy HH:mm")</small>
                                 }
                             </div>
-                            <p class="mb-1">Valor: @register.PeriodValue.ToString("C2")</p>
+                            <p class="mb-1">Valor: @register.PeriodValue.ToString("C2", ViewBag.Currency)</p>
                             @if (register.IsPayed)
                             {
                                 <p class="mb-1">Status: <b style="color:green">PAGO</b></p>
@@ -131,7 +131,7 @@
                             <small><b>Outras Informações:</b> @register.Observation</small>
                             @if (!String.IsNullOrEmpty(register.ReceiptFile))
                             {
-                                var data = register.PeriodTime.ToString("MM/yyyy") + " - " + register.PeriodValue.ToString("C2");
+                                var data = register.PeriodTime.ToString("MM/yyyy") + " - " + register.PeriodValue.ToString("C2", ViewBag.Currency);
                                 <small class="btn btn-success float-end" onclick="ShowReceiptModal('@register.ReceiptFile', '@data')" 
                                        data-bs-toggle="modal" data-bs-target="#receiptModal" >Ver Comprovante</small>
 
