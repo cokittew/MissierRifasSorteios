@@ -101,7 +101,7 @@ namespace MissierSystem.Models.Platform.Services.Raffle
         public string RaffleNumberResult { get; set; }
 
         [Column("raffle_winners_number")]
-        [Display(Name = "Máximo de Números Vencedores")]
+        [Display(Name = "Máx. de Números Vencedores")]
         [Required(ErrorMessage = "Este campo é obrigatório!")]
         [Remote("VerifyMaxWinners", "PlataformServiceRaffle", AdditionalFields = "RaffleMaxNumberLimited")]
         public int RaffleWinnersNumber { get; set; }

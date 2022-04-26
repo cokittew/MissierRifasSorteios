@@ -593,7 +593,7 @@ RaffleSelectTypeEvent = () => {
 
             
         } else {
-            alert("Você não possui números suficientes para essa modalidade de sorteio.");
+            alert("Você não possui MissierCoins suficientes para essa modalidade de sorteio. Mínimo de 100 MissierCoins");
             RaffleType.value = 1;
 
         }

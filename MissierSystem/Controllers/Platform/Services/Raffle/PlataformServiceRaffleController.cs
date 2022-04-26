@@ -1953,7 +1953,7 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                     if (userBagNumber >= RaffleMaxNumberLimited)
                         return Json(true);
                     else
-                        return Json($"Você não possui números suficientes em seu cofre. Compre mais logo acima.");
+                        return Json($"Você não possui MissierCoin suficientes. Compre mais logo acima.");
 
                 }
                 catch (Exception) { return Json($"Houve um erro ao verificar seu registro, tente mais tarde."); } 
