@@ -589,16 +589,16 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
 
             if (pack.Quantity >= 30)
             {
-                var price = (decimal)0.5;
+                var price = (decimal)0.35;
 
                 if (pack.Quantity >= 50 && pack.Quantity <= 100)
-                    price = (decimal)0.35;
+                    price = (decimal)0.25;
 
                 else if (pack.Quantity > 100 && pack.Quantity <= 400)
-                    price = (decimal)0.30;
+                    price = (decimal)0.20;
 
                 else if (pack.Quantity > 400)
-                    price = (decimal)0.25;
+                    price = (decimal)0.15;
 
 
                 decimal value = pack.Quantity * price;

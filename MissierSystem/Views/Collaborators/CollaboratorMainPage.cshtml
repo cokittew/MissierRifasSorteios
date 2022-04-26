@@ -139,6 +139,11 @@
                         </a>
                     </div>
                 }
+
+                @if(Model.PeriodRegisters.Count() == 0)
+            {
+                <span class="lead text-center">Você ainda não possui registros.</span>
+            }
             </div>
         </div>
 
