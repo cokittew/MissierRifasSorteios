@@ -155,7 +155,7 @@
     }
     else if (ViewBag.alert == "success")
     {
-        <div class="alert alert-danger alert-dismissible fade show container-fluid mt-4 text-center" role="alert">
+        <div class="alert alert-success alert-dismissible fade show container mt-4 text-center" role="alert">
             <strong>Alterado com sucesso!.</strong>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -237,18 +237,37 @@
                                     <div class="card-body text-center">
                                         <h5 class="card-title">AVESTRUZ</h5>
                                         <p class="card-text">@GetNumberSequence(1)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
+
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('AVESTRUZ', 1)">Disponível</a>
+                                            }
+
                                         }
+
+
                                         @if (ChangeFlux()) { }
                                     </div>
                                 </div>
@@ -259,18 +278,33 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin(@AnimalName, @flux)">Disponível</a>
+                                            }
                                         }
+
                                         @if (ChangeFlux()) { }
                                     </div>
                                 </div>
@@ -281,17 +315,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
 
@@ -304,17 +352,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
 
@@ -327,17 +389,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -352,17 +428,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -374,17 +464,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -396,17 +500,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
 
@@ -419,17 +537,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
 
@@ -442,17 +574,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -467,17 +613,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -489,17 +649,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -511,17 +685,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
 
@@ -534,17 +722,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
 
@@ -557,17 +759,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -582,17 +798,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -604,17 +834,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -626,17 +870,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
 
@@ -649,17 +907,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
 
@@ -672,17 +944,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -697,17 +983,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -719,17 +1019,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -741,17 +1055,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
 
@@ -764,17 +1092,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
 
@@ -787,17 +1129,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@AnimalName</h5>
                                         <p class="card-text">@GetNumberSequence(flux)</p>
-                                        @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                        @if (!Model.Raffle.RaffleCloseOption)
                                         {
-                                            <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
-                                        }
-                                        else if (AllNumbersAmorinReserved.Any(e => e == flux))
-                                        {
-                                            <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            @if (AllNumbersAmorinOcuped.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else if (AllNumbersAmorinReserved.Any(e => e == flux))
+                                            {
+                                                <a class="btn btn-warning m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumber","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 2)">Reservado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1">Disponível</a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a class="btn btn-success m-1">Disponível</a>
+                                            if (Model.NumberStatus.Any(e => e.Number == flux))
+                                            {
+                                                <a class="btn btn-danger m-1" onclick="GetParticipantInformationByNumberAmorin('@Url.Action("GetParticipantInformationByNumberRaffleManual","PlataformServiceRaffle")', '@stringToRout', '@Model.Raffle.Id', 3)">Ocupado</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-success m-1" onclick="RaffleManualConfirmationAmorin('@AnimalName', @flux)">Disponível</a>
+                                            }
                                         }
                                         @if (ChangeFlux()) { }
                                     </div>
@@ -861,7 +1217,7 @@
                                             {
                                                 <div class="form-group form-check ">
                                                     <label class="form-check-label mt-4">
-                                                        <input class="form-check-input" type="checkbox" id="concience" onclick="AllowConfirmPaymentManualOption()" asp-for="ConfirmBuy" /> Estou ciente que estou confimando um pagamento.
+                                                        <input class="form-check-input" type="checkbox" id="concience" onclick="AllowConfirmPaymentManualOptionAmorin()" asp-for="ConfirmBuy" /> Estou ciente que estou confimando um pagamento.
                                                     </label>
                                                     <span asp-validation-for="ConfirmBuy" class="text-danger"></span>
                                                 </div>

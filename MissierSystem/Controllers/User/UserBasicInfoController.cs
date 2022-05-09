@@ -224,9 +224,13 @@ namespace MissierSystem.Controllers.User
                 Console.WriteLine(nullError);
             }
 
+            var ra = form["raffleId"];
+            var ow = form["owner"];
+
             var dic = new Dictionary<string, string>()
             {
                 {"localuse",userLogin.LoginType },
+                {"raffleId", ra + ":" + ow  },
                 {"answer","NotFound" }
             };
             return RedirectToAction("Login", dic);

@@ -39,6 +39,7 @@ namespace MissierSystem.Models.Platform.Services.Raffle
         [Required(ErrorMessage = "Este campo é obrigatório!")]
         [MaxLength(200, ErrorMessage = "Máximo de 200 caracteres.")]
         [MinLength(10, ErrorMessage = "Mínimo de 10 caracteres.")]
+        [Remote("VerifyRaffleName", "PlataformServiceRaffle")]
         public string RaffleName { get; set; }
 
         [Column("raffle_general_description")]
@@ -125,7 +126,7 @@ namespace MissierSystem.Models.Platform.Services.Raffle
         [Display(Name = "Máximo de Nº Para o Sorteio")]
         [Required(ErrorMessage = "Este campo é obrigatório!")]
         [Range(10, 1000, ErrorMessage = "Selecione um número entre 10 e 1000.")]
-        [Remote("VerifyRaffleMaxNumber", "PlataformServiceRaffle")]
+        [Remote("VerifyRaffleMaxNumber", "PlataformServiceRaffle", AdditionalFields = "RaffleCloseOption")]
         public int RaffleMaxNumberLimited { get; set; }
 
         [NotMapped]

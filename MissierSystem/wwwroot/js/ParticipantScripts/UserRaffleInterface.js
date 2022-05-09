@@ -59,7 +59,6 @@ RafflePreSaveSelectNumber = (numberSelected, max) => {
 
 
 RafflePreSaveSelectNumberAmorin = (numberSelected, max) => {
-    console.log(max);
     if (max > 0) {
         var participantUserSelectNumber = document.getElementById('participantUserSelectNumber');
         var serverSendNumbers = document.getElementById('serverSendNumbers');

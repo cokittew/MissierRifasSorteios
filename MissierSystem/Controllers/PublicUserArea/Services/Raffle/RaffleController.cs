@@ -638,7 +638,12 @@ namespace MissierSystem.Controllers.PublicUserArea.Services.Raffle
                                 RaffleName = e.RaffleName,
                                 RaffleUserMaxNumbers = e.RaffleUserMaxNumbers,
                                 RaffleMaxNumber = e.RaffleMaxNumber,
-                                RaffleNumbersValue = e.RaffleNumbersValue
+                                RaffleNumbersValue = e.RaffleNumbersValue,
+                                RaffleGeneralDescription = e.RaffleGeneralDescription,
+                                RafflePremiationDescription = e.RafflePremiationDescription,
+                                RaffleStatus = e.RaffleStatus,
+                                RaffleNumberResult = e.RaffleNumberResult,
+                                RaffleType = e.RaffleType
 
                             }).FirstOrDefault();
 
@@ -709,6 +714,18 @@ namespace MissierSystem.Controllers.PublicUserArea.Services.Raffle
                                     raffleNumber.Add(itemSave);
                                 }
 
+                                var AmorinList = new List<int>();
+                                var toSelect = list;
+
+
+                                for (int po = 1; po < 100; po += 4)
+                                {
+                                    if (toSelect.Any(e => e.Number == po))
+                                        AmorinList.Add(po);
+                                }
+                                
+                                ViewBag.YourNumbersAmorin = AmorinList;
+
                                 if (userBasicInfo != null)
                                 {
                                     var raffleNumberSelection = new NumberStatusTotal(new List<PlatformServiceRaffleFile>(),
@@ -717,7 +734,8 @@ namespace MissierSystem.Controllers.PublicUserArea.Services.Raffle
                                         userPix, userBank);
 
                                     ViewBag.MaxUserCanSelect = 0;
-                                    ViewBag.YourNumbers = 0;
+                                    if(raffle.RaffleType != 3)
+                                        ViewBag.YourNumbers = 0;
                                     ViewBag.ActionFinalResult = actionAfter;
 
                                     return View(raffleNumberSelection);

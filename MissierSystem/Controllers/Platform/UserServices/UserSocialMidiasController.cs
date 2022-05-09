@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -101,6 +102,9 @@ namespace MissierSystem.Controllers.Platform.UserServices
                 return RedirectToAction("GetOutFromLogin", "Home");
 
             ViewBag.userId = Convert.ToInt32(idUser);
+
+            Regex g = new Regex("[^0-9]");
+            userSocialMidia.WhatsApp = g.Replace(userSocialMidia.WhatsApp, String.Empty);
 
             if (userSocialMidia.Id != 0)
             {

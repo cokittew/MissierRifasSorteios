@@ -8,7 +8,6 @@
     #teste:hover {
         background-color: red;
     }
-
 </style>
 
 <div id="NotificationSide">
@@ -174,7 +173,7 @@
                                 <input asp-for="RaffleMaxNumber" class="form-control" type="hidden" value="30" />
 
                                 <label asp-for="RaffleMaxNumberLimited" class="control-label lead my-2" style="font-weight: bold"></label><span style="color: red;">*</span>
-                                <input asp-for="RaffleMaxNumberLimited" onchange="WeWantToHelp()" class="form-control text-center" title="Digite quantos números estarão disponíveis para a escolha." placeholder="Número máximo de números para seleção" />
+                                <input asp-for="RaffleMaxNumberLimited" onchange="WeWantToHelp()" onblur="VerifyFilds()" class="form-control text-center" title="Digite quantos números estarão disponíveis para a escolha." placeholder="Número máximo de números para seleção" />
                                 <span asp-validation-for="RaffleMaxNumberLimited" class="text-danger"></span>
                             </div>
 
@@ -267,9 +266,15 @@
                         </div>
                     </div>
 
-                    <div class="row justify-content-center">
-                        <div class="col-lg-10 text-center">
-                            <div class="form-group my-3 d-grid gap-4">
+                    <div class="row justify-content-center mt-3">
+                        <div class="col-lg-12 text-center">
+                            <div class="form-group d-grid gap-4">
+                                
+                                <span class="lead">Vai Custar: <span id="ManualCost" class="btn btn-danger my-3 ">0</span> MissierCoin(s)</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 mb-3 text-center">
+                            <div class="form-group d-grid gap-4">
                                 <input type="submit" value="Adicionar Sorteio" class="btn btn-success my-3 " />
                             </div>
                         </div>
@@ -337,12 +342,35 @@
     function VerifyFilds() {
         var checkB = document.getElementById("RaffleCloseOption");
         var fieldToSet = document.getElementById("RaffleUserMaxNumbersLimited");
+        var howMuchNumbers = document.getElementById("RaffleMaxNumberLimited").value;
+        var missierCoin = document.getElementById("numbersWeHave").value;
+        var cost = document.getElementById("ManualCost")
 
         if (checkB.checked) {
             fieldToSet.setAttribute("value", "1");
             fieldToSet.setAttribute("disabled", "true");
+
+            if (howMuchNumbers <= 100)
+                cost.innerText = '5';
+            else if (howMuchNumbers > 300)
+                cost.innerText = '15';
+            else if (howMuchNumbers > 200)
+                cost.innerText = '11';
+            else if (howMuchNumbers > 100)
+                cost.innerText = '8';
+
         } else {
             fieldToSet.removeAttribute("disabled");
+
+            if (howMuchNumbers >= 50) {
+                cost.innerText = parseInt(howMuchNumbers / 3);
+
+            } else {
+                cost.innerText = parseInt(howMuchNumbers / 2);
+
+            }
+
+        //    document.getElementById("RaffleMaxNumberLimited").value = 0;
         }
     }
 
@@ -354,24 +382,24 @@
         //valueNumber.setAttribute("value", valueF);
     }
 
-    function WeWantToHelp() {
-        var valueNumber = document.getElementById("RaffleNumbersValue").value;
-        var howMuchNumbers = document.getElementById("RaffleMaxNumberLimited").value;
-        var fieldAlert = document.getElementById("NotificationSide");
-        fieldAlert.innerHTML = "";
-        if (valueNumber > 0 && howMuchNumbers > 0) {
-            if (valueNumber < 2) {
-                fieldAlert.innerHTML = `<div class="alert alert-success alert-dismissible fade show fixed-top container mt-2 text-center" role="alert">
-                                        <strong>Olá!</strong> Analisamos as informações do seu sorteio e achamos que você não está lucrando o suficiente. <b>${(valueNumber * 1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} x ${howMuchNumbers} = ${(valueNumber * howMuchNumbers).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</b ><br />
-                                        <span>Você selecionou <b>${howMuchNumbers} números</b>, lhe cobraremos <b>${parseInt(howMuchNumbers / 2)} números</b> do seu cofre<br /> ao salvar esse sorteio no formato atual.</span><br />
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        </div>`;
-            }
+    //function WeWantToHelp() {
+    //    var valueNumber = document.getElementById("RaffleNumbersValue").value;
+    //    var howMuchNumbers = document.getElementById("RaffleMaxNumberLimited").value;
+    //    var fieldAlert = document.getElementById("NotificationSide");
+    //    fieldAlert.innerHTML = "";
+    //    if (valueNumber > 0 && howMuchNumbers > 0) {
+    //        if (valueNumber < 2) {
+    //            fieldAlert.innerHTML = `<div class="alert alert-success alert-dismissible fade show fixed-top container mt-2 text-center" role="alert">
+    //                                    <strong>Olá!</strong> Analisamos as informações do seu sorteio e achamos que você não está lucrando o suficiente. <b>${(valueNumber * 1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} x ${howMuchNumbers} = ${(valueNumber * howMuchNumbers).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</b ><br />
+    //                                    <span>Você selecionou <b>${howMuchNumbers} números</b>, lhe cobraremos <b>${parseInt(howMuchNumbers / 2)} MissierCoin</b> <br /> ao salvar esse sorteio no formato atual.</span><br />
+    //                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    //                                    </div>`;
+    //        }
 
-        }
+    //    }
 
 
-    }
+    //}
 </script>
 
 @section Scripts {

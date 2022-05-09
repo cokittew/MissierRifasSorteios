@@ -277,8 +277,8 @@ GetParticipantInformationByNumberAmorin = (url, route, raffleId, status) => {
                                         <span class="lead mt-3" id="paricipantNick">Usuário: <b>${obj.NickName}</b></span>
                                     </div>
                                     <div class="col-sm-12 col-lg-12 mt-1">
-                                        <span class="lead mt-3" id="">Número: </span>
-                                        <span class="btn btn-danger" id="paricipantNumber"> ${obj.Number}</span>
+                                        <span class="lead mt-3" id="">Animal: </span>
+                                        <span class="btn btn-danger" id="paricipantNumber"> ${getAnimalName(obj.Number)}</span>
                                     </div>`
             } else {
 
@@ -344,8 +344,9 @@ GetParticipantInformationByNumberAmorin = (url, route, raffleId, status) => {
             if (check.checked)
                 check.click();
 
-            if (checkRefuse.checked)
-                checkRefuse.click();
+            if (manual != 1)
+                if (checkRefuse.checked)
+                    checkRefuse.click();
 
             if (status == 3) {
                 $("#confirmPaymentFormDiv").hide();
@@ -420,6 +421,30 @@ RaffleManualConfirmation = (number) => {
  
 }
 
+RaffleManualConfirmationAmorin = (animal, number) => {
+
+    if (animal != "") {
+        document.getElementById("ParticipantNumberInformation").innerHTML = `
+<div class="col-sm-12 col-lg-12 mt-1">
+                                        <span class="lead mt-3" id="">Animal: </span>
+                                        <span class="btn btn-danger" id="paricipantNumber"> ${animal}</span>
+                                    </div>`
+
+        document.getElementById("NumberBought").setAttribute("value", number)
+
+        if (document.getElementById("CloseOption").getAttribute("value") != "1")
+            document.getElementById("NumberBoughtRefuse").setAttribute("value", number)
+
+        $("#Identity").show();
+
+        var check = document.getElementById("concience");
+        if (check.checked) {
+            check.click();
+        }
+    }
+
+}
+
 AllowConfirmPayment = () => {
     var paymentButton = document.getElementById("confirmPay");
     var number = document.getElementById("NumberBought");
@@ -463,6 +488,29 @@ AllowConfirmPaymentManualOption = () => {
         paymentButton.setAttribute("disabled", "disabled");
     }
 }
+
+AllowConfirmPaymentManualOptionAmorin = () => {
+    var paymentButton = document.getElementById("confirmPay");
+    var number = document.getElementById("NumberBought");
+    var check = document.getElementById("concience");
+
+    if (check.checked) {
+        if (number.value > 0) {
+
+            if (document.getElementById("Identity").value.length > 9)
+                paymentButton.removeAttribute("disabled");
+            else
+                check.click();
+
+        } else {
+            paymentButton.setAttribute("disabled", "disabled");
+        }
+    } else {
+        paymentButton.setAttribute("disabled", "disabled");
+    }
+}
+
+
 
 Restartconcience = () => {
     var check = document.getElementById("concience");
@@ -589,7 +637,9 @@ RaffleSelectTypeEvent = () => {
             if (manualAction.checked) {
                 manualAction.click();
             }
-            manualAction.setAttribute('disabled', 'disabled')
+
+            document.getElementById("ManualCost").innerText = parseInt(100 / 3);
+            //manualAction.setAttribute('disabled', 'disabled')
 
             
         } else {

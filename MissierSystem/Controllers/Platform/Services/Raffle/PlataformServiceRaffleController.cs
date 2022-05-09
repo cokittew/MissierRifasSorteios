@@ -470,11 +470,11 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
             {
                 newRaffle.RaffleMaxNumberLimited = 100;
                 newRaffle.RaffleWinnersNumber = 1;
-
             }
-            //var value = form["RaffleCloseOption"];
 
-            //newRaffle.RaffleCloseOption = value[0].Equals("true") ? true : false;
+            var closeOptionFormValue = form["RaffleCloseOption"];
+
+            newRaffle.RaffleCloseOption = closeOptionFormValue[0].Equals("true") ? true : false;
 
             if (newRaffle.RaffleCloseOption)
                 newRaffle.RaffleUserMaxNumbersLimited = 1;
@@ -514,10 +514,30 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                         UserNumberBag = e.UserNumberBag,
                     }).FirstOrDefault();
 
-                    if(newRaffle.RaffleNumbersValue >= (decimal)2)
-                        userUpdateBag.UserNumberBag -= newRaffle.RaffleMaxNumberLimited;
+                    if (newRaffle.RaffleCloseOption)
+                    {
+                        if (newRaffle.RaffleMaxNumberLimited <= 100)
+                            userUpdateBag.UserNumberBag -= 5;
+                        else if (newRaffle.RaffleMaxNumberLimited > 300)
+                            userUpdateBag.UserNumberBag -= 15;
+                        else if (newRaffle.RaffleMaxNumberLimited > 200)
+                            userUpdateBag.UserNumberBag -= 11;
+                        else if (newRaffle.RaffleMaxNumberLimited > 100)
+                            userUpdateBag.UserNumberBag -= 8;
+                    }
                     else
-                        userUpdateBag.UserNumberBag -= (int)(newRaffle.RaffleMaxNumberLimited / 2);
+                    {
+                        var numberQuantity = newRaffle.RaffleMaxNumberLimited;
+                        if (numberQuantity >= 50)
+                            userUpdateBag.UserNumberBag -= (int)(newRaffle.RaffleMaxNumberLimited / 3);
+                        else
+                            userUpdateBag.UserNumberBag -= (int)(newRaffle.RaffleMaxNumberLimited / 2);
+
+                        //if (newRaffle.RaffleNumbersValue >= (decimal)2)
+                        //    userUpdateBag.UserNumberBag -= newRaffle.RaffleMaxNumberLimited;
+                        //else
+                        //    userUpdateBag.UserNumberBag -= (int)(newRaffle.RaffleMaxNumberLimited / 2);
+                    }
 
                     if (userUpdateBag.UserNumberBag >= 0)
                     {
@@ -1935,7 +1955,7 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
             return Json(true);
         }
 
-        public IActionResult VerifyRaffleMaxNumber([FromQuery(Name = "RaffleMaxNumberLimited")] int RaffleMaxNumberLimited, int RaffleWinnersNumber)
+        public IActionResult VerifyRaffleMaxNumber([FromQuery(Name = "RaffleMaxNumberLimited")] int RaffleMaxNumberLimited, bool RaffleCloseOption)
         {
             var userId = HttpContext.Session.GetInt32("UserLogId");
 
@@ -1949,6 +1969,23 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                 try
                 {
                     var userBagNumber = _context.UserBasic.Find(userId).UserNumberBag;
+
+                    if (RaffleCloseOption)
+                    {
+                        var value = 0;
+
+                        if(RaffleMaxNumberLimited <= 100)
+                            value = 6;
+                        else if (RaffleMaxNumberLimited > 300)
+                            value = 15;
+                        else if (RaffleMaxNumberLimited > 200)
+                            value = 11;
+                        else if (RaffleMaxNumberLimited > 100)
+                            value = 8;
+
+                        if (userBagNumber >= value)
+                            return Json(true);
+                    }
 
                     if (userBagNumber >= RaffleMaxNumberLimited)
                         return Json(true);
@@ -2029,6 +2066,22 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
             }
 
             return Json(true);
+        }
+
+        public IActionResult VerifyRaffleName(string RaffleName)
+        {
+            var userId = HttpContext.Session.GetInt32("UserLogId");
+
+            if (userId == null || userId == 0)
+                return Json($"Não conseguimos validar este campo, tente novamente mais tarde.");
+
+            else
+            {
+                if (!_context.PlataformServiceRaffle.Any(e => e.RaffleName.ToLower() == RaffleName.ToLower()))
+                    return Json(true);
+
+                return Json($"O nome '{RaffleName}' já está em uso");
+            }
         }
 
 
