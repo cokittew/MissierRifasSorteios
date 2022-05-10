@@ -29,6 +29,18 @@ namespace MissierSystem.Models.Platform.Services.Raffle.WorkClasses
             ParticipantReceipts = receipts;
         }
 
+        public NumberStatusTotal(UserBasicInfo raffleOwner,
+            List<PlatformServiceRaffle> raffles, UserSocialMidia raffleOwnerSocialMidia,
+            UserPixInformation userPixInformation, List<UserBankInformation> userBankInformation = null, PlatformServiceRaffleInformations raffleExtraInfo = null)
+        {
+            RaffleOwner = raffleOwner;
+            Raffles = raffles;
+            RaffleExtraInfo = raffleExtraInfo;
+            RaffleOwnerSocialMidia = raffleOwnerSocialMidia;
+            UserPixInformation = userPixInformation;
+            UserBankInformation = userBankInformation;
+        }
+
         //Raffle Simple Data
         public List<NumberStatus> NumberStatus { get; private set; }
 
@@ -43,6 +55,8 @@ namespace MissierSystem.Models.Platform.Services.Raffle.WorkClasses
 
         //Raffle All Data
         public PlatformServiceRaffle Raffle { get; private set; }
+        public List<PlatformServiceRaffle> Raffles { get; private set; }
+
         public PlatformServiceRaffleInformations RaffleExtraInfo { get; private set; }
 
         //Raffle Statistics

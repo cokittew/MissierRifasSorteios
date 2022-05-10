@@ -65,6 +65,95 @@ namespace MissierSystem.Controllers.PublicUserArea.Services.Raffle
             return View();
         }
 
+        [Route("MinhaPagina/{user}")]
+        public async Task<IActionResult> PersonalUserInterface(string user)
+        {
+            if(String.IsNullOrEmpty(user))
+                return RedirectToAction("GetOutFromLogin", "Home");
+
+            CultureInfo culture = new CultureInfo("pt-BR");
+            ViewBag.Culture = culture;
+
+            try
+            {
+                var userBasicInfo = _context.UserBasicInfo
+                        .Select(e => new UserBasicInfo()
+                        {
+                            Id = e.Id,
+                            IdBasicUser = e.IdBasicUser,
+                            NickName = e.NickName,
+                        }).FirstOrDefault(e => e.NickName.ToLower() == user.ToLower());
+
+                if(userBasicInfo != null)
+                {
+                    var userSociaMedia = _context.UserSocialMidia.Where(e => e.IdBasicUser == userBasicInfo.IdBasicUser)
+                    .Select(e => new UserSocialMidia()
+                    {
+                        AnotherInformations = e.AnotherInformations,
+                        Facebook = e.Facebook,
+                        Instagram = e.Instagram,
+                        Kwai = e.Kwai,
+                        Reddit = e.Reddit,
+                        TikTok = e.TikTok,
+                        Twitter = e.Twitter,
+                        WhatsApp = e.WhatsApp,
+                        Youtube = e.Youtube
+                    }).FirstOrDefault();
+
+                    var userBank = _context.UserBankInformation.Where(e => e.IdBasicUser == userBasicInfo.IdBasicUser && e.Removed == false)
+                        .Select(e => new UserBankInformation()
+                        {
+                            AccountOwnerCpf = e.AccountOwnerCpf,
+                            AgenceAccount = e.AgenceAccount,
+                            BankAccount = e.BankAccount,
+                            BankCode = e.BankCode,
+                        }).ToList();
+
+                    var userPix = _context.UserPixInformation.Where(e => e.IdBasicUser == userBasicInfo.IdBasicUser)
+                        .Select(e => new UserPixInformation()
+                        {
+                            PixKey = e.PixKey,
+                            PixKeyType = e.PixKeyType,
+                        }).FirstOrDefault();
+
+                    var raffleList = _context.PlataformServiceRaffle.Where(e => e.IdBasicUser == userBasicInfo.IdBasicUser && e.RaffleStatus == 1)
+                        .Select(e => new PlatformServiceRaffle()
+                        {
+                            Id = e.Id,
+                            RaffleStatus = e.RaffleStatus,
+                            RaffleEndDate = e.RaffleEndDate,
+                            RaffleStartDate = e.RaffleStartDate,
+                            RaffleName = e.RaffleName,
+                            RaffleNumberResult = e.RaffleNumberResult,
+                            RaffleMaxNumber = e.RaffleMaxNumber,
+                            RaffleNumbersValue = e.RaffleNumbersValue,
+                            RaffleUserMaxNumbers = e.RaffleUserMaxNumbers,
+                            RaffleCloseOption = e.RaffleCloseOption,
+                            Identity = e.Identity,
+                            RaffleType = e.RaffleType,
+                            RafflePremiationDescription = e.RafflePremiationDescription,
+                            RaffleGeneralDescription = e.RaffleGeneralDescription
+
+                        }).ToList();
+
+
+                    ViewBag.banksData = LocalDataBase.GetAllBank();
+                    ViewBag.pixData = LocalDataBase.GetAllPixType();
+
+                    var raffleNumberSelection = new NumberStatusTotal(userBasicInfo, raffleList, userSociaMedia,
+                                     userPix, userBank);
+
+                    return View(raffleNumberSelection);
+                } 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return View(new NumberStatusTotal());
+        }
+
         public IActionResult RaffleList(string code = "", string nameNick = "", string type="", string answer = "")
         {
             ViewBag.alert = answer;

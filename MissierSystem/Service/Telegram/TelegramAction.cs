@@ -11,7 +11,7 @@ namespace MissierSystem.Service.Telegram
     public class TelegramAction
     {
         private string BotToken { get; }
-        private readonly string DefaultIdTelegram = "1285175398";
+        //private readonly string DefaultIdTelegram = "1285175398";
 
         public TelegramAction()
         {

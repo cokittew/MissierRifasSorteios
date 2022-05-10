@@ -1,0 +1,275 @@
+﻿@model MissierSystem.Models.Platform.Services.Raffle.WorkClasses.NumberStatusTotal
+
+@{
+    ViewData["Title"] = "Minha Página - Sorteio/Rifa";
+
+}
+
+<div class="participateSelectNumberMainPage">
+    <nav class="navbar navbar-expand-lg navbar-light mb-4 " style="background-color: black">
+        <div class="container-fluid">
+            <a class="navbar-brand text-light" asp-controller="Home" asp-action="Index"><img src="~/image/geral/logo/missier_logo_pequeno.png" title="Missier Sorteios" alt="Missier Sorteios" /> <span class="ml-3 pt-4">Missier Sorteios</span></a>
+            @if (Model.Raffle != null)
+            {
+                <span class="lead text-center">@Model.Raffle.RaffleName</span>
+            }
+            <div>
+                <a class="btn btn-warning text-end" asp-area="" asp-controller="Raffle" asp-action="MainPage">Voltar</a>
+                <a class="btn btn-outline-danger" asp-area="" asp-controller="Home" asp-action="GetOutFromLogin">Sair</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-bottom: 200px;">
+
+        <div class="row mb-5">
+
+            <div class="col-sm-6 mt-3 lead">
+                <div class="accordion accordion-flush" id="raffleUserInformations">
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-raffleUserInformations-1">
+                            <button class="accordion-button collapsed lead" type="button" data-bs-toggle="collapse" data-bs-target="#flush-raffleUserInformations-collapse1" aria-expanded="false" aria-controls="flush-raffleUserInformations-collapse1">
+                                <span>Criador do sorteio - <strong>@Model.RaffleOwner.NickName</strong></span>
+                            </button>
+                        </h2>
+
+                        <div id="flush-raffleUserInformations-collapse1" class="accordion-collapse collapse" aria-labelledby="flush-raffleUserInformations-1" data-bs-parent="#raffleUserInformations">
+                            <ul class="list-group">
+
+                                @if (Model.RaffleOwnerSocialMidia != null)
+                                {
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Instagram))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-instagram" style="color:orange;"></i> Instagram: </b><a href="https://www.instagram.com/@Model.RaffleOwnerSocialMidia.Instagram" target="_blank">@Model.RaffleOwnerSocialMidia.Instagram</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Youtube))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-youtube" style="color:red;"></i> Youtube: </b><a href="https://youtube.com/channel/@Model.RaffleOwnerSocialMidia.Youtube" target="_blank">@Model.RaffleOwnerSocialMidia.Youtube</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.TikTok))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-tiktok"></i> TikTok: </b><a href="https://www.tiktok.com/@Model.RaffleOwnerSocialMidia.TikTok" target="_blank">@Model.RaffleOwnerSocialMidia.TikTok</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Facebook))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-facebook" style="color:darkblue;"></i> Facebook: </b><a href="https://www.facebook.com/@Model.RaffleOwnerSocialMidia.Facebook" target="_blank">@Model.RaffleOwnerSocialMidia.Facebook</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Twitter))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-twitter" style="color:deepskyblue;"></i> Twitter: </b><a href="#">@Model.RaffleOwnerSocialMidia.Twitter</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.WhatsApp))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                @{ var whats = "55" + Model.RaffleOwnerSocialMidia.WhatsApp;}
+                                                <b><i class="fab fa-whatsapp" style="color:green;"></i> WhatsApp: </b><a href="https://api.whatsapp.com/send?phone=@whats" target="_blank">@Model.RaffleOwnerSocialMidia.WhatsApp</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Reddit))
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b><i class="fab fa-reddit" style="color:orangered;"></i> Reddit: </b><a href="#">@Model.RaffleOwnerSocialMidia.Reddit</a>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="lead">Nenhuma informação informada <i class="fas fa-exclamation-triangle" style="color:red"></i></span>
+                                        </div>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-6 mt-3">
+                <div class="accordion accordion-flush" id="raffleUserInformationsPayment">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header " id="flush-raffleUserInformations-3">
+                            <button class="accordion-button collapsed lead" type="button" data-bs-toggle="collapse" data-bs-target="#flush-raffleUserInformations-collapse3" aria-expanded="false" aria-controls="flush-raffleUserInformations-collapse3">
+                                <span>Informações para <strong>PAGAMENTO</strong></span>
+                            </button>
+                        </h2>
+                        <div id="flush-raffleUserInformations-collapse3" class="accordion-collapse collapse" aria-labelledby="flush-raffleUserInformations-1" data-bs-parent="#raffleUserInformationsPayment">
+                            <ul class="list-group">
+                                @if (!String.IsNullOrEmpty(Model.UserPixInformation.PixKey))
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="lead">PIX : </span><b> Tipo: </b>
+                                            @foreach (var pixT in ViewBag.pixData)
+                                            {
+                                                @if (pixT.Id == Model.UserPixInformation.PixKeyType)
+                                                {
+                                                    <span>@pixT.PixType</span>
+                                                }
+                                            }
+                                            |
+                                            <b> Chave: </b><span>@Model.UserPixInformation.PixKey</span>
+                                        </div>
+                                    </li>
+                                }
+                                @if (Model.UserBankInformation.Count() > 0)
+                                {
+                                    foreach (var bank in Model.UserBankInformation)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <b> Banco: </b><span>@bank.BankCode</span>
+
+                                                @foreach (var bankItem in ViewBag.banksData)
+                                                {
+                                                    if (bankItem.BankCode == bank.BankCode)
+                                                    {
+                                                        <span>(</span>@bankItem.BankName<span>)</span>
+                                                    }
+                                                }
+                                                |
+                                                <b> Agência: </b><span>@bank.AgenceAccount</span> |
+                                                <b> Nº da conta: </b><span>@bank.BankAccount</span> |
+                                                <b> CPF: </b><span>@bank.AccountOwnerCpf</span>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-12 text-center mb-3">
+                <h1 class="display-5">Seus Sorteios</h1>
+                <hr style="width: 30%; margin:auto;" />
+            </div>
+
+            @if (Model.Raffles.Count > 0)
+            {
+                <div class="container-fluid ">
+                    <div class="row">
+
+                        @foreach (var raffle in Model.Raffles)
+                        {
+
+                        <div class="p-1 mb-2 rounded-3 col-sm-12 col-lg-6" style="background-color: ghostwhite">
+                            <div href="#" class="list-group-item list-group-item-action mb-1 bg-dark text-light text-center" aria-current="true" style="box-shadow: black 2px 2px ">
+                                <div class="d-flex w-100 justify-content-between text-center">
+                                    <h5 class="mb-1">@raffle.RaffleName</h5>
+                                    <small>
+                                        <span class="btn btn-outline-info fw-bolder">Valor: @raffle.RaffleNumbersValue.ToString("C2", ViewBag.Culture)</span>
+                                    </small>
+                                </div>
+
+                            </div>
+
+                            <div href="#" class="list-group-item list-group-item-action mb-2 bg-dark text-light text-center" aria-current="true" style="box-shadow: black 2px 2px ">
+
+                                <p class="mb-1">@raffle.RafflePremiationDescription</p>
+                                <small>@raffle.RaffleGeneralDescription</small>
+
+                                <div class="bg-dark p-3 rounded-3">
+
+                                    @if (raffle.RaffleType == 1)
+                                    {
+                                        if (raffle.RaffleCloseOption)
+                                        {
+                                            var data = new Dictionary<string, string>
+                                                () { { "identity", raffle.Identity.ToString() } };
+                                            <a class="btn btn-outline-info fw-bolder" asp-action="RaffleUserDirectLink" asp-controller="Raffle" asp-all-route-data="data" target="_blank" >Visualizar</a>
+                                        }
+                                        else
+                                        {
+                                            var data = new Dictionary<string, string>
+                                                () { { "identity", raffle.Identity.ToString() } };
+                                            <a class="btn btn-outline-danger fw-bolder" asp-action="RaffleUserDirectLink" asp-controller="Raffle" asp-all-route-data="data" target="_blank">Participar</a>
+                                        }
+                                    }
+                                    else if (raffle.RaffleType == 3)
+                                    {
+                                        if (raffle.RaffleCloseOption)
+                                        {
+                                            var data = new Dictionary<string, string>
+                                                () { { "identity", raffle.Identity.ToString() } };
+                                            <a class="btn btn-outline-info fw-bolder" asp-action="RaffleUserDirectLink" asp-controller="Raffle" asp-all-route-data="data" target="_blank">Visualizar</a>
+                                        }
+                                        else
+                                        {
+                                            var data = new Dictionary<string, string>
+                                                () { { "identity", raffle.Identity.ToString() } };
+                                            <a class="btn btn-outline-danger fw-bolder" asp-action="RaffleUserDirectLink" asp-controller="Raffle" asp-all-route-data="data" target="_blank">Participar</a>
+                                        }
+
+                                    }
+
+                                    @if (Model.RaffleOwnerSocialMidia != null)
+                                    {
+                                        @if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.WhatsApp))
+                                        {
+                                            var whats = "55" + Model.RaffleOwnerSocialMidia.WhatsApp;
+                                            <a class="btn btn-outline-success fw-bolder" href="https://api.whatsapp.com/send?phone=@whats" target="_blank"><i class="fab fa-whatsapp"></i> </a>
+                                        }
+                                        if (!String.IsNullOrEmpty(Model.RaffleOwnerSocialMidia.Instagram))
+                                        {
+                                            <a class="btn btn-outline-warning fw-bolder" href="https://www.instagram.com/@Model.RaffleOwnerSocialMidia.Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+
+                                        }
+                                    }
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                            
+                        }
+
+                    </div>
+                </div>
+            }
+            else
+            {
+                <span class="lead text-center">Você não possui um sorteio ativo.<br /> <a href="/UserBasicInfo/Login?localuse=platform">Crie um agora! </a></span>
+            }
+        </div>
+
+    </div>
+</div>
+
+<script src="~/js/ParticipantScripts/UserRaffleInterface.js"></script>

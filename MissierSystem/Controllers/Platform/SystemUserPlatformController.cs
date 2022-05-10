@@ -51,7 +51,7 @@ namespace MissierSystem.Controllers.Platform
                 try
                 {
                     var userInfo = _context.UserBasicInfo.Where(e => e.IdBasicUser == Convert.ToInt32(idUser))
-                        .Select(u=> new UserBasicInfo() {Id= u.Id, FullName = u.FullName }).FirstOrDefault();
+                        .Select(u=> new UserBasicInfo() {Id= u.Id, FullName = u.FullName, NickName = u.NickName }).FirstOrDefault();
 
                     if(userInfo != null)
                     {
