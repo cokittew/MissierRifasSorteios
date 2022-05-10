@@ -50,15 +50,21 @@
 
                         Clique em <b>Pagar</b> logo abaixo e finalize sua compra.
 
-                        @*Cartões para compras online também são considerados cartões de crédito. <br />Exemplos de cartões (Mercado Pago, PagBank, Nubank entre vários outros).*@
-
                     </span>
                 </div>
-                <div class="col-sm-12 col-lg-12 mt-3">
-                    <div class="form-group my-3 d-grid gap-4">
-                        <div class="cho-container"></div>
+                @*<div class="col-sm-12 col-lg-12 mt-3">
+            <div class="form-group my-3 d-grid gap-4">
+                <div class="cho-container"></div>
+            </div>
+        </div>*@
+
+                <div class="text-center">
+                    <div class="d-grid gap-4 mt-3">
+                        <span class="btn btn-success" onclick="preparePayment()"> Concluir Compra</span>
                     </div>
                 </div>
+
+
             </div>
 
         </div>
@@ -79,23 +85,39 @@
     <script src="https://sdk.mercadopago.com/js/v2"></script>
 
     <script>
-        var id = document.getElementById('referenceId').value;
 
-        // Adicione as credenciais do SDK
-        const mp = new MercadoPago('APP_USR-fa5bb9d2-8fa1-47af-a936-6bac506b1ee2' /*'TEST-f89c1425-efa8-4655-aa37-613fe20a1312'*/, {
-            locale: 'pt-BR'
-        });
+        function preparePayment() {
 
-        // Inicialize o checkout
-        mp.checkout({
-            preference: {
-                id: id
-            },
-            render: {
-                container: '.cho-container', // Indica onde o botão de pagamento será exibido
-                label: 'Pagar', // Muda o texto do botão de pagamento (opcional)
-            }
-        });
+            var id = document.getElementById('referenceId').value;
+            const mp = new MercadoPago('APP_USR-fa5bb9d2-8fa1-47af-a936-6bac506b1ee2' /*'TEST-f89c1425-efa8-4655-aa37-613fe20a1312'*/, {
+                locale: 'pt-BR'
+            });
+
+            const checkout = mp.checkout({
+                preference: {
+                    id: id
+                },
+                autoOpen: true,
+            });
+        }
+
+        //var id = document.getElementById('referenceId').value;
+
+        //// Adicione as credenciais do SDK
+        //const mp = new MercadoPago('APP_USR-fa5bb9d2-8fa1-47af-a936-6bac506b1ee2' /*'TEST-f89c1425-efa8-4655-aa37-613fe20a1312'*/, {
+        //    locale: 'pt-BR'
+        //});
+
+        //// Inicialize o checkout
+        //mp.checkout({
+        //    preference: {
+        //        id: id
+        //    },
+        //    render: {
+        //        container: '.cho-container', // Indica onde o botão de pagamento será exibido
+        //        label: 'Pagar', // Muda o texto do botão de pagamento (opcional)
+        //    }
+        //});
     </script>
 
 </body>
