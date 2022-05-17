@@ -1986,8 +1986,15 @@ namespace MissierSystem.Controllers.Platform.Services.Raffle
                         if (userBagNumber >= value)
                             return Json(true);
                     }
+                    else
+                    {
+                        if (RaffleMaxNumberLimited >= 50)
+                            userBagNumber -= (int)(RaffleMaxNumberLimited / 3);
+                        else
+                            userBagNumber -= (int)(RaffleMaxNumberLimited / 2);
+                    }
 
-                    if (userBagNumber >= RaffleMaxNumberLimited)
+                    if (userBagNumber >= 0)
                         return Json(true);
                     else
                         return Json($"Você não possui MissierCoin suficientes. Compre mais logo acima.");
